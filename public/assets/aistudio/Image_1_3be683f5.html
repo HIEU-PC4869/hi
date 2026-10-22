@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"primary-container":"#0e4d6e","on-secondary-container":"#c0d8e8","surface-container-highest":"#202c42","secondary-fixed-dim":"#88b4cc","error-container":"#3d1414","primary-fixed-dim":"#7dd3fc","on-tertiary":"#1a002e","error":"#ff6b6b","surface-variant":"#1a2438","surface-container-lowest":"#0a0e1a","on-background":"#e0e8f0","surface-bright":"#1a2438","on-secondary-fixed-variant":"#2a4a5e","secondary":"#88b4cc","on-surface-variant":"#a0b4c4","outline-variant":"#2a3a48","secondary-fixed":"#c0d8e8","on-surface":"#e0e8f0","on-primary-container":"#c8eaff","surface-container":"#141c2e","surface-dim":"#0f1524","outline":"#4a6070","primary":"#7dd3fc","on-tertiary-fixed":"#1a002e","primary-fixed":"#c8eaff","secondary-container":"#1a3a4e","surface":"#0f1524","surface-container-low":"#111828","tertiary-fixed-dim":"#c8a0f0","on-secondary":"#001f2e","inverse-surface":"#e0e8f0","on-secondary-fixed":"#0d1f2b","tertiary-container":"#3d2060","background":"#0a0e1a","on-error":"#1a0000","on-tertiary-container":"#e8d0ff","inverse-primary":"#0a4c6e","on-primary-fixed-variant":"#004d73","on-primary":"#001f2e","tertiary-fixed":"#e8d0ff","surface-container-high":"#1a2438","tertiary":"#c8a0f0","inverse-on-surface":"#0a0e1a","on-error-container":"#ffb3b3","on-primary-fixed":"#001f2e","surface-tint":"#7dd3fc","on-tertiary-fixed-variant":"#4d2a73"},"borderRadius":{"DEFAULT":"0.5rem","lg":"1rem","xl":"1.5rem","full":"9999px"},"spacing":{},"fontFamily":{"headline":["Inter"],"display":["Inter"],"body":["Inter"],"label":["Inter"]},"fontSize":{}}}}</script></head><body class="bg-background font-body text-on-surface min-h-screen flex items-center justify-center p-6 selection:bg-primary-container selection:text-on-primary-container"><main class="w-full max-w-md"><div class="flex flex-col w-full relative">
+<!-- Ambient frozen glow background elements -->
+<div class="absolute -top-24 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-20 -right-16 w-80 h-80 bg-tertiary/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Enterprise Auth Card Panel -->
+<div class="relative w-full bg-surface-container/70 backdrop-blur-2xl rounded-2xl p-7 sm:p-9 shadow-2xl shadow-surface-container-lowest/80 transition-all duration-300">
+<!-- Top Brand & Hex Icon -->
+<div class="flex flex-col items-center text-center mb-7">
+<div class="relative flex items-center justify-center w-14 h-14 rounded-2xl bg-surface-variant/80 shadow-lg shadow-primary/10 mb-4 group cursor-pointer">
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-primary/20 via-transparent to-tertiary/20 opacity-70"></div>
+<!-- Hexagon Checkmark Icon resembling user upload -->
+<svg class="w-8 h-8 text-primary transition-transform duration-300 group-hover:scale-105" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+<polyline points="9 12 11.5 14.5 15.5 9.5"></polyline>
+</svg>
+</div>
+<!-- SAS Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/40 text-primary text-[10px] sm:text-xs font-semibold tracking-widest uppercase mb-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>Student Attendance System</span>
+</div>
+<h1 class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight">
+        Sign in to your Portal
+      </h1>
+<p class="text-xs text-on-surface-variant mt-1.5 max-w-xs font-normal">
+        Select role or provide institutional credentials
+      </p>
+</div>
+<!-- Feedback / Error Notification Container (lbl_login_error) -->
+<div class="hidden mb-5 p-3 rounded-lg bg-error-container/60 text-error text-xs flex items-center gap-2.5 transition-all duration-200" id="lbl_login_error">
+<span class="material-symbols-outlined text-base shrink-0 text-error">error</span>
+<span class="flex-1 font-medium" id="error_message_text">Authentication failed. Please verify institutional ID.</span>
+<button class="text-error/70 hover:text-error p-0.5 rounded transition-colors" onclick="dismissError()" type="button">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+<!-- Login Form -->
+<form class="space-y-4" id="form_login" onsubmit="handleFormSubmit(event)">
+<!-- Institutional Email Field (txt_email) -->
+<div class="space-y-1.5">
+<label class="block text-xs font-medium text-on-surface-variant tracking-wide" for="txt_email">
+          Institutional Email
+        </label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/60 text-lg pointer-events-none">
+            school
+          </span>
+<input class="w-full h-11 pl-11 pr-4 bg-surface-variant/60 rounded-lg text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:bg-surface-variant/90 focus:shadow-[0_0_0_2px_rgba(125,211,252,0.35)] transition-all duration-150" id="txt_email" placeholder="user@university.edu" required="" type="email" value="a.rivera@university.edu"/>
+</div>
+</div>
+<!-- Password Field (txt_password) -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="block text-xs font-medium text-on-surface-variant tracking-wide" for="txt_password">
+            Password
+          </label>
+<a class="text-[11px] font-medium text-primary hover:text-primary-fixed transition-colors" href="#">
+            Forgot Key?
+          </a>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/60 text-lg pointer-events-none">
+            lock_open
+          </span>
+<input class="w-full h-11 pl-11 pr-11 bg-surface-variant/60 rounded-lg text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:bg-surface-variant/90 focus:shadow-[0_0_0_2px_rgba(125,211,252,0.35)] transition-all duration-150 tracking-wider" id="txt_password" placeholder="••••••••••••" required="" type="password" value="password123"/>
+<button aria-label="Toggle password visibility" class="absolute right-3 text-on-surface-variant/70 hover:text-on-surface p-1 rounded transition-colors focus:outline-none" id="btn_toggle_pw" onclick="togglePasswordVisibility()" type="button">
+<span class="material-symbols-outlined text-lg leading-none" id="pw_icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember device & session status -->
+<div class="flex items-center justify-between pt-1 pb-1">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded bg-surface-variant/80 accent-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+<span class="text-xs text-on-surface-variant group-hover:text-on-surface transition-colors select-none">
+            Keep verified session
+          </span>
+</label>
+<span class="text-[11px] text-on-surface-variant/70 font-mono">TLS 1.3 Active</span>
+</div>
+<!-- Primary Action: Login (btn_login) -->
+<button class="relative w-full h-11 mt-2 rounded-lg bg-primary text-on-primary font-semibold text-sm tracking-wide shadow-lg shadow-primary-container/50 hover:bg-primary-fixed hover:shadow-primary/25 active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2" id="btn_login" type="submit">
+<span>Sign In</span>
+<span class="material-symbols-outlined text-base">login</span>
+</button>
+</form>
+<!-- Role Quick-Select Demo Section -->
+<div class="mt-7 pt-5 bg-surface-variant/20 rounded-xl p-3.5">
+<div class="flex items-center justify-between mb-2.5">
+<span class="text-[10px] font-semibold tracking-wider uppercase text-on-surface-variant">
+          Demo Quick Roles
+        </span>
+<span class="text-[10px] text-tertiary font-mono">Simulated</span>
+</div>
+<div class="grid grid-cols-2 gap-2" id="role_chip_group">
+<button class="role-chip group flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-surface-variant/70 hover:bg-surface-variant text-left transition-all duration-150 ring-1 ring-primary/40 text-on-surface" onclick="selectRole('a.rivera@university.edu', 'Alex Rivera (Student)', this)" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+<div class="truncate">
+<div class="text-[11px] font-medium leading-tight text-on-surface">Alex Rivera</div>
+<div class="text-[9px] text-on-surface-variant leading-tight truncate">Student ID: #8841</div>
+</div>
+</button>
+<button class="role-chip group flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-surface-variant/40 hover:bg-surface-variant text-left transition-all duration-150 text-on-surface-variant hover:text-on-surface" onclick="selectRole('dr.vance@university.edu', 'Dr. Vance (Instructor)', this)" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant/40 shrink-0"></span>
+<div class="truncate">
+<div class="text-[11px] font-medium leading-tight">Dr. Vance</div>
+<div class="text-[9px] text-on-surface-variant/80 leading-tight truncate">Faculty / Instructor</div>
+</div>
+</button>
+<button class="role-chip group flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-surface-variant/40 hover:bg-surface-variant text-left transition-all duration-150 text-on-surface-variant hover:text-on-surface" onclick="selectRole('m.brody@university.edu', 'M. Brody (Advisor)', this)" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant/40 shrink-0"></span>
+<div class="truncate">
+<div class="text-[11px] font-medium leading-tight">M. Brody</div>
+<div class="text-[9px] text-on-surface-variant/80 leading-tight truncate">Academic Advisor</div>
+</div>
+</button>
+<button class="role-chip group flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-surface-variant/40 hover:bg-surface-variant text-left transition-all duration-150 text-on-surface-variant hover:text-on-surface" onclick="selectRole('sysadmin@university.edu', 'Sysadmin (Admin)', this)" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant/40 shrink-0"></span>
+<div class="truncate">
+<div class="text-[11px] font-medium leading-tight">Sysadmin</div>
+<div class="text-[9px] text-on-surface-variant/80 leading-tight truncate">Administrator</div>
+</div>
+</button>
+</div>
+</div>
+<!-- Single Sign-On (SSO) Federated Provider Options -->
+<div class="mt-6 pt-5 bg-surface-variant/10 rounded-xl px-4 py-3">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[11px] font-medium text-on-surface-variant">Federated Institutional Sign-In</span>
+<span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-surface-container-highest text-secondary-fixed">SAML 2.0</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<button class="flex flex-col items-center justify-center p-2 rounded-lg bg-surface-variant/40 hover:bg-surface-variant/80 transition-colors group" onclick="triggerSSO('Okta')" title="Okta Verify" type="button">
+<span class="material-symbols-outlined text-primary text-xl group-hover:scale-110 transition-transform">verified_user</span>
+<span class="text-[10px] font-medium text-on-surface-variant group-hover:text-on-surface mt-1">Okta</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg bg-surface-variant/40 hover:bg-surface-variant/80 transition-colors group" onclick="triggerSSO('Azure AD')" title="Microsoft Azure AD" type="button">
+<span class="material-symbols-outlined text-secondary text-xl group-hover:scale-110 transition-transform">cloud_sync</span>
+<span class="text-[10px] font-medium text-on-surface-variant group-hover:text-on-surface mt-1">Azure AD</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg bg-surface-variant/40 hover:bg-surface-variant/80 transition-colors group" onclick="triggerSSO('Google Workspace')" title="Campus Google Suite" type="button">
+<span class="material-symbols-outlined text-tertiary text-xl group-hover:scale-110 transition-transform">domain</span>
+<span class="text-[10px] font-medium text-on-surface-variant group-hover:text-on-surface mt-1">Campus ID</span>
+</button>
+</div>
+</div>
+<!-- Institutional Footer Links -->
+<div class="mt-6 text-center space-y-2">
+<div class="flex items-center justify-center gap-3 text-xs text-on-surface-variant">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xs">contact_support</span>
+<span>Helpdesk</span>
+</a>
+<span class="text-surface-container-highest">•</span>
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<span class="text-surface-container-highest">•</span>
+<a class="hover:text-primary transition-colors" href="#">FERPA Statement</a>
+</div>
+<p class="text-[10px] text-on-surface-variant/60 font-mono">
+        Authorized University Staff and Enrolled Students Only
+      </p>
+</div>
+</div>
+</div>
+<script>
+  function togglePasswordVisibility() {
+    const pwInput = document.getElementById('txt_password');
+    const pwIcon = document.getElementById('pw_icon');
+    if (!pwInput || !pwIcon) return;
+    
+    if (pwInput.type === 'password') {
+      pwInput.type = 'text';
+      pwIcon.textContent = 'visibility_off';
+    } else {
+      pwInput.type = 'password';
+      pwIcon.textContent = 'visibility';
+    }
+  }
+
+  function selectRole(email, label, btn) {
+    const emailInput = document.getElementById('txt_email');
+    if (emailInput) {
+      emailInput.value = email;
+      emailInput.focus();
+    }
+    
+    // Update chip styling
+    const chips = document.querySelectorAll('#role_chip_group .role-chip');
+    chips.forEach(chip => {
+      chip.classList.remove('ring-1', 'ring-primary/40', 'text-on-surface', 'bg-surface-variant/70');
+      chip.classList.add('text-on-surface-variant', 'bg-surface-variant/40');
+      const dot = chip.querySelector('span');
+      if (dot) {
+        dot.classList.remove('bg-primary');
+        dot.classList.add('bg-on-surface-variant/40');
+      }
+    });
+
+    btn.classList.remove('text-on-surface-variant', 'bg-surface-variant/40');
+    btn.classList.add('ring-1', 'ring-primary/40', 'text-on-surface', 'bg-surface-variant/70');
+    const dot = btn.querySelector('span');
+    if (dot) {
+      dot.classList.remove('bg-on-surface-variant/40');
+      dot.classList.add('bg-primary');
+    }
+  }
+
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btn_login');
+    const errBox = document.getElementById('lbl_login_error');
+    const emailVal = document.getElementById('txt_email').value;
+
+    // Simulate validation
+    if (!emailVal.includes('@university.edu') && !emailVal.includes('@')) {
+      showError('Please enter a valid institution address (*@university.edu)');
+      return;
+    }
+
+    if (btn) {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-base animate-spin">progress_activity</span><span>Verifying...</span>`;
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-base">check_circle</span><span>Authenticated</span>`;
+        btn.classList.add('bg-primary-fixed-dim');
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }, 1500);
+      }, 1000);
+    }
+  }
+
+  function showError(msg) {
+    const errBox = document.getElementById('lbl_login_error');
+    const msgText = document.getElementById('error_message_text');
+    if (errBox && msgText) {
+      msgText.textContent = msg;
+      errBox.classList.remove('hidden');
+    }
+  }
+
+  function dismissError() {
+    const errBox = document.getElementById('lbl_login_error');
+    if (errBox) {
+      errBox.classList.add('hidden');
+    }
+  }
+
+  function triggerSSO(provider) {
+    const btn = document.getElementById('btn_login');
+    if (btn) {
+      btn.innerHTML = `<span class="material-symbols-outlined text-base animate-spin">sync</span><span>Redirecting to ${provider}...</span>`;
+      setTimeout(() => {
+        btn.innerHTML = `<span>Sign In</span><span class="material-symbols-outlined text-base">login</span>`;
+      }, 1200);
+    }
+  }
+</script></main></body></html>

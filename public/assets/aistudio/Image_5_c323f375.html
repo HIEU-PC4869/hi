@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"primary-container":"#0e4d6e","on-secondary-container":"#c0d8e8","surface-container-highest":"#202c42","secondary-fixed-dim":"#88b4cc","error-container":"#3d1414","primary-fixed-dim":"#7dd3fc","on-tertiary":"#1a002e","error":"#ff6b6b","surface-variant":"#1a2438","surface-container-lowest":"#0a0e1a","on-background":"#e0e8f0","surface-bright":"#1a2438","on-secondary-fixed-variant":"#2a4a5e","secondary":"#88b4cc","on-surface-variant":"#a0b4c4","outline-variant":"#2a3a48","secondary-fixed":"#c0d8e8","on-surface":"#e0e8f0","on-primary-container":"#c8eaff","surface-container":"#141c2e","surface-dim":"#0f1524","outline":"#4a6070","primary":"#7dd3fc","on-tertiary-fixed":"#1a002e","primary-fixed":"#c8eaff","secondary-container":"#1a3a4e","surface":"#0f1524","surface-container-low":"#111828","tertiary-fixed-dim":"#c8a0f0","on-secondary":"#001f2e","inverse-surface":"#e0e8f0","on-secondary-fixed":"#0d1f2b","tertiary-container":"#3d2060","background":"#0a0e1a","on-error":"#1a0000","on-tertiary-container":"#e8d0ff","inverse-primary":"#0a4c6e","on-primary-fixed-variant":"#004d73","on-primary":"#001f2e","tertiary-fixed":"#e8d0ff","surface-container-high":"#1a2438","tertiary":"#c8a0f0","inverse-on-surface":"#0a0e1a","on-error-container":"#ffb3b3","on-primary-fixed":"#001f2e","surface-tint":"#7dd3fc","on-tertiary-fixed-variant":"#4d2a73"},"borderRadius":{"DEFAULT":"0.5rem","lg":"1rem","xl":"1.5rem","full":"9999px"},"spacing":{},"fontFamily":{"headline":["Inter"],"display":["Inter"],"body":["Inter"],"label":["Inter"]},"fontSize":{}}}}</script></head><body class="bg-background font-body text-on-surface min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/75 backdrop-blur-2xl shadow-[0_1px_12px_rgba(0,0,0,0.35)]"><div class="h-20 w-full px-6 flex items-center justify-between gap-6"><div class="flex items-center gap-4 shrink-0"><img alt="SAS Institutional Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WqAzBH3PrtubGSwwTOjhCk8Uw3yIx-0hiA1VjSThm0jacekiAnuq20_1RPEI0s0tWigb4gIjTlQpmZ6j4C7lrjVEAS5koP3IFs7hoW3Y5l0I8BLTjCGy2x1lEmdta6Xa5iAYjdECa3NoXBHOSwm4czP69sx9RUDPyNWNl-6-VlbfqPaa-qVNaZtAU7Lpi4zKflbkVvwBvLr6HsktwNQM5pADQIf-NTxx50SAhpPU1MBOuUXCvyosNHzHY"/><div class="flex flex-col"><span class="text-base font-headline font-bold tracking-tight text-on-surface leading-tight">SAS Enterprise</span><span class="text-xs font-label text-on-surface-variant tracking-normal">Student Attendance &amp; Intelligence</span></div></div><div class="flex items-center gap-4 flex-1 justify-center max-w-3xl"><div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container/60 backdrop-blur-md shadow-[0_0_20px_rgba(125,211,252,0.05)]"><span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span><span class="text-xs font-label text-on-surface-variant font-medium">System Ready</span><span class="text-xs text-outline-variant">|</span><span class="text-xs font-label text-secondary">Active Context</span></div><nav class="flex items-center p-1 rounded-xl bg-surface-container-low/80 backdrop-blur-md" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-inner"><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="login" href="#">0: Login</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="student-portal" href="#">1: Student</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="instructor-workspace" href="#">2: Instructor</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="advisor-hub" href="#">3: Advisor</a><a aria-current="page" class="px-3.5 py-1.5 rounded-lg transition-all bg-primary-container text-on-primary-container font-semibold shadow-inner" data-path="admin-console" href="#">4: Admin</a></nav></div><div class="flex items-center gap-4 shrink-0"><button class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-xl leading-none">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary"></span></button><div class="flex items-center gap-3 pl-2"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-primary/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzH-7fzikK9qt-ALvc2g0BvjVT5Gp3inTEebEwIS0MvJ72EFbi-yxgtfI262r-fA3Vet-2f3WoJHp1rNvURCxECc7eAQ7zvCSilEUSPfw2UyM5s3MjBiOh8Znl64IunmkvmyRd_oacy99NeT-VqE_UJVYb1WXTU-ZEpf-g4iBEHh-Hybcxi9vlinYBxOFga2qSlovHKVMhDjxSgctnUyaMZK-SCs4Jp59aZLnNsg0NzRszWEh--3Yu"/><div class="hidden lg:flex flex-col text-left"><span class="text-xs font-headline font-semibold text-on-surface leading-snug">Dr. Evelyn Vance</span><span class="text-[11px] font-label text-on-surface-variant leading-none">Metropolitan University</span></div></div></div></div></header><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low/70 backdrop-blur-2xl z-40 flex flex-col pt-24 pb-6 shadow-[1px_0_12px_rgba(0,0,0,0.25)]"><div class="px-6 mb-6"><span class="text-[11px] font-label font-bold tracking-wider uppercase text-on-surface-variant/70">Navigation Core</span></div><nav class="flex-1 px-3 space-y-1 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm"><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="instructor-workspace" href="#"><span class="material-symbols-outlined text-lg leading-none">co_present</span>Instructor Workspace</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="student-portal" href="#"><span class="material-symbols-outlined text-lg leading-none">school</span>Student Portal</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="advisor-hub" href="#"><span class="material-symbols-outlined text-lg leading-none">assignment_ind</span>Advisor Hub</a><a aria-current="page" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm" data-path="admin-console" href="#"><span class="material-symbols-outlined text-lg leading-none">admin_panel_settings</span>Admin Console</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="attendance-analytics" href="#"><span class="material-symbols-outlined text-lg leading-none">monitoring</span>Attendance Analytics</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="audit-logs" href="#"><span class="material-symbols-outlined text-lg leading-none">history_toggle_off</span>Audit Logs</a></nav><div class="px-4 mt-auto"><div class="p-3.5 rounded-xl bg-surface-container/60 backdrop-blur-md flex items-center gap-3"><span class="material-symbols-outlined text-primary text-lg">verified_user</span><div class="flex flex-col"><span class="text-[11px] font-headline font-semibold text-on-surface">Session Secured</span><span class="text-[10px] text-on-surface-variant">Hardware Token Valid</span></div></div></div></aside><div class="pl-64"><main class="w-full pt-20 px-8 pb-12 bg-background min-h-screen relative"><div class="flex flex-col w-full space-y-8">
+<div class="relative overflow-hidden rounded-2xl bg-surface-container/70 backdrop-blur-2xl p-7 shadow-2xl">
+<div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+<div class="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-tertiary/10 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="space-y-1.5">
+<div class="flex items-center gap-2.5">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-lg leading-none">admin_panel_settings</span>
+</span>
+<span class="text-xs font-semibold tracking-wider uppercase text-secondary">Governance Engine</span>
+</div>
+<h1 class="text-2xl md:text-3xl font-headline font-bold tracking-tight text-on-surface">
+          System Administration &amp; Governance
+        </h1>
+<p class="text-sm text-on-surface-variant max-w-2xl leading-relaxed">
+          User lifecycle management, role-based access control (RBAC), security policies, and institutional audit compliance exports.
+        </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="group relative px-4 py-2.5 rounded-xl bg-surface-container-high/90 hover:bg-surface-bright text-on-surface text-xs font-medium tracking-wide transition-all duration-200 flex items-center gap-2.5 shadow-lg shadow-black/20" id="btn_export_system_report" type="button">
+<span class="material-symbols-outlined text-base text-primary group-hover:scale-110 transition-transform">download</span>
+<span>Export System Report</span>
+<div class="flex items-center gap-1 pl-1 ml-1 text-[10px] text-on-surface-variant">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-secondary font-mono">CSV</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-tertiary font-mono">PDF</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+<div class="relative rounded-2xl bg-surface-container/60 backdrop-blur-xl p-6 shadow-xl">
+<div class="flex items-center justify-between mb-5">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></div>
+<h2 class="text-base font-headline font-semibold text-on-surface">
+          Provision New Identity / User Enrollment
+        </h2>
+</div>
+<button class="text-xs font-medium text-primary hover:text-primary-fixed flex items-center gap-1.5 group transition-colors" type="button">
+<span class="material-symbols-outlined text-sm transition-transform group-hover:-translate-y-0.5">upload_file</span>
+<span>Fast Bulk CSV Import</span>
+</button>
+</div>
+<form class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end" id="provision_form" onsubmit="event.preventDefault();">
+<div class="md:col-span-4 space-y-1.5">
+<label class="block text-xs font-medium text-on-surface-variant" for="txt_add_email">Institutional Email / Identity</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-on-surface-variant/70">alternate_email</span>
+<input class="w-full pl-10 pr-3 py-2.5 rounded-xl bg-surface-container-low/90 text-on-surface placeholder:text-on-surface-variant/50 text-xs focus:outline-none focus:bg-surface-container-high transition-all" id="txt_add_email" placeholder="first.last@university.edu" type="email"/>
+</div>
+</div>
+<div class="md:col-span-3 space-y-1.5">
+<label class="block text-xs font-medium text-on-surface-variant" for="combo_add_role">Assigned System Role</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-on-surface-variant/70">badge</span>
+<select class="w-full pl-10 pr-8 py-2.5 rounded-xl bg-surface-container-low/90 text-on-surface text-xs focus:outline-none focus:bg-surface-container-high transition-all appearance-none" id="combo_add_role">
+<option value="Student">Student (End User)</option>
+<option value="Instructor">Instructor (Faculty)</option>
+<option value="Advisor">Advisor (Counseling)</option>
+<option value="Administrator">Administrator (Root)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="md:col-span-3 space-y-1.5">
+<label class="block text-xs font-medium text-on-surface-variant" for="combo_department">Academic / Org Department</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-on-surface-variant/70">domain</span>
+<select class="w-full pl-10 pr-8 py-2.5 rounded-xl bg-surface-container-low/90 text-on-surface text-xs focus:outline-none focus:bg-surface-container-high transition-all appearance-none" id="combo_department">
+<option value="eng">Faculty of Engineering</option>
+<option value="cs">Dept. of Computer Science</option>
+<option value="med">School of Medicine</option>
+<option value="bus">School of Business &amp; Analytics</option>
+<option value="all">Global Campus Services</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="md:col-span-2">
+<button class="w-full py-2.5 px-4 rounded-xl bg-primary-container text-on-primary-container hover:brightness-110 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/10" id="btn_add_user" type="button">
+<span class="material-symbols-outlined text-sm">person_add</span>
+<span>Add User</span>
+</button>
+</div>
+</form>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+<div class="group relative rounded-2xl bg-surface-container/60 backdrop-blur-xl p-5 hover:bg-surface-container-high/60 transition-all duration-300">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface-variant">Total Active Users</span>
+<div class="p-2 rounded-xl bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-lg leading-none">groups</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface tracking-tight">4,820</span>
+<span class="text-xs font-semibold text-secondary flex items-center">
+<span class="material-symbols-outlined text-sm leading-none">north_east</span>
+          +4.2%
+        </span>
+</div>
+<div class="mt-4 flex items-center justify-between text-[11px] text-on-surface-variant">
+<span>Provisioned: 5,100 max</span>
+<span class="font-mono text-primary">94.5% Cap</span>
+</div>
+<div class="mt-2 w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 94.5%"></div>
+</div>
+</div>
+<div class="group relative rounded-2xl bg-surface-container/60 backdrop-blur-xl p-5 hover:bg-surface-container-high/60 transition-all duration-300">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface-variant">Daily Check-ins</span>
+<div class="p-2 rounded-xl bg-secondary/10 text-secondary">
+<span class="material-symbols-outlined text-lg leading-none">fingerprint</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface tracking-tight">18,492</span>
+<span class="text-xs font-semibold text-secondary flex items-center">
+<span class="material-symbols-outlined text-sm leading-none">trending_up</span>
+          Peak cycle
+        </span>
+</div>
+<div class="mt-3 flex items-end justify-between h-5 gap-1.5 pt-1">
+<div class="w-full bg-secondary/20 rounded-t h-[40%]"></div>
+<div class="w-full bg-secondary/20 rounded-t h-[60%]"></div>
+<div class="w-full bg-secondary/40 rounded-t h-[55%]"></div>
+<div class="w-full bg-secondary/60 rounded-t h-[80%]"></div>
+<div class="w-full bg-secondary rounded-t h-[95%]"></div>
+<div class="w-full bg-secondary/80 rounded-t h-[85%]"></div>
+<div class="w-full bg-secondary/50 rounded-t h-[70%]"></div>
+</div>
+<div class="mt-2 text-[11px] text-on-surface-variant flex justify-between">
+<span>RFID &amp; Geo Verification</span>
+<span class="font-mono text-secondary">100% Synced</span>
+</div>
+</div>
+<div class="group relative rounded-2xl bg-surface-container/60 backdrop-blur-xl p-5 hover:bg-surface-container-high/60 transition-all duration-300">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface-variant">System Uptime</span>
+<div class="p-2 rounded-xl bg-tertiary/10 text-tertiary">
+<span class="material-symbols-outlined text-lg leading-none">cloud_done</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface tracking-tight">99.98%</span>
+<span class="text-xs font-medium text-on-surface-variant">Past 90d</span>
+</div>
+<div class="mt-4 flex items-center gap-1.5">
+<div class="flex-1 h-1.5 rounded-full bg-primary"></div>
+<div class="flex-1 h-1.5 rounded-full bg-primary"></div>
+<div class="flex-1 h-1.5 rounded-full bg-primary"></div>
+<div class="flex-1 h-1.5 rounded-full bg-primary"></div>
+<div class="flex-1 h-1.5 rounded-full bg-primary"></div>
+<div class="flex-1 h-1.5 rounded-full bg-primary"></div>
+<div class="flex-1 h-1.5 rounded-full bg-secondary"></div>
+</div>
+<div class="mt-2 text-[11px] text-on-surface-variant flex justify-between">
+<span>Latency: 14ms edge</span>
+<span class="text-primary font-mono">Cluster Stable</span>
+</div>
+</div>
+<div class="group relative rounded-2xl bg-surface-container/60 backdrop-blur-xl p-5 hover:bg-surface-container-high/60 transition-all duration-300">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface-variant">Security Audit</span>
+<div class="p-2 rounded-xl bg-primary-container text-on-primary-container">
+<span class="material-symbols-outlined text-lg leading-none">rotate_90_degrees_ccw</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface tracking-tight">0</span>
+<span class="text-xs font-semibold text-primary">Anomalies</span>
+</div>
+<div class="mt-4 flex items-center justify-between text-[11px]">
+<span class="text-on-surface-variant">SOC2 Type II Active</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium text-[10px]">Verified</span>
+</div>
+<div class="mt-2 w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</div>
+<div class="relative rounded-2xl bg-surface-container/60 backdrop-blur-2xl shadow-xl overflow-hidden">
+<div class="p-6 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h3 class="text-base font-headline font-semibold text-on-surface">Directory: Institutional Users &amp; Course Enrolments</h3>
+<p class="text-xs text-on-surface-variant mt-0.5">Filter by access tier, track active verification nodes, and update access permissions.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-base text-on-surface-variant">search</span>
+<input class="pl-9 pr-4 py-2 rounded-xl bg-surface-container-low/90 text-xs text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:bg-surface-container-high transition-all w-64" id="directory_search" placeholder="Search by name, ID or email..." type="text"/>
+</div>
+<div class="flex items-center p-1 rounded-xl bg-surface-container-low/80 text-xs font-medium" id="role_filter_tabs">
+<button class="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container transition-all" data-filter="all">All</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-filter="Student">Students</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-filter="Instructor">Instructors</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-filter="Advisor">Advisors</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-filter="Administrator">Admin</button>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs" id="table_admin_users">
+<thead>
+<tr class="bg-surface-container-highest/40 text-on-surface-variant uppercase text-[10px] font-semibold tracking-wider">
+<th class="py-3 px-6">User ID</th>
+<th class="py-3 px-6">User Identity / Email</th>
+<th class="py-3 px-6">Assigned Role</th>
+<th class="py-3 px-6">Status</th>
+<th class="py-3 px-6">Course Allocations</th>
+<th class="py-3 px-6">Last Login</th>
+<th class="py-3 px-6 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface">
+<tr class="user-row hover:bg-surface-container-high/40 transition-colors" data-role="Student">
+<td class="py-4 px-6 font-mono font-medium text-primary">USR-1001</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary/15 flex items-center justify-center font-semibold text-secondary text-xs shrink-0">
+                  AR
+                </div>
+<div>
+<div class="font-medium text-on-surface">Alex Rivera</div>
+<div class="text-[11px] text-on-surface-variant font-mono">alex.rivera@student.univ.edu</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest text-secondary text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                Student
+              </span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Active
+              </span>
+</td>
+<td class="py-4 px-6">
+<div class="flex flex-wrap gap-1.5 max-w-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">CS-301</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">ENG-204</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">MATH-310</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-[11px]">Today, 08:42 AM</td>
+<td class="py-4 px-6 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors" title="Edit Role &amp; Permissions">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-surface-container-high transition-colors" title="Suspend Account">
+<span class="material-symbols-outlined text-base">block</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-tertiary hover:bg-surface-container-high transition-colors" title="Reset MFA Credentials">
+<span class="material-symbols-outlined text-base">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="user-row hover:bg-surface-container-high/40 transition-colors bg-surface-container/20" data-role="Instructor">
+<td class="py-4 px-6 font-mono font-medium text-primary">USR-1002</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary/15 flex items-center justify-center font-semibold text-tertiary text-xs shrink-0">
+                  EV
+                </div>
+<div>
+<div class="font-medium text-on-surface">Dr. Evelyn Vance</div>
+<div class="text-[11px] text-on-surface-variant font-mono">dr.vance@faculty.univ.edu</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary/15 text-tertiary text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                Instructor
+              </span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Active
+              </span>
+</td>
+<td class="py-4 px-6">
+<div class="flex flex-wrap gap-1.5 max-w-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">CS-301</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">CS-402</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-[11px]">Today, 07:15 AM</td>
+<td class="py-4 px-6 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors" title="Edit Role &amp; Permissions">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-surface-container-high transition-colors" title="Suspend Account">
+<span class="material-symbols-outlined text-base">block</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-tertiary hover:bg-surface-container-high transition-colors" title="Reset MFA Credentials">
+<span class="material-symbols-outlined text-base">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="user-row hover:bg-surface-container-high/40 transition-colors" data-role="Advisor">
+<td class="py-4 px-6 font-mono font-medium text-primary">USR-1003</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary/15 flex items-center justify-center font-semibold text-secondary text-xs shrink-0">
+                  MB
+                </div>
+<div>
+<div class="font-medium text-on-surface">Marcus Brody</div>
+<div class="text-[11px] text-on-surface-variant font-mono">m.brody@counseling.univ.edu</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                Advisor
+              </span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Active
+              </span>
+</td>
+<td class="py-4 px-6">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-highest/60 text-secondary font-medium text-[11px]">
+                All CS Undergrads
+              </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-[11px]">Yesterday, 04:30 PM</td>
+<td class="py-4 px-6 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors" title="Edit Role &amp; Permissions">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-surface-container-high transition-colors" title="Suspend Account">
+<span class="material-symbols-outlined text-base">block</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-tertiary hover:bg-surface-container-high transition-colors" title="Reset MFA Credentials">
+<span class="material-symbols-outlined text-base">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="user-row hover:bg-surface-container-high/40 transition-colors bg-surface-container/20" data-role="Administrator">
+<td class="py-4 px-6 font-mono font-medium text-primary">USR-1004</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center font-semibold text-primary text-xs shrink-0">
+                  SA
+                </div>
+<div>
+<div class="font-medium text-on-surface flex items-center gap-1.5">
+<span>Root Systems Admin</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="text-[11px] text-on-surface-variant font-mono">sysadmin@univ.edu</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Administrator
+              </span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Active
+              </span>
+</td>
+<td class="py-4 px-6">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-highest/60 text-primary font-medium text-[11px]">
+                Global Root Privileges
+              </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-[11px]">Active Now</td>
+<td class="py-4 px-6 text-right">
+<div class="inline-flex items-center gap-1 opacity-50 cursor-not-allowed">
+<span class="p-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-base">lock</span>
+</span>
+</div>
+</td>
+</tr>
+<tr class="user-row hover:bg-surface-container-high/40 transition-colors" data-role="Student">
+<td class="py-4 px-6 font-mono font-medium text-primary">USR-1005</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-error-container flex items-center justify-center font-semibold text-error text-xs shrink-0">
+                  SJ
+                </div>
+<div>
+<div class="font-medium text-on-surface">Sarah Jenkins</div>
+<div class="text-[11px] text-on-surface-variant font-mono">sarah.jenkins@student.univ.edu</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest text-secondary text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                Student
+              </span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-error text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+                Flagged (EWS)
+              </span>
+</td>
+<td class="py-4 px-6">
+<div class="flex flex-wrap gap-1.5 max-w-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">CS-301</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">ENG-204</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-[11px]">3 days ago</td>
+<td class="py-4 px-6 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors" title="Edit Role &amp; Permissions">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 rounded-lg text-error hover:bg-surface-container-high transition-colors" title="Review EWS Flag">
+<span class="material-symbols-outlined text-base">priority_high</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-tertiary hover:bg-surface-container-high transition-colors" title="Reset MFA Credentials">
+<span class="material-symbols-outlined text-base">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 px-6 bg-surface-container-low/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant">
+<div>
+        Showing <span class="text-on-surface font-medium">1 - 5</span> of <span class="text-on-surface font-medium">4,820</span> records
+      </div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors disabled:opacity-40" disabled="">
+          Previous
+        </button>
+<div class="flex items-center gap-1 font-mono">
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container font-semibold">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-on-surface transition-colors">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-on-surface transition-colors">3</button>
+<span class="px-1 text-on-surface-variant">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-on-surface transition-colors">964</button>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface hover:text-on-surface transition-colors">
+          Next
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const searchInput = document.getElementById('directory_search');
+    const filterTabs = document.getElementById('role_filter_tabs');
+    const rows = document.querySelectorAll('.user-row');
+
+    let currentFilter = 'all';
+
+    function applyFilters() {
+      const query = (searchInput.value || '').toLowerCase().trim();
+
+      rows.forEach(row => {
+        const role = row.getAttribute('data-role');
+        const text = row.textContent.toLowerCase();
+        const matchesRole = (currentFilter === 'all') || (role === currentFilter);
+        const matchesQuery = !query || text.includes(query);
+
+        if (matchesRole && matchesQuery) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    if (filterTabs) {
+      filterTabs.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterTabs.querySelectorAll('button').forEach(b => {
+            b.className = 'px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all';
+          });
+          btn.className = 'px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container transition-all';
+          currentFilter = btn.getAttribute('data-filter') || 'all';
+          applyFilters();
+        });
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', applyFilters);
+    }
+
+    const exportBtn = document.getElementById('btn_export_system_report');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => {
+        const prevText = exportBtn.innerHTML;
+        exportBtn.innerHTML = '<span class="material-symbols-outlined text-base animate-spin text-primary">sync</span><span>Preparing Package...</span>';
+        setTimeout(() => {
+          exportBtn.innerHTML = prevText;
+        }, 1200);
+      });
+    }
+
+    const addUserBtn = document.getElementById('btn_add_user');
+    const emailInput = document.getElementById('txt_add_email');
+    if (addUserBtn && emailInput) {
+      addUserBtn.addEventListener('click', () => {
+        if (!emailInput.value) {
+          emailInput.focus();
+          return;
+        }
+        const orig = addUserBtn.innerHTML;
+        addUserBtn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">refresh</span><span>Enrolling...</span>';
+        setTimeout(() => {
+          addUserBtn.innerHTML = '<span class="material-symbols-outlined text-sm text-primary">done</span><span>Provisioned</span>';
+          setTimeout(() => {
+            addUserBtn.innerHTML = orig;
+            emailInput.value = '';
+          }, 1500);
+        }, 800);
+      });
+    }
+  })();
+</script></main></div></body></html>

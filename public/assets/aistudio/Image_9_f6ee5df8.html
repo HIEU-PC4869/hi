@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"primary-container":"#0e4d6e","on-secondary-container":"#c0d8e8","surface-container-highest":"#202c42","secondary-fixed-dim":"#88b4cc","error-container":"#3d1414","primary-fixed-dim":"#7dd3fc","on-tertiary":"#1a002e","error":"#ff6b6b","surface-variant":"#1a2438","surface-container-lowest":"#0a0e1a","on-background":"#e0e8f0","surface-bright":"#1a2438","on-secondary-fixed-variant":"#2a4a5e","secondary":"#88b4cc","on-surface-variant":"#a0b4c4","outline-variant":"#2a3a48","secondary-fixed":"#c0d8e8","on-surface":"#e0e8f0","on-primary-container":"#c8eaff","surface-container":"#141c2e","surface-dim":"#0f1524","outline":"#4a6070","primary":"#7dd3fc","on-tertiary-fixed":"#1a002e","primary-fixed":"#c8eaff","secondary-container":"#1a3a4e","surface":"#0f1524","surface-container-low":"#111828","tertiary-fixed-dim":"#c8a0f0","on-secondary":"#001f2e","inverse-surface":"#e0e8f0","on-secondary-fixed":"#0d1f2b","tertiary-container":"#3d2060","background":"#0a0e1a","on-error":"#1a0000","on-tertiary-container":"#e8d0ff","inverse-primary":"#0a4c6e","on-primary-fixed-variant":"#004d73","on-primary":"#001f2e","tertiary-fixed":"#e8d0ff","surface-container-high":"#1a2438","tertiary":"#c8a0f0","inverse-on-surface":"#0a0e1a","on-error-container":"#ffb3b3","on-primary-fixed":"#001f2e","surface-tint":"#7dd3fc","on-tertiary-fixed-variant":"#4d2a73"},"borderRadius":{"DEFAULT":"0.5rem","lg":"1rem","xl":"1.5rem","full":"9999px"},"spacing":{},"fontFamily":{"headline":["Inter"],"display":["Inter"],"body":["Inter"],"label":["Inter"]},"fontSize":{}}}}</script></head><body class="bg-background font-body text-on-surface min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/75 backdrop-blur-2xl shadow-[0_1px_12px_rgba(0,0,0,0.35)]"><div class="h-20 w-full px-6 flex items-center justify-between gap-6"><div class="flex items-center gap-4 shrink-0"><img alt="SAS Institutional Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WqAzBH3PrtubGSwwTOjhCk8Uw3yIx-0hiA1VjSThm0jacekiAnuq20_1RPEI0s0tWigb4gIjTlQpmZ6j4C7lrjVEAS5koP3IFs7hoW3Y5l0I8BLTjCGy2x1lEmdta6Xa5iAYjdECa3NoXBHOSwm4czP69sx9RUDPyNWNl-6-VlbfqPaa-qVNaZtAU7Lpi4zKflbkVvwBvLr6HsktwNQM5pADQIf-NTxx50SAhpPU1MBOuUXCvyosNHzHY"/><div class="flex flex-col"><span class="text-base font-headline font-bold tracking-tight text-on-surface leading-tight">SAS Enterprise</span><span class="text-xs font-label text-on-surface-variant tracking-normal">Student Attendance &amp; Intelligence</span></div></div><div class="flex items-center gap-4 flex-1 justify-center max-w-3xl"><div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container/60 backdrop-blur-md shadow-[0_0_20px_rgba(125,211,252,0.05)]"><span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span><span class="text-xs font-label text-on-surface-variant font-medium">System Ready</span><span class="text-xs text-outline-variant">|</span><span class="text-xs font-label text-secondary">Active Context</span></div><nav class="flex items-center p-1 rounded-xl bg-surface-container-low/80 backdrop-blur-md" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-inner"><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="login" href="#">0: Login</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="student-portal" href="#">1: Student</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="instructor-workspace" href="#">2: Instructor</a><a aria-current="page" class="px-3.5 py-1.5 rounded-lg transition-all bg-primary-container text-on-primary-container font-semibold shadow-inner" data-path="advisor-hub" href="#">3: Advisor</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="admin-console" href="#">4: Admin</a></nav></div><div class="flex items-center gap-4 shrink-0"><button class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-xl leading-none">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary"></span></button><div class="flex items-center gap-3 pl-2"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-primary/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzH-7fzikK9qt-ALvc2g0BvjVT5Gp3inTEebEwIS0MvJ72EFbi-yxgtfI262r-fA3Vet-2f3WoJHp1rNvURCxECc7eAQ7zvCSilEUSPfw2UyM5s3MjBiOh8Znl64IunmkvmyRd_oacy99NeT-VqE_UJVYb1WXTU-ZEpf-g4iBEHh-Hybcxi9vlinYBxOFga2qSlovHKVMhDjxSgctnUyaMZK-SCs4Jp59aZLnNsg0NzRszWEh--3Yu"/><div class="hidden lg:flex flex-col text-left"><span class="text-xs font-headline font-semibold text-on-surface leading-snug">Dr. Evelyn Vance</span><span class="text-[11px] font-label text-on-surface-variant leading-none">Metropolitan University</span></div></div></div></div></header><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low/70 backdrop-blur-2xl z-40 flex flex-col pt-24 pb-6 shadow-[1px_0_12px_rgba(0,0,0,0.25)]"><div class="px-6 mb-6"><span class="text-[11px] font-label font-bold tracking-wider uppercase text-on-surface-variant/70">Navigation Core</span></div><nav class="flex-1 px-3 space-y-1 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm"><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="instructor-workspace" href="#"><span class="material-symbols-outlined text-lg leading-none">co_present</span>Instructor Workspace</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="student-portal" href="#"><span class="material-symbols-outlined text-lg leading-none">school</span>Student Portal</a><a aria-current="page" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm" data-path="advisor-hub" href="#"><span class="material-symbols-outlined text-lg leading-none">assignment_ind</span>Advisor Hub</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="admin-console" href="#"><span class="material-symbols-outlined text-lg leading-none">admin_panel_settings</span>Admin Console</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="attendance-analytics" href="#"><span class="material-symbols-outlined text-lg leading-none">monitoring</span>Attendance Analytics</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="audit-logs" href="#"><span class="material-symbols-outlined text-lg leading-none">history_toggle_off</span>Audit Logs</a></nav><div class="px-4 mt-auto"><div class="p-3.5 rounded-xl bg-surface-container/60 backdrop-blur-md flex items-center gap-3"><span class="material-symbols-outlined text-primary text-lg">verified_user</span><div class="flex flex-col"><span class="text-[11px] font-headline font-semibold text-on-surface">Session Secured</span><span class="text-[10px] text-on-surface-variant">Hardware Token Valid</span></div></div></div></aside><div class="pl-64"><main class="w-full pt-20 px-8 pb-12 bg-background min-h-screen relative"><div class="flex flex-col w-full space-y-8">
+<!-- Dynamic Atmospheric Glow Underlays -->
+<div class="relative w-full">
+<div class="absolute -top-12 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px] pointer-events-none"></div>
+<div class="absolute top-20 right-10 w-80 h-80 bg-tertiary/10 rounded-full blur-[128px] pointer-events-none"></div>
+<!-- Page Header & Filters -->
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-2">
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-container/40 text-primary text-[11px] font-label font-semibold tracking-wide uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+            Real-time Telemetry
+          </span>
+<span class="text-xs font-label text-on-surface-variant/80 tracking-widest uppercase">EWS Engine v4.2</span>
+</div>
+<h1 class="text-2xl lg:text-3xl font-headline font-bold text-on-surface tracking-tight">
+          Academic Advisor Early Warning System (EWS)
+        </h1>
+<p class="text-sm text-on-surface-variant max-w-2xl leading-relaxed">
+          Automated detection of students with &lt; 80% attendance or ≥ 3 consecutive unexcused absences. Cross-referenced with biometric and LMS logs.
+        </p>
+</div>
+<!-- Filter Controls -->
+<div class="flex flex-wrap items-center gap-3">
+<div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-surface-container/70 backdrop-blur-xl shadow-sm text-xs font-label">
+<span class="material-symbols-outlined text-primary text-base">domain</span>
+<span class="text-on-surface-variant">Dept:</span>
+<select class="bg-transparent text-on-surface font-semibold focus:outline-none cursor-pointer">
+<option class="bg-surface-container-high text-on-surface">Computer Science &amp; Engineering</option>
+<option class="bg-surface-container-high text-on-surface">Electrical Engineering</option>
+<option class="bg-surface-container-high text-on-surface">Applied Mathematics</option>
+</select>
+</div>
+<div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-surface-container/70 backdrop-blur-xl shadow-sm text-xs font-label">
+<span class="material-symbols-outlined text-secondary text-base">calendar_month</span>
+<span class="text-on-surface-variant">Term:</span>
+<select class="bg-transparent text-on-surface font-semibold focus:outline-none cursor-pointer">
+<option class="bg-surface-container-high text-on-surface">Spring 2025</option>
+<option class="bg-surface-container-high text-on-surface">Fall 2024</option>
+</select>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-on-primary font-label text-xs font-semibold shadow-md hover:bg-primary-fixed-dim transition-all" type="button">
+<span class="material-symbols-outlined text-base">file_download</span>
+          Export Audit
+        </button>
+</div>
+</div>
+</div>
+<!-- Quick Summary Metric Badges (Bento Style) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Stat 1 -->
+<div class="relative overflow-hidden p-5 rounded-2xl bg-surface-container/60 backdrop-blur-2xl shadow-sm hover:bg-surface-container/80 transition-all">
+<div class="flex items-start justify-between">
+<div>
+<span class="text-[11px] font-label font-semibold uppercase tracking-wider text-on-surface-variant">Total Flagged</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">14</span>
+<span class="text-xs font-label text-error font-medium flex items-center">
+<span class="material-symbols-outlined text-xs">trending_up</span> +2 this wk
+            </span>
+</div>
+</div>
+<div class="p-2.5 rounded-xl bg-primary-container/30 text-primary">
+<span class="material-symbols-outlined text-xl">groups</span>
+</div>
+</div>
+<div class="mt-3 w-full bg-surface-variant rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 42%"></div>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="relative overflow-hidden p-5 rounded-2xl bg-surface-container/60 backdrop-blur-2xl shadow-sm hover:bg-surface-container/80 transition-all">
+<div class="flex items-start justify-between">
+<div>
+<span class="text-[11px] font-label font-semibold uppercase tracking-wider text-error">Critical Interventions</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-error">4</span>
+<span class="text-xs font-label text-error font-semibold">Immediate Action</span>
+</div>
+</div>
+<div class="p-2.5 rounded-xl bg-error-container/60 text-error">
+<span class="material-symbols-outlined text-xl">crisis_alert</span>
+</div>
+</div>
+<div class="mt-3 w-full bg-surface-variant rounded-full h-1.5 overflow-hidden">
+<div class="bg-error h-full rounded-full animate-pulse" style="width: 75%"></div>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="relative overflow-hidden p-5 rounded-2xl bg-surface-container/60 backdrop-blur-2xl shadow-sm hover:bg-surface-container/80 transition-all">
+<div class="flex items-start justify-between">
+<div>
+<span class="text-[11px] font-label font-semibold uppercase tracking-wider text-secondary">Resolved This Week</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">9</span>
+<span class="text-xs font-label text-primary font-medium flex items-center">
+<span class="material-symbols-outlined text-xs">check_circle</span> 64% rate
+            </span>
+</div>
+</div>
+<div class="p-2.5 rounded-xl bg-secondary-container/50 text-secondary">
+<span class="material-symbols-outlined text-xl">task_alt</span>
+</div>
+</div>
+<div class="mt-3 w-full bg-surface-variant rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 64%"></div>
+</div>
+</div>
+<!-- Stat 4 (Visual sparkline mini card) -->
+<div class="relative overflow-hidden p-5 rounded-2xl bg-surface-container/60 backdrop-blur-2xl shadow-sm hover:bg-surface-container/80 transition-all">
+<div class="flex items-start justify-between">
+<div>
+<span class="text-[11px] font-label font-semibold uppercase tracking-wider text-tertiary">Department Avg</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">88.4%</span>
+<span class="text-[11px] font-label text-on-surface-variant">Normal</span>
+</div>
+</div>
+<!-- Inline SVG Sparkline -->
+<div class="w-20 h-10 flex items-center">
+<svg class="w-full h-full text-tertiary overflow-visible" viewbox="0 0 100 40">
+<path d="M 0 30 Q 20 15, 40 25 T 70 8 T 100 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"></path>
+<circle class="fill-tertiary animate-pulse" cx="100" cy="18" r="3.5"></circle>
+</svg>
+</div>
+</div>
+<span class="mt-3 block text-[10px] font-label text-on-surface-variant truncate">Cohort CSE-2025: 418 Students active</span>
+</div>
+</div>
+<!-- Horizontal Split: Main Workspace -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- LEFT PANEL (60%): Attendance Risk Flags Table -->
+<div class="lg:col-span-7 flex flex-col space-y-4">
+<div class="p-6 rounded-2xl bg-surface-container/60 backdrop-blur-2xl shadow-md">
+<!-- Table Panel Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 gap-3">
+<div class="space-y-0.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">warning</span>
+<h2 class="text-base font-headline font-bold text-on-surface">
+                Attendance Risk Flags
+              </h2>
+</div>
+<p class="text-xs text-on-surface-variant">&lt; 80% overall attendance or ≥ 3 consecutive unexcused absences</p>
+</div>
+<div class="flex items-center gap-2 self-start sm:self-auto">
+<span class="px-2.5 py-1 rounded-lg bg-surface-variant text-[11px] font-mono text-on-surface-variant">Showing: 4 High Priority</span>
+</div>
+</div>
+<!-- Risk Table Container -->
+<div class="overflow-x-auto -mx-6 px-6">
+<table class="w-full text-left border-collapse" id="table_advisor_warnings">
+<thead>
+<tr class="text-[11px] font-label font-bold tracking-wider text-on-surface-variant uppercase bg-surface-container-high/40 rounded-xl">
+<th class="py-3 px-3 rounded-l-xl">ID</th>
+<th class="py-3 px-3">Student Name</th>
+<th class="py-3 px-3">Course</th>
+<th class="py-3 px-3">Attendance</th>
+<th class="py-3 px-3">Absences</th>
+<th class="py-3 px-3">Risk Level</th>
+<th class="py-3 px-3 text-right rounded-r-xl">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30 text-xs">
+<!-- Student 1 (Selected Row) -->
+<tr class="group cursor-pointer bg-primary-container/25 hover:bg-primary-container/35 transition-colors">
+<td class="py-3.5 px-3 font-mono font-medium text-primary">24108</td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-2.5">
+<img class="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-primary/40" data-alt="Portrait photo of David Kim, a young male university student in modern indoor campus lighting with soft focus background, wearing a casual sweater, confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADoR_pr70uOMzxF8haBZsFbnfflGtEmz87IJtymbTPkG4FjzmhocuVzAXuqatOpEYRhcRczLmgaqm5bJnMUaLnVGvU2UxeAcf6e6N3MH0zIGidm1ceLBByyO6NlAKp4dGepx7mqTyHlNAmjkQdXnfJWOxWeYgLe_ioiS9aeR0AyP7KWGoT9_L8Bj4yc70DlpGP8r33LbMJ3tZFIZpGFf9fyti2NTqcvnMUVgOrympMpnjLnRGOv7TE"/>
+<div>
+<span class="font-headline font-semibold text-on-surface block leading-tight">David Kim</span>
+<span class="text-[10px] text-primary block">Active Selected</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-3 font-medium text-on-surface">PHY-102</td>
+<td class="py-3.5 px-3 font-mono font-bold text-error">68.5%</td>
+<td class="py-3.5 px-3 font-medium text-on-surface-variant">4 Days</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-label font-bold uppercase tracking-wider bg-error-container text-error">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+                    CRITICAL
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right">
+<button class="p-1.5 rounded-lg bg-surface-variant text-primary hover:bg-primary hover:text-on-primary transition-all" type="button">
+<span class="material-symbols-outlined text-base leading-none">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Student 2 -->
+<tr class="group cursor-pointer hover:bg-surface-container-high/40 transition-colors">
+<td class="py-3.5 px-3 font-mono font-medium text-on-surface-variant">24094</td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-2.5">
+<img class="w-7 h-7 rounded-full object-cover shadow-sm" data-alt="Portrait photo of Sarah Jenkins, a female computer science student wearing glasses with a friendly determined expression in a bright modern university classroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD39rhwuG-2yXNB4_2WnBYlnL8JooUfJ2s3Fy2ejjKpPaJ5y1dTvDFjT_Jx7movxzeSrOxIbwKQLw-kfLjv24WYbuMMtLk2lCCldLATrzXmzhmhIgx1ozNPpec6hEZccMdr77n6X3WBhiEjjTMvnuDa_gx-6i0hIV119RFRgtBqeByB-DlJ1p75I_qPnMzTIgUq6uibsvGHCIaFskRmRR80EkYl2QVVhS4QJTHmdYfy-Pjf_bHxUSTN"/>
+<span class="font-headline font-semibold text-on-surface">Sarah Jenkins</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-medium text-on-surface">CS-301</td>
+<td class="py-3.5 px-3 font-mono font-semibold text-amber-400">74.0%</td>
+<td class="py-3.5 px-3 font-medium text-on-surface-variant">3 Days</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-label font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300">
+                    HIGH
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right">
+<button class="p-1.5 rounded-lg bg-surface-variant/50 text-on-surface-variant group-hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-base leading-none">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Student 3 -->
+<tr class="group cursor-pointer hover:bg-surface-container-high/40 transition-colors">
+<td class="py-3.5 px-3 font-mono font-medium text-on-surface-variant">24155</td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-2.5">
+<img class="w-7 h-7 rounded-full object-cover shadow-sm" data-alt="Portrait of Amira Patel, a female engineering student with a warm neutral background, soft academic lighting, wearing a stylish blazer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGmP2gmrrIMhXxnDMgyky59B1vF5Y5kY7RBnzv9sHnWcP2_9TVHbhgAEzRgZajzLgcWxhKxkryiWPUxZjC2IhVCR1KQGNS4gwgi0zsWT84bKHYV_0Q-k3rkxG8J5wb21kKuKpKiwEIpwWq11rCSO0aZMQl98rJhePoiIHaZ0hdtJnZKi8HeGZQMUucInnaeo9lkp4Q-P8VxFtGhhlpAWXrEidjjPilcBb4RNUwJQ7SKAW60HXceYSL"/>
+<span class="font-headline font-semibold text-on-surface">Amira Patel</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-medium text-on-surface">MATH-310</td>
+<td class="py-3.5 px-3 font-mono font-semibold text-yellow-300">78.2%</td>
+<td class="py-3.5 px-3 font-medium text-on-surface-variant">2 Days</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-label font-bold uppercase tracking-wider bg-yellow-500/15 text-yellow-300">
+                    MODERATE
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right">
+<button class="p-1.5 rounded-lg bg-surface-variant/50 text-on-surface-variant group-hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-base leading-none">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Student 4 -->
+<tr class="group cursor-pointer hover:bg-surface-container-high/40 transition-colors">
+<td class="py-3.5 px-3 font-mono font-medium text-on-surface-variant">24190</td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-2.5">
+<img class="w-7 h-7 rounded-full object-cover shadow-sm" data-alt="Portrait photo of Carlos Mendez, a young Hispanic male university student standing near library bookshelves with natural sunlight on his face" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMFmkTvuZ_atkJ1EXZjX24oNRaG5L6bIHbUX95VJCxzpVsMiItM-atrLBGpHQ-GazZzrPVuWba52RD5bXnCPzaw2BGtFu3GYzPsCpInmJNDaCh0VQfaWgjHX6wSlGfwEb8VWafC4SAly1LC3lUb3vGBxYtSS2d9IsVqJ9e8W5IgLeEK66xc1E-77DLcO6C-GDceQ1k_3V8gFJozEmKjQ3OtUoPZQmcpHnQpjOa4xFHNiTbd6ggzfzN"/>
+<span class="font-headline font-semibold text-on-surface">Carlos Mendez</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-medium text-on-surface">ENG-204</td>
+<td class="py-3.5 px-3 font-mono font-semibold text-amber-400">71.0%</td>
+<td class="py-3.5 px-3 font-medium text-on-surface-variant">3 Days</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-label font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300">
+                    HIGH
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right">
+<button class="p-1.5 rounded-lg bg-surface-variant/50 text-on-surface-variant group-hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-base leading-none">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer pagination note -->
+<div class="mt-4 pt-3 flex items-center justify-between text-xs text-on-surface-variant">
+<span>Displaying 4 priority flags needing active outreach</span>
+<div class="flex items-center gap-1">
+<button class="px-2 py-1 rounded bg-surface-variant text-on-surface font-medium disabled:opacity-50" disabled="">←</button>
+<span class="px-2 text-primary font-mono font-semibold">1</span>
+<button class="px-2 py-1 rounded bg-surface-variant hover:bg-surface-container-highest text-on-surface">→</button>
+</div>
+</div>
+</div>
+<!-- Quick Context Visual: Cohort Risk Distribution -->
+<div class="p-5 rounded-2xl bg-surface-container/60 backdrop-blur-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="p-3 rounded-xl bg-surface-variant text-primary">
+<span class="material-symbols-outlined text-2xl">insights</span>
+</div>
+<div>
+<h4 class="text-xs font-headline font-semibold text-on-surface">Department Threshold Adherence</h4>
+<p class="text-[11px] text-on-surface-variant">93.2% of CSE students maintain &gt;80% attendance rate</p>
+</div>
+</div>
+<div class="flex items-center gap-3 w-full sm:w-auto">
+<div class="flex flex-col text-right">
+<span class="text-xs font-mono font-bold text-on-surface">6.8% At-Risk</span>
+<span class="text-[10px] text-on-surface-variant">Threshold: 8.0%</span>
+</div>
+<div class="w-24 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT PANEL (40%): Intervention & Counseling Record -->
+<div class="lg:col-span-5 flex flex-col space-y-4">
+<div class="p-6 rounded-2xl bg-surface-container/70 backdrop-blur-2xl shadow-xl space-y-6">
+<!-- Header: Student Context -->
+<div class="space-y-3 pb-4 border-b border-outline-variant/30">
+<div class="flex items-start justify-between gap-4">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-error-container text-error uppercase">Probation Watchlist</span>
+<span class="text-[11px] font-mono text-on-surface-variant">SYS_ID #24108</span>
+</div>
+<h3 class="text-xl font-headline font-bold text-on-surface">
+                David Kim
+              </h3>
+<p class="text-xs text-on-surface-variant">B.S. Computer Engineering • 2nd Year • Advisor: Dr. Vance</p>
+</div>
+<img class="w-12 h-12 rounded-xl object-cover ring-2 ring-primary/40 shadow-md" data-alt="Portrait photo of David Kim, a young male university student in modern indoor campus lighting with soft focus background, wearing a casual sweater, confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc4VuFY7qGTfcq9hZfRZo2_eWrUEtgo85x_hAxdLVt5dtyrO02GplFVmLimu2WAEHNTjZHSttklvYB-YHglexgjkctNo4Wlc6gHw6Tj37ewwWwuMyJvSz9kaB_piYEF2P5Pz64fnUnOuYfZzE3jTDHvHmTm1cnTyLtw5SGcH4rvvt5swKcf4Hskylsf-S89BtWY6GeYewNLrgRe04WVld64D5pqcSnDpV-gBb6Woi_lrzZsrFmSSXP"/>
+</div>
+<!-- Quick Metrics Bar -->
+<div class="grid grid-cols-3 gap-2 pt-2">
+<div class="p-2.5 rounded-xl bg-surface-variant/50 text-center">
+<span class="block text-[10px] font-label text-on-surface-variant uppercase">Course Rate</span>
+<span class="text-sm font-mono font-bold text-error">68.5%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-surface-variant/50 text-center">
+<span class="block text-[10px] font-label text-on-surface-variant uppercase">Absence Run</span>
+<span class="text-sm font-mono font-bold text-on-surface">4 Days</span>
+</div>
+<div class="p-2.5 rounded-xl bg-surface-variant/50 text-center">
+<span class="block text-[10px] font-label text-on-surface-variant uppercase">Prior Alerts</span>
+<span class="text-sm font-mono font-bold text-secondary">2 Cases</span>
+</div>
+</div>
+</div>
+<!-- Historical Log Timeline -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs font-headline font-semibold text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-base">history</span>
+              Timeline &amp; Previous Encounters
+            </span>
+<span class="text-[11px] text-on-surface-variant font-label">3 Events</span>
+</div>
+<div class="relative pl-5 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant/50">
+<!-- Timeline Item 1 -->
+<div class="relative">
+<div class="absolute -left-[17px] top-1 w-2.5 h-2.5 rounded-full bg-primary ring-4 ring-surface-container"></div>
+<div class="text-xs">
+<div class="flex items-center justify-between text-on-surface-variant text-[11px]">
+<span class="font-mono">Feb 14, 2025 • 14:30</span>
+<span class="text-primary font-medium">Dr. Vance</span>
+</div>
+<p class="text-on-surface mt-1 font-medium">Health Referral Issued</p>
+<p class="text-[11px] text-on-surface-variant leading-snug">Directed student to University Health Services for non-academic documentation verification.</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative">
+<div class="absolute -left-[17px] top-1 w-2.5 h-2.5 rounded-full bg-secondary ring-4 ring-surface-container"></div>
+<div class="text-xs">
+<div class="flex items-center justify-between text-on-surface-variant text-[11px]">
+<span class="font-mono">Feb 02, 2025 • 10:15</span>
+<span class="text-secondary font-medium">Automated System</span>
+</div>
+<p class="text-on-surface mt-1 font-medium">1st Early Warning Dispatch</p>
+<p class="text-[11px] text-on-surface-variant leading-snug">Triggered after 2 consecutive absences in PHY-102. System notification sent to student portal.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Counseling Notes Input -->
+<div class="space-y-2">
+<label class="flex items-center justify-between text-xs font-headline font-semibold text-on-surface" for="txt_counseling_notes">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary text-base">edit_note</span>
+              Intervention Notes &amp; Action Plan
+            </span>
+<span class="text-[10px] text-on-surface-variant">Confidential Record</span>
+</label>
+<div class="relative">
+<textarea class="w-full rounded-xl bg-surface-container-highest/50 backdrop-blur-md p-3.5 text-xs text-on-surface font-body leading-relaxed placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 focus:ring-primary shadow-inner resize-none" id="txt_counseling_notes" rows="5">Met with student via virtual office hours regarding PHY-102 attendance dip (68.5%). Student cited acute health complications and missed lab syncs. Initiated student health referral; coordinated with Dr. Vance (Physics Dept) regarding lab makeup protocol. Agreed follow-up meeting scheduled for Friday at 11:00 AM to assess syllabus recovery milestones.</textarea>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="space-y-2.5 pt-2">
+<button class="w-full py-2.5 px-4 rounded-xl bg-primary text-on-primary font-headline text-xs font-semibold shadow-lg hover:bg-primary-fixed-dim transition-all flex items-center justify-center gap-2" id="btn_save_notes" type="button">
+<span class="material-symbols-outlined text-base">save</span>
+            Save Intervention Notes
+          </button>
+<div class="grid grid-cols-2 gap-2.5">
+<button class="py-2.5 px-3 rounded-xl bg-surface-variant hover:bg-surface-container-highest text-on-surface font-label text-xs font-medium transition-all flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-secondary text-base">event_available</span>
+              Schedule 1-on-1
+            </button>
+<button class="py-2.5 px-3 rounded-xl bg-error-container/70 hover:bg-error-container text-error font-label text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">outgoing_mail</span>
+              Send Academic Alert
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

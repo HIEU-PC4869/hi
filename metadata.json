@@ -1,0 +1,6 @@
+{
+  "name": "SAS Enterprise - Student Attendance & Intelligence System",
+  "description": "Enterprise Student Attendance System featuring PySide6 MVC architecture, SQLite3 context manager, real-time QR/PIN check-in, early warning analytics, and role-based access for Students, Instructors, Advisors, and Admins.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"primary-container":"#0e4d6e","on-secondary-container":"#c0d8e8","surface-container-highest":"#202c42","secondary-fixed-dim":"#88b4cc","error-container":"#3d1414","primary-fixed-dim":"#7dd3fc","on-tertiary":"#1a002e","error":"#ff6b6b","surface-variant":"#1a2438","surface-container-lowest":"#0a0e1a","on-background":"#e0e8f0","surface-bright":"#1a2438","on-secondary-fixed-variant":"#2a4a5e","secondary":"#88b4cc","on-surface-variant":"#a0b4c4","outline-variant":"#2a3a48","secondary-fixed":"#c0d8e8","on-surface":"#e0e8f0","on-primary-container":"#c8eaff","surface-container":"#141c2e","surface-dim":"#0f1524","outline":"#4a6070","primary":"#7dd3fc","on-tertiary-fixed":"#1a002e","primary-fixed":"#c8eaff","secondary-container":"#1a3a4e","surface":"#0f1524","surface-container-low":"#111828","tertiary-fixed-dim":"#c8a0f0","on-secondary":"#001f2e","inverse-surface":"#e0e8f0","on-secondary-fixed":"#0d1f2b","tertiary-container":"#3d2060","background":"#0a0e1a","on-error":"#1a0000","on-tertiary-container":"#e8d0ff","inverse-primary":"#0a4c6e","on-primary-fixed-variant":"#004d73","on-primary":"#001f2e","tertiary-fixed":"#e8d0ff","surface-container-high":"#1a2438","tertiary":"#c8a0f0","inverse-on-surface":"#0a0e1a","on-error-container":"#ffb3b3","on-primary-fixed":"#001f2e","surface-tint":"#7dd3fc","on-tertiary-fixed-variant":"#4d2a73"},"borderRadius":{"DEFAULT":"0.5rem","lg":"1rem","xl":"1.5rem","full":"9999px"},"spacing":{},"fontFamily":{"headline":["Inter"],"display":["Inter"],"body":["Inter"],"label":["Inter"]},"fontSize":{}}}}</script></head><body class="bg-background font-body text-on-surface min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/75 backdrop-blur-2xl shadow-[0_1px_12px_rgba(0,0,0,0.35)]"><div class="h-20 w-full px-6 flex items-center justify-between gap-6"><div class="flex items-center gap-4 shrink-0"><img alt="SAS Institutional Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WqAzBH3PrtubGSwwTOjhCk8Uw3yIx-0hiA1VjSThm0jacekiAnuq20_1RPEI0s0tWigb4gIjTlQpmZ6j4C7lrjVEAS5koP3IFs7hoW3Y5l0I8BLTjCGy2x1lEmdta6Xa5iAYjdECa3NoXBHOSwm4czP69sx9RUDPyNWNl-6-VlbfqPaa-qVNaZtAU7Lpi4zKflbkVvwBvLr6HsktwNQM5pADQIf-NTxx50SAhpPU1MBOuUXCvyosNHzHY"/><div class="flex flex-col"><span class="text-base font-headline font-bold tracking-tight text-on-surface leading-tight">SAS Enterprise</span><span class="text-xs font-label text-on-surface-variant tracking-normal">Student Attendance &amp; Intelligence</span></div></div><div class="flex items-center gap-4 flex-1 justify-center max-w-3xl"><div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container/60 backdrop-blur-md shadow-[0_0_20px_rgba(125,211,252,0.05)]"><span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span><span class="text-xs font-label text-on-surface-variant font-medium">System Ready</span><span class="text-xs text-outline-variant">|</span><span class="text-xs font-label text-secondary">Active Context</span></div><nav class="flex items-center p-1 rounded-xl bg-surface-container-low/80 backdrop-blur-md" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-inner"><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="login" href="#">0: Login</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="student-portal" href="#">1: Student</a><a aria-current="page" class="px-3.5 py-1.5 rounded-lg transition-all bg-primary-container text-on-primary-container font-semibold shadow-inner" data-path="instructor-workspace" href="#">2: Instructor</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="advisor-hub" href="#">3: Advisor</a><a class="px-3.5 py-1.5 rounded-lg text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="admin-console" href="#">4: Admin</a></nav></div><div class="flex items-center gap-4 shrink-0"><button class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-xl leading-none">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary"></span></button><div class="flex items-center gap-3 pl-2"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-primary/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzH-7fzikK9qt-ALvc2g0BvjVT5Gp3inTEebEwIS0MvJ72EFbi-yxgtfI262r-fA3Vet-2f3WoJHp1rNvURCxECc7eAQ7zvCSilEUSPfw2UyM5s3MjBiOh8Znl64IunmkvmyRd_oacy99NeT-VqE_UJVYb1WXTU-ZEpf-g4iBEHh-Hybcxi9vlinYBxOFga2qSlovHKVMhDjxSgctnUyaMZK-SCs4Jp59aZLnNsg0NzRszWEh--3Yu"/><div class="hidden lg:flex flex-col text-left"><span class="text-xs font-headline font-semibold text-on-surface leading-snug">Dr. Evelyn Vance</span><span class="text-[11px] font-label text-on-surface-variant leading-none">Metropolitan University</span></div></div></div></div></header><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low/70 backdrop-blur-2xl z-40 flex flex-col pt-24 pb-6 shadow-[1px_0_12px_rgba(0,0,0,0.25)]"><div class="px-6 mb-6"><span class="text-[11px] font-label font-bold tracking-wider uppercase text-on-surface-variant/70">Navigation Core</span></div><nav class="flex-1 px-3 space-y-1 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm"><a aria-current="page" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm" data-path="instructor-workspace" href="#"><span class="material-symbols-outlined text-lg leading-none">co_present</span>Instructor Workspace</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="student-portal" href="#"><span class="material-symbols-outlined text-lg leading-none">school</span>Student Portal</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="advisor-hub" href="#"><span class="material-symbols-outlined text-lg leading-none">assignment_ind</span>Advisor Hub</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="admin-console" href="#"><span class="material-symbols-outlined text-lg leading-none">admin_panel_settings</span>Admin Console</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="attendance-analytics" href="#"><span class="material-symbols-outlined text-lg leading-none">monitoring</span>Attendance Analytics</a><a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-label text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="audit-logs" href="#"><span class="material-symbols-outlined text-lg leading-none">history_toggle_off</span>Audit Logs</a></nav><div class="px-4 mt-auto"><div class="p-3.5 rounded-xl bg-surface-container/60 backdrop-blur-md flex items-center gap-3"><span class="material-symbols-outlined text-primary text-lg">verified_user</span><div class="flex flex-col"><span class="text-[11px] font-headline font-semibold text-on-surface">Session Secured</span><span class="text-[10px] text-on-surface-variant">Hardware Token Valid</span></div></div></div></aside><div class="pl-64"><main class="w-full pt-20 px-8 pb-12 bg-background min-h-screen relative"><div class="flex flex-col w-full">
+<!-- Glowing subtle backdrop canvas aura -->
+<div class="relative w-full">
+<div class="absolute -top-24 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-48 right-10 w-80 h-80 bg-tertiary/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- Header & Quick Switcher -->
+<div class="flex flex-col xl:flex-row xl:items-end justify-between gap-6 pb-8">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-xs font-label uppercase tracking-widest text-primary font-semibold">
+<span class="inline-block w-2 h-2 rounded-full bg-primary animate-ping"></span>
+          Live Stream Session Orchestration
+        </div>
+<h1 class="text-3xl lg:text-4xl font-headline font-bold text-on-surface tracking-tight">Instructor Command Center</h1>
+<p class="text-sm font-body text-on-surface-variant max-w-2xl leading-relaxed">
+          Control active classroom sessions, generate dynamic check-in keys, and evaluate student excuses.
+        </p>
+</div>
+<!-- Course Selector & Global Action -->
+<div class="flex flex-wrap items-center gap-3">
+<div class="relative min-w-[280px]">
+<select class="w-full appearance-none bg-surface-container/70 backdrop-blur-xl text-on-surface font-body text-xs rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-primary shadow-lg cursor-pointer" id="combo_instructor_courses">
+<option value="cs301">CS-301 — Lecture Hall A (Mon/Wed 10:00 AM)</option>
+<option value="cs402">CS-402 — Distributed Systems Lab (Tue/Thu 02:00 PM)</option>
+<option value="cs101">CS-101 — Intro to Computing (Fri 09:00 AM)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-lg">expand_more</span>
+</div>
+<button class="flex items-center gap-2 px-4 py-3 rounded-xl bg-surface-container-high/80 hover:bg-surface-container-highest text-primary font-label text-xs font-semibold shadow-md backdrop-blur-xl transition-all hover:scale-[1.02] active:scale-[0.98]" id="btn_export_course_report">
+<span class="material-symbols-outlined text-base">download</span>
+<span>Export Course Report</span>
+</button>
+</div>
+</div>
+<!-- Section 1: Session Management Panel (Bento Bar) -->
+<div class="w-full rounded-2xl bg-surface-container-low/70 backdrop-blur-2xl p-6 lg:p-8 mb-8 shadow-2xl">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 items-center">
+<!-- Live Action Controls -->
+<div class="lg:col-span-3 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="text-xs font-label text-on-surface-variant uppercase tracking-wider font-semibold">Session Status</span>
+<span class="px-2.5 py-1 rounded-full text-[11px] font-label font-bold bg-primary-container text-on-primary-container flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+              Broadcasting
+            </span>
+</div>
+<div class="flex flex-col sm:flex-row lg:flex-col gap-2.5">
+<button class="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary-container/80 hover:bg-primary-container text-on-primary-container font-headline text-xs font-bold shadow-lg shadow-primary-container/30 transition-all hover:brightness-110 active:scale-95" id="btn_start_session">
+<span class="material-symbols-outlined text-base">sensors</span>
+              Start Live Session
+            </button>
+<button class="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-error-container/80 hover:bg-error-container text-on-error-container font-headline text-xs font-bold shadow-lg shadow-error-container/30 transition-all hover:brightness-110 active:scale-95" id="btn_end_session">
+<span class="material-symbols-outlined text-base">stop_circle</span>
+              End Session
+            </button>
+</div>
+<span class="text-[11px] text-on-surface-variant/80 text-center font-label">Session ID: #SES-9821-B</span>
+</div>
+<!-- Dynamic PIN / QR display -->
+<div class="lg:col-span-4 flex items-center justify-between p-4 rounded-xl bg-surface-container/60 backdrop-blur-md">
+<div class="flex flex-col gap-2">
+<span class="text-xs font-label text-on-surface-variant uppercase tracking-wider">Dynamic Check-In PIN</span>
+<div class="text-3xl font-mono font-bold tracking-widest text-primary drop-shadow-[0_0_12px_rgba(125,211,252,0.4)]" id="lbl_dynamic_qr">
+              849-210
+            </div>
+<div class="flex items-center gap-2 text-[11px] text-secondary font-label">
+<span class="material-symbols-outlined text-xs animate-spin" style="animation-duration: 4s;">sync</span>
+<span>Next key in <span class="font-mono text-on-surface font-semibold" id="pin-cycle">24s</span></span>
+</div>
+</div>
+<!-- Stylized QR Vector Preview -->
+<div class="relative p-2 rounded-xl bg-surface-container-highest/80 flex items-center justify-center shrink-0 shadow-inner group cursor-pointer" title="Click to view full screen">
+<svg class="w-20 h-20 text-primary" fill="currentColor" viewbox="0 0 100 100">
+<!-- Corner Finder Outer -->
+<rect fill="none" height="28" rx="4" stroke="currentColor" stroke-width="5" width="28" x="5" y="5"></rect>
+<rect fill="currentColor" height="14" rx="2" width="14" x="12" y="12"></rect>
+<rect fill="none" height="28" rx="4" stroke="currentColor" stroke-width="5" width="28" x="67" y="5"></rect>
+<rect fill="currentColor" height="14" rx="2" width="14" x="74" y="12"></rect>
+<rect fill="none" height="28" rx="4" stroke="currentColor" stroke-width="5" width="28" x="5" y="67"></rect>
+<rect fill="currentColor" height="14" rx="2" width="14" x="12" y="74"></rect>
+<!-- Data modules -->
+<rect height="7" rx="1.5" width="7" x="42" y="10"></rect>
+<rect height="14" rx="1.5" width="7" x="52" y="10"></rect>
+<rect height="7" rx="1.5" width="12" x="42" y="24"></rect>
+<rect height="7" rx="1.5" width="7" x="10" y="42"></rect>
+<rect height="7" rx="1.5" width="14" x="22" y="42"></rect>
+<rect fill="var(--tw-colors-secondary)" height="16" rx="2" width="16" x="42" y="42"></rect>
+<rect height="7" rx="1.5" width="12" x="65" y="42"></rect>
+<rect height="12" rx="1.5" width="8" x="82" y="42"></rect>
+<rect height="7" rx="1.5" width="22" x="68" y="55"></rect>
+<rect height="12" rx="1.5" width="7" x="42" y="68"></rect>
+<rect height="7" rx="1.5" width="14" x="54" y="75"></rect>
+<rect height="18" rx="1.5" width="16" x="75" y="72"></rect>
+</svg>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] transition-opacity rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg">zoom_in</span>
+</div>
+</div>
+</div>
+<!-- Session Countdown Timer with Progress Ring -->
+<div class="lg:col-span-2 flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container/60 backdrop-blur-md">
+<div class="relative w-24 h-24 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 100 100">
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="none" r="42" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-tertiary-fixed-dim" cx="50" cy="50" fill="none" r="42" stroke="currentColor" stroke-dasharray="264" stroke-dashoffset="66" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center">
+<span class="text-base font-mono font-bold text-tertiary-fixed tracking-tight drop-shadow-[0_0_8px_rgba(200,160,240,0.5)]" id="lbl_timer">14:59</span>
+<span class="text-[9px] font-label text-on-surface-variant uppercase tracking-tighter">Remaining</span>
+</div>
+</div>
+</div>
+<!-- Quick Attendance Metrics Grid -->
+<div class="lg:col-span-3 grid grid-cols-2 gap-2.5">
+<div class="p-3 rounded-xl bg-surface-container/60 backdrop-blur-sm flex flex-col">
+<span class="text-[11px] font-label text-on-surface-variant font-medium">Enrolled</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-xl font-headline font-bold text-on-surface">45</span>
+<span class="text-[10px] text-on-surface-variant">students</span>
+</div>
+</div>
+<div class="p-3 rounded-xl bg-primary-container/20 backdrop-blur-sm flex flex-col">
+<span class="text-[11px] font-label text-primary font-medium">Checked In</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-xl font-headline font-bold text-primary">38</span>
+<span class="text-[10px] text-primary/70">84%</span>
+</div>
+</div>
+<div class="p-3 rounded-xl bg-surface-container/60 backdrop-blur-sm flex flex-col">
+<span class="text-[11px] font-label text-tertiary font-medium">Late Arrival</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-xl font-headline font-bold text-tertiary">3</span>
+<span class="text-[10px] text-on-surface-variant">6.6%</span>
+</div>
+</div>
+<div class="p-3 rounded-xl bg-error-container/20 backdrop-blur-sm flex flex-col">
+<span class="text-[11px] font-label text-error font-medium">Absent</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-xl font-headline font-bold text-error">4</span>
+<span class="text-[10px] text-error/70">8.8%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Two-Column Workspace (60% / 40%) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Panel (60%): Real-Time Attendance Monitoring -->
+<div class="lg:col-span-7 flex flex-col gap-5">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="text-lg font-headline font-bold text-on-surface">Real-time Class Attendance Monitoring</h2>
+<p class="text-xs text-on-surface-variant font-body">Synchronizing dynamic events over secure student edge mesh</p>
+</div>
+<!-- Filter Tabs -->
+<div class="flex items-center p-1 rounded-xl bg-surface-container-low/90 backdrop-blur-md self-start sm:self-auto text-xs font-label">
+<button class="filter-tab px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container font-medium shadow-sm transition-all" data-filter="all">All (45)</button>
+<button class="filter-tab px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-filter="present">Present (38)</button>
+<button class="filter-tab px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-filter="late">Late (3)</button>
+<button class="filter-tab px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-filter="absent">Absent (4)</button>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-base">search</span>
+<input class="w-full bg-surface-container/60 backdrop-blur-md rounded-xl pl-10 pr-4 py-2.5 text-xs text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="attendance_search" placeholder="Search student by name, institutional ID, or token..." type="text"/>
+</div>
+<!-- Table Container -->
+<div class="w-full overflow-hidden rounded-2xl bg-surface-container-low/70 backdrop-blur-xl shadow-xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse" id="table_instructor_attendance">
+<thead>
+<tr class="bg-surface-container-high/60 text-on-surface-variant font-label text-[11px] uppercase tracking-wider">
+<th class="py-3.5 px-4 font-semibold">Student ID</th>
+<th class="py-3.5 px-4 font-semibold">Full Name</th>
+<th class="py-3.5 px-4 font-semibold">Status</th>
+<th class="py-3.5 px-4 font-semibold">Check-In Time</th>
+<th class="py-3.5 px-4 font-semibold">Method</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-transparent font-body text-on-surface">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary">#ST-2024-0018</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[10px]">MC</div>
+<span class="font-medium">Marcus Chen</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container font-label text-[10px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                      Present
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant">10:01:24 AM</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary">qr_code_scanner</span>
+<span>QR Scan</span>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary">#ST-2024-0104</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-bold text-[10px]">AL</div>
+<span class="font-medium">Aaliyah Lawson</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container font-label text-[10px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                      Present
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant">10:02:11 AM</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary">pin</span>
+<span>PIN Code</span>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary">#ST-2023-0892</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold text-[10px]">DK</div>
+<span class="font-medium">Devon Kim</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                      Late (+8m)
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant">10:08:45 AM</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-tertiary">location_on</span>
+<span>Geolocation</span>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary">#ST-2024-0341</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[10px]">SH</div>
+<span class="font-medium">Sophia Hernandez</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container font-label text-[10px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                      Present
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant">10:00:52 AM</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary">qr_code_scanner</span>
+<span>QR Scan</span>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary">#ST-2024-0220</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-error-container text-error flex items-center justify-center font-bold text-[10px]">JM</div>
+<span class="font-medium">Julian Mercer</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-error font-label text-[10px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                      Absent
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant/40">—</td>
+<td class="py-3.5 px-4 text-on-surface-variant/40">—</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary">#ST-2024-0091</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[10px]">EW</div>
+<span class="font-medium">Elena Wu</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container font-label text-[10px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                      Present
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant">10:04:19 AM</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary">qr_code_scanner</span>
+<span>QR Scan</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Pagination / Summary -->
+<div class="px-4 py-3 bg-surface-container-high/40 flex items-center justify-between text-[11px] font-label text-on-surface-variant">
+<span>Showing 6 of 45 students</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded-md hover:bg-surface-container-highest transition-colors disabled:opacity-40" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<span class="px-2 py-0.5 rounded bg-surface-container text-primary font-bold">1</span>
+<button class="p-1 rounded-md hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Panel (40%): Pending Excuse Requests & Slip Drawer -->
+<div class="lg:col-span-5 flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-lg font-headline font-bold text-on-surface">Pending Excuse Requests</h2>
+<p class="text-xs text-on-surface-variant font-body">Direct validation workflow for absence appeals</p>
+</div>
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-label font-bold bg-tertiary-container text-on-tertiary-container">
+            3 Requiring Action
+          </span>
+</div>
+<!-- Excuse Requests Mini Table / List -->
+<div class="w-full rounded-2xl bg-surface-container-low/70 backdrop-blur-xl p-4 shadow-xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs" id="table_instructor_excuses">
+<thead>
+<tr class="text-on-surface-variant font-label text-[11px] uppercase tracking-wider pb-2 border-b border-surface-variant/30">
+<th class="pb-2 font-semibold">Student</th>
+<th class="pb-2 font-semibold">Date</th>
+<th class="pb-2 font-semibold">Reason</th>
+<th class="pb-2 font-semibold">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high/40 font-body">
+<!-- Selected / Active request row -->
+<tr class="bg-surface-container/70 rounded-xl cursor-pointer">
+<td class="py-3 px-2 font-medium text-on-surface">Julian Mercer</td>
+<td class="py-3 px-2 text-on-surface-variant font-mono text-[11px]">Today</td>
+<td class="py-3 px-2 text-secondary font-medium">Medical / ER</td>
+<td class="py-3 px-2">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-semibold whitespace-nowrap">
+                      Pending Review
+                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/40 rounded-xl cursor-pointer transition-colors">
+<td class="py-3 px-2 font-medium text-on-surface">Kassandra Vance</td>
+<td class="py-3 px-2 text-on-surface-variant font-mono text-[11px]">Oct 24</td>
+<td class="py-3 px-2 text-secondary font-medium">Varsity Athletics</td>
+<td class="py-3 px-2">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-semibold whitespace-nowrap">
+                      Pending Review
+                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/40 rounded-xl cursor-pointer transition-colors">
+<td class="py-3 px-2 font-medium text-on-surface">Tariq Al-Mansoor</td>
+<td class="py-3 px-2 text-on-surface-variant font-mono text-[11px]">Oct 22</td>
+<td class="py-3 px-2 text-secondary font-medium">Academic Conf.</td>
+<td class="py-3 px-2">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-semibold whitespace-nowrap">
+                      Pending Review
+                    </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Document Preview Drawer (Integrated Sub-card) -->
+<div class="mt-4 pt-4 border-t border-surface-container-high/60 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="text-xs font-label text-on-surface font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-sm">attachment</span>
+                Medical Slip Attachment Preview
+              </span>
+<span class="text-[10px] font-mono text-on-surface-variant">DOC-2024-8841.pdf</span>
+</div>
+<!-- Photorealistic Attachment Image Container -->
+<div class="relative w-full h-44 rounded-xl overflow-hidden bg-surface-container-highest group">
+<img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Close-up professional hospital clinic medical certificate and physician signature slip with official embossed stamp on textured white paper under dramatic cool hospital laboratory lighting, dark cinematic shadows, high resolution macro documentation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7cIPK-5dCyLwZk3nZuHXwTHhMHdyIav0FdX3o5Xya0WLRc5XYDjqdB3CXGR_26mHqSecC8iax6yi3hojxhleXtRcMXIb0gB2VFlnzCCAh6i3OYoZhShBCgqHT9oyZAkWaGNbv36yvtgQJIE0F7n-ctIi3F1seGy1o6wzUnWNCt_UaLOM9_mDw8iv9ugKiy2YJziMmx-g-p3HVO-z2JUnWhHfMfdfXkB5Epg__OGWSebWbdI3snA6F"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 via-surface-container-lowest/20 to-transparent flex items-end p-3">
+<div class="flex items-center justify-between w-full">
+<div class="flex flex-col">
+<span class="text-xs font-headline font-bold text-on-surface">St. Jude Medical Urgent Care</span>
+<span class="text-[10px] font-label text-on-surface-variant">Verified Physician Signature Attached</span>
+</div>
+<button class="p-1.5 rounded-lg bg-surface-container-high/80 text-primary hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-base">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Student Excuse Description Note -->
+<div class="p-3 rounded-xl bg-surface-container/60 backdrop-blur-sm text-xs font-body text-on-surface-variant leading-relaxed">
+<span class="text-on-surface font-semibold">Note from Julian Mercer:</span> "Severe acute migraine and ophthalmology examination scheduled at 09:30 AM. Prescribed bedrest through end of day."
+            </div>
+<!-- Decision Action Buttons -->
+<div class="grid grid-cols-2 gap-3 mt-1">
+<button class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-primary-container text-on-primary-container hover:brightness-110 font-headline font-semibold text-xs shadow-md transition-all active:scale-95" id="btn_approve_excuse">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                Approve Excuse
+              </button>
+<button class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-error-container text-on-error-container hover:brightness-110 font-headline font-semibold text-xs shadow-md transition-all active:scale-95" id="btn_reject_excuse">
+<span class="material-symbols-outlined text-sm">cancel</span>
+                Reject Excuse
+              </button>
+</div>
+</div>
+</div>
+<!-- Instructor Active Key Diagnostics Sparkline Card -->
+<div class="w-full rounded-2xl bg-surface-container-low/70 backdrop-blur-xl p-4 shadow-xl flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-label text-on-surface-variant uppercase tracking-wider font-semibold">Mesh Validation Latency</span>
+<span class="text-base font-headline font-bold text-on-surface">18.4 ms avg</span>
+<span class="text-[11px] text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">verified</span>
+              TLS 1.3 Hardware Authenticated
+            </span>
+</div>
+<!-- Inline Latency Sparkline Vector -->
+<div class="w-32 h-12 shrink-0">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 120 40">
+<defs>
+<lineargradient id="sparkline-grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#7dd3fc" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#7dd3fc" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<path d="M 0 32 Q 20 28, 30 18 T 60 22 T 90 8 T 120 14 L 120 40 L 0 40 Z" fill="url(#sparkline-grad)"></path>
+<path d="M 0 32 Q 20 28, 30 18 T 60 22 T 90 8 T 120 14" fill="none" stroke="#7dd3fc" stroke-linecap="round" stroke-width="2.5"></path>
+<circle class="animate-pulse" cx="120" cy="14" fill="#7dd3fc" r="3.5"></circle>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Countdown Timer Micro-interaction Simulation
+  (function initSessionTimer() {
+    let totalSeconds = 14 * 60 + 59;
+    const timerDisplay = document.getElementById('lbl_timer');
+    const pinCycleDisplay = document.getElementById('pin-cycle');
+    let pinSeconds = 24;
+
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        if (timerDisplay) {
+          timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+      }
+
+      if (pinSeconds > 1) {
+        pinSeconds--;
+      } else {
+        pinSeconds = 30;
+        // Optionally rotate mock PIN
+        const pinEl = document.getElementById('lbl_dynamic_qr');
+        if (pinEl) {
+          const randA = Math.floor(100 + Math.random() * 900);
+          const randB = Math.floor(100 + Math.random() * 900);
+          pinEl.textContent = `${randA}-${randB}`;
+        }
+      }
+      if (pinCycleDisplay) {
+        pinCycleDisplay.textContent = `${pinSeconds}s`;
+      }
+    }, 1000);
+
+    // Interactive Tab Filtering
+    const tabs = document.querySelectorAll('.filter-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('bg-primary-container', 'text-on-primary-container', 'font-medium', 'shadow-sm');
+          t.classList.add('text-on-surface-variant');
+        });
+        tab.classList.add('bg-primary-container', 'text-on-primary-container', 'font-medium', 'shadow-sm');
+        tab.classList.remove('text-on-surface-variant');
+      });
+    });
+
+    // Excuse approval / reject simulated toasts
+    const btnApprove = document.getElementById('btn_approve_excuse');
+    const btnReject = document.getElementById('btn_reject_excuse');
+    if (btnApprove) {
+      btnApprove.addEventListener('click', () => {
+        btnApprove.innerHTML = `<span class="material-symbols-outlined text-sm">done_all</span> Approved`;
+        setTimeout(() => {
+          btnApprove.innerHTML = `<span class="material-symbols-outlined text-sm">check_circle</span> Approve Excuse`;
+        }, 2000);
+      });
+    }
+    if (btnReject) {
+      btnReject.addEventListener('click', () => {
+        btnReject.innerHTML = `<span class="material-symbols-outlined text-sm">close</span> Rejected`;
+        setTimeout(() => {
+          btnReject.innerHTML = `<span class="material-symbols-outlined text-sm">cancel</span> Reject Excuse`;
+        }, 2000);
+      });
+    }
+  })();
+</script></main></div></body></html>
