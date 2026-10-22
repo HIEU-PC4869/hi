@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>850</height>
+    <width>1360</width>
+    <height>920</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>SAS Enterprise - Student Attendance &amp; Intelligence System</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="mainVerticalLayout">
+   <layout class="QVBoxLayout" name="rootLayout">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -30,480 +30,352 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
+    
+    <!-- TOP HEADER BAR -->
     <item>
-     <widget class="QStackedWidget" name="stackedWidget">
-      <property name="currentIndex">
+     <widget class="QFrame" name="frame_top_header">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>72</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="headerLayout">
+       <property name="leftMargin">
+        <number>24</number>
+       </property>
+       <property name="rightMargin">
+        <number>24</number>
+       </property>
+       <!-- Brand -->
+       <item>
+        <widget class="QLabel" name="lbl_header_brand">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span style=&quot;font-size:15px; font-weight:bold; color:#7dd3fc;&quot;&gt;🛡 SAS Enterprise&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot;font-size:10px; color:#a0b4c4;&quot;&gt;Student Attendance &amp;amp; Intelligence&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="headerSpacerLeft">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
+       <!-- Role Navigation Tabs -->
+       <item>
+        <widget class="QFrame" name="frame_nav_tabs">
+         <layout class="QHBoxLayout" name="tabsLayout">
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="btn_nav_login">
+            <property name="text">
+             <string>0: Login</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_nav_student">
+            <property name="text">
+             <string>1: Student</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_nav_instructor">
+            <property name="text">
+             <string>2: Instructor</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_nav_advisor">
+            <property name="text">
+             <string>3: Advisor</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_nav_admin">
+            <property name="text">
+             <string>4: Admin</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="headerSpacerRight">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
+       <!-- Profile Info -->
+       <item>
+        <widget class="QLabel" name="lbl_header_user">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;b style=&quot;color:#e0e8f0;&quot;&gt;Dr. Evelyn Vance&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size:10px; color:#88b4cc;&quot;&gt;Metropolitan University&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+    <!-- MAIN BODY AREA (SIDEBAR + STACKED WIDGET) -->
+    <item>
+     <layout class="QHBoxLayout" name="bodyHorizontalLayout">
+      <property name="spacing">
        <number>0</number>
       </property>
-
-      <!-- SCREEN 0: LOGIN -->
-      <widget class="QWidget" name="page_login">
-       <layout class="QVBoxLayout" name="loginLayout">
-        <item>
-         <spacer name="loginSpacerTop">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </spacer>
-        </item>
-        <item alignment="Qt::AlignCenter">
-         <widget class="QFrame" name="frame_login_card">
-          <property name="minimumSize">
-           <size>
-            <width>420</width>
-            <height>460</height>
-           </size>
-          </property>
-          <layout class="QVBoxLayout" name="cardLayout">
-           <property name="spacing">
-            <number>12</number>
-           </property>
-           <property name="margin">
-            <number>24</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="lbl_title">
-             <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot;margin:0;&quot;&gt;Sign in to your Portal&lt;/h2&gt;&lt;p style=&quot;color:#88a0b0; font-size:11px;&quot;&gt;Select role or provide institutional credentials&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lbl_login_error">
-             <property name="text">
-              <string>Authentication failed. Please verify credentials.</string>
-             </property>
-             <property name="visible">
-              <bool>false</bool>
-             </property>
-             <property name="styleSheet">
-              <string>color: #ff6b6b; background: rgba(61, 20, 20, 0.6); padding: 6px; border-radius: 6px;</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lbl_email_caption">
-             <property name="text">
-              <string>Institutional Email</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="txt_email">
-             <property name="placeholderText">
-              <string>user@university.edu</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lbl_password_caption">
-             <property name="text">
-              <string>Password</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="txt_password">
-             <property name="echoMode">
-              <enum>QLineEdit::Password</enum>
-             </property>
-             <property name="placeholderText">
-              <string>••••••••••••</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_login">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Sign In</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <spacer name="loginSpacerBottom">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
-
-      <!-- SCREEN 1: STUDENT MODULE -->
-      <widget class="QWidget" name="page_student">
-       <layout class="QVBoxLayout" name="studentLayout">
-        <property name="margin">
-         <number>20</number>
+      
+      <!-- LEFT SIDEBAR -->
+      <item>
+       <widget class="QFrame" name="frame_sidebar">
+        <property name="minimumSize">
+         <size>
+          <width>230</width>
+          <height>0</height>
+         </size>
         </property>
-        <property name="spacing">
-         <number>16</number>
+        <property name="maximumSize">
+         <size>
+          <width>230</width>
+          <height>16777215</height>
+         </size>
         </property>
-        <item>
-         <widget class="QLabel" name="lbl_student_header">
-          <property name="text">
-           <string>&lt;h2&gt;Student Attendance &amp; Compliance Dashboard&lt;/h2&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="studentTopRow">
-          <!-- Direct Check-in Box -->
-          <item>
-           <widget class="QGroupBox" name="grp_checkin">
-            <property name="title">
-             <string>Fast Check-In (QR / Session PIN)</string>
+        <layout class="QVBoxLayout" name="sidebarLayout">
+         <property name="leftMargin">
+          <number>16</number>
+         </property>
+         <property name="rightMargin">
+          <number>16</number>
+         </property>
+         <property name="topMargin">
+          <number>20</number>
+         </property>
+         <property name="bottomMargin">
+          <number>20</number>
+         </property>
+         <property name="spacing">
+          <number>8</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lbl_side_heading">
+           <property name="text">
+            <string>&lt;span style=&quot;font-size:10px; font-weight:bold; color:#a0b4c4; letter-spacing:1px;&quot;&gt;NAVIGATION CORE&lt;/span&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_side_instructor">
+           <property name="text">
+            <string>👨‍🏫 Instructor Workspace</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_side_student">
+           <property name="text">
+            <string>🎓 Student Portal</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_side_advisor">
+           <property name="text">
+            <string>📋 Advisor Hub</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_side_admin">
+           <property name="text">
+            <string>⚙️ Admin Console</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="sideSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </spacer>
+         </item>
+         <!-- Secured Token Badge -->
+         <item>
+          <widget class="QFrame" name="frame_session_secured">
+           <property name="styleSheet">
+            <string>background-color: rgba(20, 28, 46, 0.6); border: 1px solid rgba(125, 211, 252, 0.15); border-radius: 10px; padding: 10px;</string>
+           </property>
+           <layout class="QVBoxLayout" name="secLayout">
+            <property name="margin">
+             <number>6</number>
             </property>
-            <layout class="QVBoxLayout" name="checkinSubLayout">
-             <item>
-              <widget class="QLabel" name="lbl_select_course">
+            <item>
+             <widget class="QLabel" name="lbl_sec_status">
+              <property name="text">
+               <string>&lt;b style=&quot;color:#7dd3fc;&quot;&gt;🔒 Session Secured&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size:10px; color:#a0b4c4;&quot;&gt;Hardware Token Valid&lt;/span&gt;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+
+      <!-- CONTENT STACKED WIDGET -->
+      <item>
+       <widget class="QStackedWidget" name="stackedWidget">
+        <property name="currentIndex">
+         <number>1</number>
+        </property>
+
+        <!-- ==================== SCREEN 0: LOGIN ==================== -->
+        <widget class="QWidget" name="page_login">
+         <layout class="QVBoxLayout" name="loginVLayout">
+          <item>
+           <spacer name="loginTopSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+           </spacer>
+          </item>
+          <item alignment="Qt::AlignCenter">
+           <widget class="QFrame" name="frame_login_card">
+            <property name="minimumSize">
+             <size>
+              <width>440</width>
+              <height>520</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>440</width>
+              <height>560</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="loginCardLayout">
+             <property name="spacing">
+              <number>12</number>
+             </property>
+             <property name="margin">
+              <number>28</number>
+             </property>
+             <item alignment="Qt::AlignCenter">
+              <widget class="QLabel" name="lbl_login_logo">
                <property name="text">
-                <string>Enrolled Session:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="combo_student_courses"/>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_token_prompt">
-               <property name="text">
-                <string>Session Token / 6-Digit PIN:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="txt_qr_code">
-               <property name="placeholderText">
-                <string>Enter 6-digit PIN or paste QR token</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btn_submit_attendance">
-               <property name="text">
-                <string>Check In</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_checkin_status">
-               <property name="text">
-                <string>Ready for check-in</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body align=&quot;center&quot;&gt;&lt;div style=&quot;font-size:28px;&quot;&gt;🔷&lt;/div&gt;&lt;span style=&quot;background:rgba(14,77,110,0.5); color:#7dd3fc; padding:3px 10px; border-radius:10px; font-size:10px; font-weight:bold;&quot;&gt;STUDENT ATTENDANCE SYSTEM&lt;/span&gt;&lt;h2 style=&quot;margin:8px 0 2px 0; color:#e0e8f0;&quot;&gt;Sign in to your Portal&lt;/h2&gt;&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;Select role or provide institutional credentials&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
-            </layout>
-           </widget>
-          </item>
-          <!-- Excuse Request Box -->
-          <item>
-           <widget class="QGroupBox" name="grp_excuse">
-            <property name="title">
-             <string>Absence Excuse Submission</string>
-            </property>
-            <layout class="QVBoxLayout" name="excuseSubLayout">
              <item>
-              <widget class="QLabel" name="lbl_excuse_course">
+              <widget class="QLabel" name="lbl_login_error">
                <property name="text">
-                <string>Impacted Course:</string>
+                <string>Authentication failed. Please verify institutional credentials.</string>
+               </property>
+               <property name="visible">
+                <bool>false</bool>
+               </property>
+               <property name="styleSheet">
+                <string>background-color: rgba(61, 20, 20, 0.8); color: #ff6b6b; border: 1px solid rgba(255, 107, 107, 0.4); border-radius: 8px; padding: 8px;</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="combo_excuse_course"/>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_date_prompt">
+              <widget class="QLabel" name="lbl_caption_email">
                <property name="text">
-                <string>Absence Date:</string>
+                <string>Institutional Email</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QDateEdit" name="date_excuse">
-               <property name="calendarPopup">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_reason_prompt">
+              <widget class="QLineEdit" name="txt_email">
                <property name="text">
-                <string>Reason / Classification:</string>
+                <string>a.rivera@university.edu</string>
                </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTextEdit" name="txt_excuse_reason">
                <property name="placeholderText">
-                <string>Enter medical, athletic, or personal explanation...</string>
+                <string>user@university.edu</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="btn_submit_excuse">
+              <widget class="QLabel" name="lbl_caption_password">
                <property name="text">
-                <string>Submit Formal Excuse Slip</string>
+                <string>Password</string>
                </property>
               </widget>
              </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <!-- Statistics Table -->
-        <item>
-         <widget class="QLabel" name="lbl_stats_heading">
-          <property name="text">
-           <string>&lt;b&gt;Academic Course Attendance Summary&lt;/b&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTableWidget" name="table_student_stats">
-          <column>
-           <property name="text">
-            <string>Course</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Total Sessions</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Present</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Late</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Absent</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Excused</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Attendance (%)</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Compliance Status</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-
-      <!-- SCREEN 2: INSTRUCTOR MODULE -->
-      <widget class="QWidget" name="page_instructor">
-       <layout class="QVBoxLayout" name="instructorLayout">
-        <property name="margin">
-         <number>20</number>
-        </property>
-        <property name="spacing">
-         <number>14</number>
-        </property>
-        <item>
-         <layout class="QHBoxLayout" name="instructorTopRow">
-          <item>
-           <widget class="QLabel" name="lbl_inst_title">
-            <property name="text">
-             <string>&lt;h2&gt;Instructor Command Center&lt;/h2&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="instSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QComboBox" name="combo_instructor_courses"/>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btn_export_course_report">
-            <property name="text">
-             <string>Export Course Report</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <!-- Session Controls Box -->
-        <item>
-         <widget class="QGroupBox" name="grp_session_ctrl">
-          <property name="title">
-           <string>Live Session Orchestration</string>
-          </property>
-          <layout class="QHBoxLayout" name="sessionBarLayout">
-           <item>
-            <widget class="QPushButton" name="btn_start_session">
-             <property name="text">
-              <string>Start Live Session</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_end_session">
-             <property name="text">
-              <string>End Session</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lbl_pin_title">
-             <property name="text">
-              <string>Dynamic PIN:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lbl_dynamic_qr">
-             <property name="text">
-              <string>849-210</string>
-             </property>
-             <property name="styleSheet">
-              <string>font-size: 18px; font-weight: bold; color: #7dd3fc;</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lbl_timer_title">
-             <property name="text">
-              <string>Remaining:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lbl_timer">
-             <property name="text">
-              <string>14:59</string>
-             </property>
-             <property name="styleSheet">
-              <string>font-size: 16px; font-weight: bold; color: #c8a0f0;</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <!-- Split Tables: Roster with ComboBox & Excuses -->
-        <item>
-         <layout class="QHBoxLayout" name="instructorSplitLayout">
-          <item>
-           <widget class="QGroupBox" name="grp_roster">
-            <property name="title">
-             <string>Class Attendance Monitoring &amp; Manual Override</string>
-            </property>
-            <layout class="QVBoxLayout" name="rosterSubLayout">
              <item>
-              <widget class="QTableWidget" name="table_instructor_attendance">
-               <column>
-                <property name="text">
-                 <string>Student ID</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Full Name</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Check-In Time</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Status (Override)</string>
-                </property>
-               </column>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="grp_instructor_excuses">
-            <property name="title">
-             <string>Student Absence Excuses</string>
-            </property>
-            <layout class="QVBoxLayout" name="excuseDecisionLayout">
-             <item>
-              <widget class="QTableWidget" name="table_instructor_excuses">
-               <column>
-                <property name="text">
-                 <string>ID</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Student</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Date</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Reason</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Status</string>
-                </property>
-               </column>
+              <widget class="QLineEdit" name="txt_password">
+               <property name="text">
+                <string>password123</string>
+               </property>
+               <property name="echoMode">
+                <enum>QLineEdit::Password</enum>
+               </property>
+               <property name="placeholderText">
+                <string>••••••••••••</string>
+               </property>
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="excuseBtnsLayout">
-               <item>
-                <widget class="QPushButton" name="btn_approve_excuse">
+              <widget class="QPushButton" name="btn_login">
+               <property name="text">
+                <string>Sign In ➔</string>
+               </property>
+              </widget>
+             </item>
+             <!-- Quick demo role switchers in login card -->
+             <item>
+              <widget class="QLabel" name="lbl_demo_caption">
+               <property name="text">
+                <string>&lt;span style=&quot;font-size:10px; font-weight:bold; color:#a0b4c4; text-transform:uppercase;&quot;&gt;Demo Quick Roles (Click to fill):&lt;/span&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="demoRolesGrid">
+               <item row="0" column="0">
+                <widget class="QPushButton" name="btn_quick_student">
                  <property name="text">
-                  <string>Approve Excuse</string>
+                  <string>Alex Rivera (Student)</string>
                  </property>
                 </widget>
                </item>
-               <item>
-                <widget class="QPushButton" name="btn_reject_excuse">
+               <item row="0" column="1">
+                <widget class="QPushButton" name="btn_quick_instructor">
                  <property name="text">
-                  <string>Reject Excuse</string>
+                  <string>Dr. Vance (Instructor)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="btn_quick_advisor">
+                 <property name="text">
+                  <string>M. Brody (Advisor)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="btn_quick_admin">
+                 <property name="text">
+                  <string>Sysadmin (Admin)</string>
                  </property>
                 </widget>
                </item>
@@ -512,223 +384,907 @@
             </layout>
            </widget>
           </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-
-      <!-- SCREEN 3: ADVISOR MODULE -->
-      <widget class="QWidget" name="page_advisor">
-       <layout class="QVBoxLayout" name="advisorLayout">
-        <property name="margin">
-         <number>20</number>
-        </property>
-        <property name="spacing">
-         <number>14</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="lbl_advisor_header">
-          <property name="text">
-           <string>&lt;h2&gt;Academic Advisor Early Warning System (EWS)&lt;/h2&gt;&lt;p style=&quot;color:#88a0b0; font-size:11px;&quot;&gt;Automatic detection of students with &amp;lt; 80% attendance or &amp;ge; 3 consecutive unexcused absences.&lt;/p&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="advisorSplitLayout">
           <item>
-           <widget class="QGroupBox" name="grp_warnings">
-            <property name="title">
-             <string>Early Warning Flagged Students</string>
-            </property>
-            <layout class="QVBoxLayout" name="warningTableLayout">
-             <item>
-              <widget class="QTableWidget" name="table_advisor_warnings">
-               <column>
-                <property name="text">
-                 <string>ID</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Student Name</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Impacted Course</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Attendance</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Absences</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Risk Level</string>
-                </property>
-               </column>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="grp_counseling">
-            <property name="title">
-             <string>Intervention Notes &amp; History</string>
-            </property>
-            <layout class="QVBoxLayout" name="counselingSubLayout">
-             <item>
-              <widget class="QLabel" name="lbl_notes_prompt">
-               <property name="text">
-                <string>Counseling History &amp; Intervention Plan:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTextEdit" name="txt_counseling_notes">
-               <property name="placeholderText">
-                <string>Select a student from the table and record counseling details...</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btn_save_notes">
-               <property name="text">
-                <string>Save Intervention Notes</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-
-      <!-- SCREEN 4: ADMIN MODULE -->
-      <widget class="QWidget" name="page_admin">
-       <layout class="QVBoxLayout" name="adminLayout">
-        <property name="margin">
-         <number>20</number>
-        </property>
-        <property name="spacing">
-         <number>14</number>
-        </property>
-        <item>
-         <layout class="QHBoxLayout" name="adminHeaderRow">
-          <item>
-           <widget class="QLabel" name="lbl_admin_title">
-            <property name="text">
-             <string>&lt;h2&gt;System Administration &amp; Governance&lt;/h2&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="adminSpacer">
+           <spacer name="loginBottomSpacer">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Vertical</enum>
             </property>
            </spacer>
           </item>
+         </layout>
+        </widget>
+
+        <!-- ==================== SCREEN 1: STUDENT MODULE ==================== -->
+        <widget class="QWidget" name="page_student">
+         <layout class="QVBoxLayout" name="studentVLayout">
+          <property name="leftMargin">
+           <number>24</number>
+          </property>
+          <property name="rightMargin">
+           <number>24</number>
+          </property>
+          <property name="topMargin">
+           <number>20</number>
+          </number>
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          <property name="spacing">
+           <number>16</number>
+          </property>
+
+          <!-- Top Banner Card -->
           <item>
-           <widget class="QPushButton" name="btn_export_system_report">
+           <widget class="QFrame" name="frame_student_banner">
+            <layout class="QHBoxLayout" name="studentBannerLayout">
+             <item>
+              <layout class="QVBoxLayout" name="stuTitleLayout">
+               <item>
+                <widget class="QLabel" name="lbl_stu_meta">
+                 <property name="text">
+                  <string>&lt;span style=&quot;background:rgba(14,77,110,0.6); color:#7dd3fc; padding:2px 8px; border-radius:10px; font-size:11px;&quot;&gt;● Spring Term 2025&lt;/span&gt;&amp;nbsp;&amp;nbsp;&lt;span style=&quot;font-size:11px; color:#a0b4c4; font-family:monospace;&quot;&gt;SAS-STU-SYS // LIVE&lt;/span&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_stu_title">
+                 <property name="text">
+                  <string>&lt;h2 style=&quot;margin:4px 0; color:#e0e8f0;&quot;&gt;Student Attendance &amp;amp; Compliance Dashboard&lt;/h2&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_stu_desc">
+                 <property name="text">
+                  <string>&lt;span style=&quot;color:#a0b4c4; font-size:12px;&quot;&gt;Record live session presence, audit personal course retention metrics, and submit verified academic excuse documentation.&lt;/span&gt;</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer name="stuBannerSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QFrame" name="frame_student_profile">
+               <property name="styleSheet">
+                <string>background-color: rgba(10, 14, 26, 0.85); border: 1px solid rgba(125, 211, 252, 0.2); border-radius: 12px; padding: 10px;</string>
+               </property>
+               <layout class="QVBoxLayout" name="stuProfLayout">
+                <item>
+                 <widget class="QLabel" name="lbl_stu_profile">
+                  <property name="text">
+                   <string>&lt;b style=&quot;font-size:13px; color:#e0e8f0;&quot;&gt;Alex Rivera&lt;/b&gt;&amp;nbsp;&lt;span style=&quot;background:rgba(125,211,252,0.15); color:#7dd3fc; padding:1px 6px; border-radius:8px; font-size:10px;&quot;&gt;ID: 24091&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;B.S. Software Engineering • Year 3&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot;font-size:11px; color:#88b4cc;&quot;&gt;Compliance Index: &lt;b style=&quot;color:#e0e8f0;&quot;&gt;86.6% (Good)&lt;/b&gt;&lt;/span&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Fast Check-in & Excuse Submission Split -->
+          <item>
+           <layout class="QHBoxLayout" name="studentPanelsRow">
+            <property name="spacing">
+             <number>16</number>
+            </property>
+
+            <!-- Check-in Box -->
+            <item>
+             <widget class="QGroupBox" name="grp_checkin">
+              <property name="title">
+               <string>Fast Check-In (QR / Session PIN)</string>
+              </property>
+              <layout class="QVBoxLayout" name="checkinLayout">
+               <property name="spacing">
+                <number>10</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="lbl_chk_status_bar">
+                 <layout class="QHBoxLayout" name="statusWrap">
+                  <item>
+                   <widget class="QLabel" name="lbl_chk_header">
+                    <property name="text">
+                     <string>&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;Synchronized geofence attendance verification&lt;/span&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="lbl_checkin_status">
+                    <property name="text">
+                     <string>● Ready for check-in</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_stu_course">
+                 <property name="text">
+                  <string>ENROLLED SESSION</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="combo_student_courses"/>
+               </item>
+
+               <!-- Optical Viewfinder Box -->
+               <item>
+                <widget class="QFrame" name="frame_viewfinder">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>120</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string>background-color: rgba(10, 14, 26, 0.9); border: 1px dashed rgba(125, 211, 252, 0.35); border-radius: 12px;</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="vfLayout">
+                  <item alignment="Qt::AlignCenter">
+                   <widget class="QLabel" name="lbl_vf_text">
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body align=&quot;center&quot;&gt;&lt;span style=&quot;font-size:20px; color:#7dd3fc;&quot;&gt;🔍&lt;/span&gt;&lt;br/&gt;&lt;b style=&quot;color:#e0e8f0; font-size:11px;&quot;&gt;Optical Scan Active&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size:10px; color:#88b4cc;&quot;&gt;Active Session PIN: 849-210&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+
+               <item>
+                <widget class="QLabel" name="lbl_stu_token">
+                 <property name="text">
+                  <string>SESSION TOKEN / 6-DIGIT PIN</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="txt_qr_code">
+                 <property name="placeholderText">
+                  <string>Enter 6-digit PIN or paste QR token</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_submit_attendance">
+                 <property name="text">
+                  <string>Check In</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Excuse Box -->
+            <item>
+             <widget class="QGroupBox" name="grp_excuse">
+              <property name="title">
+               <string>Absence Excuse Submission</string>
+              </property>
+              <layout class="QVBoxLayout" name="excuseLayout">
+               <property name="spacing">
+                <number>10</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="lbl_exc_sla">
+                 <property name="text">
+                  <string>&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;Official justification • Dean of Students SLA: 48h&lt;/span&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="excCourseDateRow">
+                 <item>
+                  <layout class="QVBoxLayout" name="cWrap">
+                   <item>
+                    <widget class="QLabel" name="lbl_exc_c">
+                     <property name="text">
+                      <string>IMPACTED COURSE</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="combo_excuse_course"/>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="dWrap">
+                   <item>
+                    <widget class="QLabel" name="lbl_exc_d">
+                     <property name="text">
+                      <string>ABSENCE DATE</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDateEdit" name="date_excuse">
+                     <property name="calendarPopup">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_exc_r">
+                 <property name="text">
+                  <string>ABSENCE CLASSIFICATION &amp; CONTEXT</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="txt_excuse_reason">
+                 <property name="placeholderText">
+                  <string>Medical clinic visit, institutional athletics, bereavement, or religious observance details...</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_submit_excuse">
+                 <property name="text">
+                  <string>Submit Formal Excuse Slip</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+           </layout>
+          </item>
+
+          <!-- Statistics Table -->
+          <item>
+           <widget class="QLabel" name="lbl_stats_title">
             <property name="text">
-             <string>Export System Report</string>
+             <string>&lt;h3 style=&quot;margin:0; color:#e0e8f0;&quot;&gt;Academic Course Attendance Summary&lt;/h3&gt;&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;Minimum institutional requirement: &lt;b style=&quot;color:#7dd3fc;&quot;&gt;80.0%&lt;/b&gt; attendance rate to qualify for regular course credit.&lt;/span&gt;</string>
             </property>
            </widget>
           </item>
-         </layout>
-        </item>
-        <!-- Provision / CRUD Form -->
-        <item>
-         <widget class="QGroupBox" name="grp_admin_crud">
-          <property name="title">
-           <string>Provision New Identity / User Enrollment</string>
-          </property>
-          <layout class="QHBoxLayout" name="crudFormLayout">
-           <item>
-            <widget class="QLineEdit" name="txt_add_email">
-             <property name="placeholderText">
-              <string>first.last@university.edu</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="combo_add_role">
-             <item>
-              <property name="text">
-               <string>Student</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Instructor</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Advisor</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Administrator</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_add_user">
+          <item>
+           <widget class="QTableWidget" name="table_student_stats">
+            <column>
              <property name="text">
-              <string>Add User</string>
+              <string>Course</string>
              </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <!-- Master User & Course Table -->
-        <item>
-         <widget class="QTableWidget" name="table_admin_users">
-          <column>
-           <property name="text">
-            <string>User ID</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Full Name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Email</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Assigned Role</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Allocations</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+            </column>
+            <column>
+             <property name="text">
+              <string>Total Sessions</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Present</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Late</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Absent</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Excused</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Attendance (%)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Compliance Status</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
 
-     </widget>
+        <!-- ==================== SCREEN 2: INSTRUCTOR MODULE ==================== -->
+        <widget class="QWidget" name="page_instructor">
+         <layout class="QVBoxLayout" name="instVLayout">
+          <property name="leftMargin">
+           <number>24</number>
+          </property>
+          <property name="rightMargin">
+           <number>24</number>
+          </property>
+          <property name="topMargin">
+           <number>20</number>
+          </property>
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          <property name="spacing">
+           <number>16</number>
+          </property>
+
+          <!-- Top Action Row -->
+          <item>
+           <layout class="QHBoxLayout" name="instTopBar">
+            <item>
+             <widget class="QLabel" name="lbl_inst_header">
+              <property name="text">
+               <string>&lt;span style=&quot;font-size:10px; color:#7dd3fc; font-weight:bold; letter-spacing:1px;&quot;&gt;● LIVE STREAM SESSION ORCHESTRATION&lt;/span&gt;&lt;br/&gt;&lt;h2 style=&quot;margin:2px 0; color:#e0e8f0;&quot;&gt;Instructor Command Center&lt;/h2&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="instHeaderSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QComboBox" name="combo_instructor_courses"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_export_course_report">
+              <property name="text">
+               <string>📥 Export Course Report</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+
+          <!-- Session Orchestration Bento Panel -->
+          <item>
+           <widget class="QFrame" name="frame_session_bento">
+            <property name="styleSheet">
+             <string>background-color: rgba(17, 24, 40, 0.8); border: 1px solid rgba(125, 211, 252, 0.15); border-radius: 14px; padding: 14px;</string>
+            </property>
+            <layout class="QHBoxLayout" name="bentoLayout">
+             <!-- Live Session Controls -->
+             <item>
+              <layout class="QVBoxLayout" name="liveCtrlCol">
+               <item>
+                <widget class="QLabel" name="lbl_ses_st">
+                 <property name="text">
+                  <string>&lt;b style=&quot;color:#a0b4c4; font-size:10px;&quot;&gt;SESSION STATUS:&lt;/b&gt; &lt;span style=&quot;color:#7dd3fc;&quot;&gt;● Broadcasting&lt;/span&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_start_session">
+                 <property name="text">
+                  <string>Start Live Session</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_end_session">
+                 <property name="text">
+                  <string>End Session</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+
+             <!-- Dynamic PIN & QR Code Display -->
+             <item>
+              <widget class="QFrame" name="frame_pin_box">
+               <property name="styleSheet">
+                <string>background-color: rgba(20, 28, 46, 0.7); border: 1px solid rgba(125, 211, 252, 0.15); border-radius: 12px; padding: 10px;</string>
+               </property>
+               <layout class="QVBoxLayout" name="pinLayout">
+                <item>
+                 <widget class="QLabel" name="lbl_pin_title">
+                  <property name="text">
+                   <string>&lt;span style=&quot;font-size:10px; color:#a0b4c4; font-weight:bold;&quot;&gt;DYNAMIC CHECK-IN PIN&lt;/span&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lbl_dynamic_qr">
+                  <property name="text">
+                   <string>849-210</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lbl_qr_refresh_note">
+                  <property name="text">
+                   <string>&lt;span style=&quot;font-size:10px; color:#88b4cc;&quot;&gt;🔄 Next cycle in 24s&lt;/span&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+
+             <!-- Session Timer -->
+             <item>
+              <widget class="QFrame" name="frame_timer_box">
+               <property name="styleSheet">
+                <string>background-color: rgba(20, 28, 46, 0.7); border: 1px solid rgba(125, 211, 252, 0.15); border-radius: 12px; padding: 10px;</string>
+               </property>
+               <layout class="QVBoxLayout" name="timerLayout">
+                <item alignment="Qt::AlignCenter">
+                 <widget class="QLabel" name="lbl_timer_caption">
+                  <property name="text">
+                   <string>&lt;span style=&quot;font-size:10px; color:#a0b4c4; font-weight:bold;&quot;&gt;TIME REMAINING&lt;/span&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item alignment="Qt::AlignCenter">
+                 <widget class="QLabel" name="lbl_timer">
+                  <property name="text">
+                   <string>14:59</string>
+                  </property>
+                 </widget>
+                </item>
+                <item alignment="Qt::AlignCenter">
+                 <widget class="QLabel" name="lbl_timer_desc">
+                  <property name="text">
+                   <string>&lt;span style=&quot;font-size:10px; color:#c8a0f0;&quot;&gt;15m Window Active&lt;/span&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+
+             <!-- Stats Bento Counters -->
+             <item>
+              <widget class="QLabel" name="lbl_inst_kpi">
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;table cellpadding=&quot;4&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;b style=&quot;font-size:15px; color:#e0e8f0;&quot;&gt;45&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size:10px; color:#a0b4c4;&quot;&gt;Enrolled&lt;/span&gt;&lt;/td&gt;&lt;td&gt;&lt;b style=&quot;font-size:15px; color:#7dd3fc;&quot;&gt;38&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size:10px; color:#7dd3fc;&quot;&gt;Present (84%)&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b style=&quot;font-size:15px; color:#c8a0f0;&quot;&gt;3&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size:10px; color:#c8a0f0;&quot;&gt;Late (6.6%)&lt;/span&gt;&lt;/td&gt;&lt;td&gt;&lt;b style=&quot;font-size:15px; color:#ff6b6b;&quot;&gt;4&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size:10px; color:#ff6b6b;&quot;&gt;Absent (8.8%)&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Split Tables: Roster with ComboBox & Excuses Table -->
+          <item>
+           <layout class="QHBoxLayout" name="instSplitRow">
+            <property name="spacing">
+             <number>16</number>
+            </property>
+
+            <!-- Real-time Class Roster -->
+            <item>
+             <widget class="QGroupBox" name="grp_roster">
+              <property name="title">
+               <string>Real-time Class Attendance Monitoring (Status ComboBox Override)</string>
+              </property>
+              <layout class="QVBoxLayout" name="rosterLayout">
+               <item>
+                <widget class="QTableWidget" name="table_instructor_attendance">
+                 <column>
+                  <property name="text">
+                   <string>Student ID</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Full Name</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Check-In Time</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Status (Override ComboBox)</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Excuse Requests Review -->
+            <item>
+             <widget class="QGroupBox" name="grp_excuses">
+              <property name="title">
+               <string>Pending Absence Excuse Requests</string>
+              </property>
+              <layout class="QVBoxLayout" name="excuseReviewLayout">
+               <item>
+                <widget class="QTableWidget" name="table_instructor_excuses">
+                 <column>
+                  <property name="text">
+                   <string>ID</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Student</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Date</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Reason</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Status</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="excBtnRow">
+                 <item>
+                  <widget class="QPushButton" name="btn_approve_excuse">
+                   <property name="text">
+                    <string>✓ Approve Excuse</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_reject_excuse">
+                   <property name="text">
+                    <string>✕ Reject Excuse</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+           </layout>
+          </item>
+         </layout>
+        </widget>
+
+        <!-- ==================== SCREEN 3: ADVISOR MODULE ==================== -->
+        <widget class="QWidget" name="page_advisor">
+         <layout class="QVBoxLayout" name="advisorVLayout">
+          <property name="leftMargin">
+           <number>24</number>
+          </property>
+          <property name="rightMargin">
+           <number>24</number>
+          </property>
+          <property name="topMargin">
+           <number>20</number>
+          </property>
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          <property name="spacing">
+           <number>16</number>
+          </property>
+
+          <item>
+           <widget class="QLabel" name="lbl_advisor_title">
+            <property name="text">
+             <string>&lt;span style=&quot;font-size:10px; color:#7dd3fc; font-weight:bold;&quot;&gt;● REAL-TIME TELEMETRY // EWS ENGINE V4.2&lt;/span&gt;&lt;br/&gt;&lt;h2 style=&quot;margin:2px 0; color:#e0e8f0;&quot;&gt;Academic Advisor Early Warning System (EWS)&lt;/h2&gt;&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;Automated detection of students with &amp;lt; 80% attendance or &amp;ge; 3 consecutive unexcused absences.&lt;/span&gt;</string>
+            </property>
+           </widget>
+          </item>
+
+          <!-- 4 Bento KPI Metric Cards -->
+          <item>
+           <widget class="QFrame" name="frame_advisor_kpis">
+            <property name="styleSheet">
+             <string>background-color: rgba(17, 24, 40, 0.7); border: 1px solid rgba(125, 211, 252, 0.15); border-radius: 12px; padding: 12px;</string>
+            </property>
+            <layout class="QHBoxLayout" name="advKpiLayout">
+             <item>
+              <widget class="QLabel" name="lbl_kpi_1">
+               <property name="text">
+                <string>&lt;span style=&quot;font-size:10px; color:#a0b4c4; font-weight:bold;&quot;&gt;TOTAL FLAGGED&lt;/span&gt;&lt;br/&gt;&lt;b style=&quot;font-size:24px; color:#e0e8f0;&quot;&gt;14&lt;/b&gt;&amp;nbsp;&lt;span style=&quot;color:#ff6b6b; font-size:11px;&quot;&gt;▲ +2 this wk&lt;/span&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lbl_kpi_2">
+               <property name="text">
+                <string>&lt;span style=&quot;font-size:10px; color:#ff6b6b; font-weight:bold;&quot;&gt;CRITICAL INTERVENTIONS&lt;/span&gt;&lt;br/&gt;&lt;b style=&quot;font-size:24px; color:#ff6b6b;&quot;&gt;4&lt;/b&gt;&amp;nbsp;&lt;span style=&quot;color:#ff6b6b; font-size:11px;&quot;&gt;Immediate Action&lt;/span&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lbl_kpi_3">
+               <property name="text">
+                <string>&lt;span style=&quot;font-size:10px; color:#88b4cc; font-weight:bold;&quot;&gt;RESOLVED THIS WEEK&lt;/span&gt;&lt;br/&gt;&lt;b style=&quot;font-size:24px; color:#e0e8f0;&quot;&gt;9&lt;/b&gt;&amp;nbsp;&lt;span style=&quot;color:#7dd3fc; font-size:11px;&quot;&gt;✓ 64% rate&lt;/span&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lbl_kpi_4">
+               <property name="text">
+                <string>&lt;span style=&quot;font-size:10px; color:#c8a0f0; font-weight:bold;&quot;&gt;DEPARTMENT AVG&lt;/span&gt;&lt;br/&gt;&lt;b style=&quot;font-size:24px; color:#e0e8f0;&quot;&gt;88.4%&lt;/b&gt;&amp;nbsp;&lt;span style=&quot;color:#a0b4c4; font-size:11px;&quot;&gt;Cohort CSE-2025&lt;/span&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Split: Risk Flags Table + Intervention Notes -->
+          <item>
+           <layout class="QHBoxLayout" name="advSplitRow">
+            <property name="spacing">
+             <number>16</number>
+            </property>
+
+            <item>
+             <widget class="QGroupBox" name="grp_warnings">
+              <property name="title">
+               <string>Attendance Risk Flags (&lt; 80% or ≥ 3 Consecutive Absences)</string>
+              </property>
+              <layout class="QVBoxLayout" name="warnLayout">
+               <item>
+                <widget class="QTableWidget" name="table_advisor_warnings">
+                 <column>
+                  <property name="text">
+                   <string>ID</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Student Name</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Course</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Attendance</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Absences</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Risk Level</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <item>
+             <widget class="QGroupBox" name="grp_counseling">
+              <property name="title">
+               <string>Student Intervention Notes &amp; Action Plan</string>
+              </property>
+              <layout class="QVBoxLayout" name="counselLayout">
+               <item>
+                <widget class="QLabel" name="lbl_adv_counsel_meta">
+                 <property name="text">
+                  <string>&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;Select a student on the left to review or append counseling history.&lt;/span&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="txt_counseling_notes">
+                 <property name="placeholderText">
+                  <string>Click a student to view records and record notes...</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_save_notes">
+                 <property name="text">
+                  <string>💾 Save Intervention Notes</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+           </layout>
+          </item>
+         </layout>
+        </widget>
+
+        <!-- ==================== SCREEN 4: ADMIN MODULE ==================== -->
+        <widget class="QWidget" name="page_admin">
+         <layout class="QVBoxLayout" name="adminVLayout">
+          <property name="leftMargin">
+           <number>24</number>
+          </property>
+          <property name="rightMargin">
+           <number>24</number>
+          </property>
+          <property name="topMargin">
+           <number>20</number>
+          </property>
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          <property name="spacing">
+           <number>16</number>
+          </property>
+
+          <item>
+           <layout class="QHBoxLayout" name="adminTopBar">
+            <item>
+             <widget class="QLabel" name="lbl_admin_header">
+              <property name="text">
+               <string>&lt;span style=&quot;font-size:10px; color:#88b4cc; font-weight:bold;&quot;&gt;● GOVERNANCE ENGINE&lt;/span&gt;&lt;br/&gt;&lt;h2 style=&quot;margin:2px 0; color:#e0e8f0;&quot;&gt;System Administration &amp;amp; Governance&lt;/h2&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="adminSpacerRight">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_export_system_report">
+              <property name="text">
+               <string>📥 Export System Report (CSV)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+
+          <!-- Provision Identity Form Card -->
+          <item>
+           <widget class="QGroupBox" name="grp_provision">
+            <property name="title">
+             <string>Provision New Identity / User Enrollment (CRUD Master)</string>
+            </property>
+            <layout class="QHBoxLayout" name="provFormLayout">
+             <item>
+              <layout class="QVBoxLayout" name="pEmailCol">
+               <item>
+                <widget class="QLabel" name="lbl_p_email">
+                 <property name="text">
+                  <string>INSTITUTIONAL EMAIL</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="txt_add_email">
+                 <property name="placeholderText">
+                  <string>first.last@university.edu</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="pRoleCol">
+               <item>
+                <widget class="QLabel" name="lbl_p_role">
+                 <property name="text">
+                  <string>ASSIGNED SYSTEM ROLE</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="combo_add_role">
+                 <item>
+                  <property name="text">
+                   <string>Student</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Instructor</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Advisor</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Administrator</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item alignment="Qt::AlignBottom">
+              <widget class="QPushButton" name="btn_add_user">
+               <property name="text">
+                <string>+ Add User</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Master Directory Table -->
+          <item>
+           <widget class="QLabel" name="lbl_users_title">
+            <property name="text">
+             <string>&lt;h3 style=&quot;margin:0; color:#e0e8f0;&quot;&gt;Directory: Institutional Users &amp;amp; Course Allocations&lt;/h3&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="table_admin_users">
+            <column>
+             <property name="text">
+              <string>User ID</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Full Name</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Institutional Email</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Assigned Role</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Course Allocations</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+
+       </widget>
+      </item>
+
+     </layout>
     </item>
    </layout>
   </widget>
