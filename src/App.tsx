@@ -12,6 +12,7 @@ import { Screen2Instructor } from './components/Screen2Instructor';
 import { Screen3Advisor } from './components/Screen3Advisor';
 import { Screen4Admin } from './components/Screen4Admin';
 import { PythonCodeModal } from './components/PythonCodeModal';
+import { HtmlGuideModal } from './components/HtmlGuideModal';
 
 import {
   INITIAL_USERS,
@@ -45,6 +46,7 @@ export default function App() {
   const [flaggedStudents, setFlaggedStudents] = useState<EWSStudentFlag[]>(INITIAL_EWS_FLAGS);
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>(INITIAL_AUDIT_LOGS);
   const [isPythonModalOpen, setIsPythonModalOpen] = useState(false);
+  const [isHtmlGuideOpen, setIsHtmlGuideOpen] = useState(false);
 
   // Active Live Session State
   const [activeSession, setActiveSession] = useState<ActiveSession>({
@@ -423,6 +425,7 @@ export default function App() {
         onSelectScreen={setCurrentScreen}
         currentUser={currentUser}
         onOpenPythonModal={() => setIsPythonModalOpen(true)}
+        onOpenHtmlGuide={() => setIsHtmlGuideOpen(true)}
       />
 
       {/* Main Container Layout */}
@@ -487,6 +490,12 @@ export default function App() {
       <PythonCodeModal
         isOpen={isPythonModalOpen}
         onClose={() => setIsPythonModalOpen(false)}
+      />
+
+      {/* HTML VS Code Guide Modal */}
+      <HtmlGuideModal
+        isOpen={isHtmlGuideOpen}
+        onClose={() => setIsHtmlGuideOpen(false)}
       />
     </div>
   );

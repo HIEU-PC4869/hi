@@ -6,6 +6,7 @@ interface HeaderProps {
   onSelectScreen: (screen: number) => void;
   currentUser: User | null;
   onOpenPythonModal: () => void;
+  onOpenHtmlGuide: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -13,6 +14,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectScreen,
   currentUser,
   onOpenPythonModal,
+  onOpenHtmlGuide,
 }) => {
   const pages = [
     { id: 0, label: '0: Login' },
@@ -41,12 +43,10 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Center Nav bar */}
-        <div className="flex items-center gap-4 flex-1 justify-center max-w-3xl">
+        <div className="flex items-center gap-3 flex-1 justify-center max-w-3xl">
           <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#141c2e]/60 border border-[#7dd3fc]/10 backdrop-blur-md">
-            <span className="h-2 w-2 rounded-full bg-[#7dd3fc] animate-pulse"></span>
-            <span className="text-xs text-[#a0b4c4] font-medium">System Ready</span>
-            <span className="text-xs text-[#2a3a48]">|</span>
-            <span className="text-xs text-[#88b4cc] font-medium">Active Context</span>
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-xs text-[#a0b4c4] font-medium">HTML & Web Ready</span>
           </div>
 
           <nav className="flex items-center p-1 rounded-xl bg-[#111828]/80 border border-[#7dd3fc]/10 backdrop-blur-md">
@@ -68,14 +68,24 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
+          {/* HTML Standalone Guide button */}
+          <button
+            onClick={onOpenHtmlGuide}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e4d6e] hover:bg-[#7dd3fc] text-[#c8eaff] hover:text-[#001f2e] border border-[#7dd3fc]/40 text-xs font-bold shadow-md transition-all active:scale-95"
+            title="Chạy bản HTML trực tiếp trên VS Code không cần cài đặt"
+          >
+            <span className="material-symbols-outlined text-sm">html</span>
+            <span>Bản HTML (VS Code)</span>
+          </button>
+
           {/* Python Architecture button */}
           <button
             onClick={onOpenPythonModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3d2060]/70 hover:bg-[#3d2060] text-[#c8a0f0] border border-[#c8a0f0]/30 text-xs font-semibold shadow-md transition-all active:scale-95"
-            title="Inspect & Download Python PySide6 + SQLite3 MVC Source Code"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3d2060]/70 hover:bg-[#3d2060] text-[#c8a0f0] border border-[#c8a0f0]/30 text-xs font-semibold shadow-md transition-all active:scale-95"
+            title="Inspect Python PySide6 Source Code"
           >
             <span className="material-symbols-outlined text-sm">code</span>
-            <span className="hidden sm:inline">PySide6 Code</span>
+            <span>PySide6 Code</span>
           </button>
         </div>
 
