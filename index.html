@@ -1,21 +1,1645 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SAS Enterprise - Student Attendance & Intelligence System</title>
-    <meta name="description" content="Enterprise Student Attendance System featuring PySide6 MVC architecture, SQLite3 context manager, real-time QR/PIN check-in, early warning analytics, and role-based access for Students, Instructors, Advisors, and Admins." />
-    <meta property="og:title" content="SAS Enterprise - Student Attendance & Intelligence System" />
-    <meta property="og:description" content="Enterprise Student Attendance System featuring PySide6 MVC architecture, SQLite3 context manager, real-time QR/PIN check-in, early warning analytics, and role-based access for Students, Instructors, Advisors, and Admins." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-  </head>
-  <body class="bg-[#0a0e1a] text-[#e0e8f0] font-sans antialiased selection:bg-[#0e4d6e] selection:text-[#c8eaff]">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAS Enterprise - Student Attendance & Intelligence System</title>
+  <meta name="description" content="Institutional Student Attendance and Intelligence System featuring role-based workflows for Students, Instructors, Academic Advisors, and System Administrators." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#0a0e1a",
+            surface: "#0f1524",
+            "surface-container": "#141c2e",
+            "surface-container-high": "#1a2438",
+            "surface-container-low": "#111828",
+            "surface-variant": "#1a2438",
+            primary: "#7dd3fc",
+            "primary-container": "#0e4d6e",
+            "primary-fixed": "#c8eaff",
+            secondary: "#88b4cc",
+            tertiary: "#c8a0f0",
+            "tertiary-container": "#3d2060",
+            error: "#ff6b6b",
+            "error-container": "#3d1414",
+            "on-surface": "#e0e8f0",
+            "on-surface-variant": "#a0b4c4"
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0a0e1a;
+      color: #e0e8f0;
+      font-family: 'Inter', sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f1524;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+    .glass-card {
+      background: rgba(20, 28, 46, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(125, 211, 252, 0.12);
+    }
+    .glass-card-glow {
+      background: rgba(20, 28, 46, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(125, 211, 252, 0.25);
+      box-shadow: 0 0 25px rgba(125, 211, 252, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#0a0e1a] text-[#e0e8f0] flex flex-col selection:bg-[#0e4d6e] selection:text-[#c8eaff]">
+
+  <!-- TOP HEADER NAVIGATION -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-[#0f1524]/90 backdrop-blur-2xl border-b border-[#7dd3fc]/15 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+    <div class="h-16 px-4 md:px-6 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Hex Icon -->
+      <div class="flex items-center gap-3 shrink-0 cursor-pointer" onclick="switchPage(0)">
+        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/30 shadow-lg text-[#7dd3fc]">
+          <svg class="w-6 h-6 text-[#7dd3fc]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="9 12 11.5 14.5 15.5 9.5"></polyline>
+          </svg>
+        </div>
+        <div>
+          <div class="text-sm md:text-base font-bold tracking-tight text-[#e0e8f0] flex items-center gap-2">
+            SAS Enterprise
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30">v2.4 LTS</span>
+          </div>
+          <div class="text-[11px] text-[#a0b4c4] hidden sm:block">
+            Student Attendance & Intelligence System
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (QStackedWidget mapping: Screens 0-4) -->
+      <nav class="flex items-center p-1 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 backdrop-blur-md overflow-x-auto max-w-full">
+        <button id="nav_btn_0" onclick="switchPage(0)" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]">
+          0: Login
+        </button>
+        <button id="nav_btn_1" onclick="switchPage(1)" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-[#0e4d6e] text-[#c8eaff] font-semibold shadow-inner">
+          1: Student
+        </button>
+        <button id="nav_btn_2" onclick="switchPage(2)" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]">
+          2: Instructor
+        </button>
+        <button id="nav_btn_3" onclick="switchPage(3)" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]">
+          3: Advisor
+        </button>
+        <button id="nav_btn_4" onclick="switchPage(4)" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]">
+          4: Admin
+        </button>
+      </nav>
+
+      <!-- Active User Profile & Run Guide -->
+      <div class="flex items-center gap-3 shrink-0">
+        <button onclick="toggleHelpModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e4d6e]/40 hover:bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-medium transition-all active:scale-95" title="How to run in VS Code without errors">
+          <span class="material-symbols-outlined text-sm">terminal</span>
+          <span class="hidden md:inline">VS Code Run Guide</span>
+        </button>
+
+        <div class="flex items-center gap-2 pl-2 border-l border-white/10">
+          <div class="w-8 h-8 rounded-full bg-[#1e293b] border border-[#7dd3fc]/40 flex items-center justify-center font-bold text-xs text-[#7dd3fc]" id="user_avatar_badge">
+            AR
+          </div>
+          <div class="hidden lg:flex flex-col text-left">
+            <span class="text-xs font-semibold text-[#e0e8f0]" id="header_user_name">Alex Rivera</span>
+            <span class="text-[10px] text-[#7dd3fc]" id="header_user_role">Student</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER: SIDEBAR + VIEWPORT -->
+  <div class="pt-16 flex-1 flex">
+
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="w-64 hidden lg:flex flex-col shrink-0 bg-[#0f1524]/70 border-r border-[#7dd3fc]/10 p-4 justify-between">
+      <div class="space-y-6">
+        <div>
+          <div class="text-[11px] font-bold text-[#7dd3fc]/70 uppercase tracking-widest px-3 mb-2">
+            Navigation Core
+          </div>
+          <div class="space-y-1">
+            <button onclick="switchPage(1)" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#e0e8f0] hover:bg-[#1a2438] transition-all text-left group">
+              <span class="material-symbols-outlined text-base text-[#7dd3fc]">school</span>
+              <span>Student Module</span>
+            </button>
+            <button onclick="switchPage(2)" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#e0e8f0] hover:bg-[#1a2438] transition-all text-left group">
+              <span class="material-symbols-outlined text-base text-[#7dd3fc]">co_present</span>
+              <span>Instructor Module</span>
+            </button>
+            <button onclick="switchPage(3)" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#e0e8f0] hover:bg-[#1a2438] transition-all text-left group">
+              <span class="material-symbols-outlined text-base text-[#7dd3fc]">shield_person</span>
+              <span>Academic Advisor (EWS)</span>
+            </button>
+            <button onclick="switchPage(4)" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#e0e8f0] hover:bg-[#1a2438] transition-all text-left group">
+              <span class="material-symbols-outlined text-base text-[#7dd3fc]">admin_panel_settings</span>
+              <span>Administrator Module</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- System Architecture Bento -->
+        <div class="p-3.5 rounded-xl bg-[#141c2e]/60 border border-[#7dd3fc]/10 space-y-2.5">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-[#a0b4c4]">Architecture:</span>
+            <span class="text-[#7dd3fc] font-mono font-medium">Standalone Zero-Config</span>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-[#a0b4c4]">Security:</span>
+            <span class="text-emerald-400 font-mono">TLS 1.3 Active</span>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-[#a0b4c4]">Database:</span>
+            <span class="text-[#c8a0f0] font-mono">Real-time In-Memory</span>
+          </div>
+          <div class="pt-2 border-t border-white/5 flex items-center gap-2 text-[10px] text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Self-Contained • Runs Everywhere</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reset Database -->
+      <div class="pt-4 border-t border-white/10">
+        <button onclick="resetDataToDefault()" class="w-full py-2 px-3 rounded-lg bg-red-950/30 hover:bg-red-900/40 text-red-300 border border-red-500/20 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="material-symbols-outlined text-sm">refresh</span>
+          <span>Reset Sample Database</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEWPORT (QStackedWidget simulation) -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
+
+      <!-- ========================================== -->
+      <!-- SCREEN 0: LOGIN MODULE (page_login) -->
+      <!-- ========================================== -->
+      <section id="page_login" class="page-screen hidden max-w-md mx-auto py-8">
+        <div class="glass-card-glow rounded-2xl p-7 md:p-8 space-y-6">
+          <div class="text-center space-y-2">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-[#1a2438] border border-[#7dd3fc]/30 flex items-center justify-center shadow-lg text-[#7dd3fc]">
+              <span class="material-symbols-outlined text-3xl">lock_open</span>
+            </div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0e4d6e]/40 text-[#7dd3fc] text-xs font-semibold uppercase tracking-wider">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#7dd3fc] animate-pulse"></span>
+              Identity & Access Management
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-white">Sign In to Your Portal</h1>
+            <p class="text-xs text-[#a0b4c4]">Select a demo role or provide institutional credentials</p>
+          </div>
+
+          <!-- Error Alert (lbl_login_error) -->
+          <div id="lbl_login_error" class="hidden p-3 rounded-xl bg-red-950/60 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm text-red-400">error</span>
+            <span id="lbl_login_error_text">Authentication failed. Please verify credentials.</span>
+          </div>
+
+          <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-medium text-[#a0b4c4]">Institutional Email (txt_email)</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-[#a0b4c4] text-sm">school</span>
+                <input id="txt_email" type="email" required value="a.rivera@university.edu"
+                  class="w-full h-11 pl-10 pr-4 rounded-xl bg-[#1a2438]/80 border border-[#7dd3fc]/20 text-sm text-white placeholder-[#a0b4c4]/40 focus:outline-none focus:border-[#7dd3fc] focus:ring-1 focus:ring-[#7dd3fc] transition-all" />
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-xs font-medium text-[#a0b4c4]">Password (txt_password)</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-[#a0b4c4] text-sm">lock</span>
+                <input id="txt_password" type="password" required value="password123"
+                  class="w-full h-11 pl-10 pr-10 rounded-xl bg-[#1a2438]/80 border border-[#7dd3fc]/20 text-sm text-white focus:outline-none focus:border-[#7dd3fc] focus:ring-1 focus:ring-[#7dd3fc] transition-all" />
+                <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 text-[#a0b4c4] hover:text-white">
+                  <span id="pw_toggle_icon" class="material-symbols-outlined text-sm">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <button id="btn_login" type="submit"
+              class="w-full h-11 rounded-xl bg-gradient-to-r from-[#0e4d6e] to-[#7dd3fc] text-[#001f2e] font-bold text-sm shadow-lg shadow-[#7dd3fc]/20 hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+              <span>Sign In</span>
+              <span class="material-symbols-outlined text-sm">login</span>
+            </button>
+          </form>
+
+          <!-- 1-Click Demo Quick Roles -->
+          <div class="pt-4 border-t border-white/10 space-y-2">
+            <div class="text-[11px] font-semibold text-[#a0b4c4] uppercase tracking-wider flex items-center justify-between">
+              <span>Demo Quick Roles (1-Click Fill)</span>
+              <span class="text-tertiary font-mono text-[10px]">Pre-seeded</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="autofillLogin('a.rivera@university.edu', 1)" class="p-2.5 rounded-lg bg-[#1a2438] hover:bg-[#202c42] border border-[#7dd3fc]/20 text-left transition-all">
+                <div class="text-xs font-bold text-[#7dd3fc]">🎓 Student</div>
+                <div class="text-[10px] text-[#a0b4c4] truncate">Alex Rivera</div>
+              </button>
+              <button onclick="autofillLogin('dr.vance@university.edu', 2)" class="p-2.5 rounded-lg bg-[#1a2438] hover:bg-[#202c42] border border-[#7dd3fc]/20 text-left transition-all">
+                <div class="text-xs font-bold text-[#7dd3fc]">👨‍🏫 Instructor</div>
+                <div class="text-[10px] text-[#a0b4c4] truncate">Dr. Evelyn Vance</div>
+              </button>
+              <button onclick="autofillLogin('m.brody@university.edu', 3)" class="p-2.5 rounded-lg bg-[#1a2438] hover:bg-[#202c42] border border-[#7dd3fc]/20 text-left transition-all">
+                <div class="text-xs font-bold text-[#c8a0f0]">🧭 Advisor</div>
+                <div class="text-[10px] text-[#a0b4c4] truncate">Marcus Brody</div>
+              </button>
+              <button onclick="autofillLogin('sysadmin@university.edu', 4)" class="p-2.5 rounded-lg bg-[#1a2438] hover:bg-[#202c42] border border-[#7dd3fc]/20 text-left transition-all">
+                <div class="text-xs font-bold text-emerald-400">⚙️ Admin</div>
+                <div class="text-[10px] text-[#a0b4c4] truncate">Root SysAdmin</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 1: STUDENT MODULE (page_student) -->
+      <!-- ========================================== -->
+      <section id="page_student" class="page-screen space-y-6">
+        
+        <!-- Welcome Banner -->
+        <div class="glass-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="text-xs font-semibold text-[#7dd3fc] tracking-wider uppercase">Student Portal • Academic Year 2026</div>
+            <h2 class="text-2xl font-extrabold text-white mt-1">Welcome back, Alex Rivera</h2>
+            <p class="text-xs text-[#a0b4c4]">Student ID: #24091 • B.S. Software Engineering (Year 3)</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="px-4 py-2 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/20 text-center">
+              <div class="text-[10px] text-[#a0b4c4]">Overall Attendance</div>
+              <div class="text-lg font-bold text-emerald-400" id="overall_attendance_stat">92.8%</div>
+            </div>
+            <div class="px-4 py-2 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/20 text-center">
+              <div class="text-[10px] text-[#a0b4c4]">Academic Standing</div>
+              <div class="text-xs font-bold text-[#7dd3fc] mt-1">Good Standing</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <!-- FUNCTION 1: DIRECT CHECK-IN -->
+          <div class="glass-card-glow rounded-2xl p-6 space-y-4">
+            <div class="flex items-center gap-2 text-[#7dd3fc]">
+              <span class="material-symbols-outlined text-xl">qr_code_scanner</span>
+              <h3 class="text-base font-bold text-white">Direct Check-In</h3>
+            </div>
+            <p class="text-xs text-[#a0b4c4]">
+              Enter the 6-digit PIN or QR code string displayed on the classroom projection screen:
+            </p>
+
+            <form onsubmit="handleStudentCheckIn(event)" class="space-y-3">
+              <div class="space-y-1">
+                <label class="text-xs text-[#a0b4c4]">Enrolled Course (combo_student_courses)</label>
+                <select id="combo_student_courses" class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/20 text-sm text-white focus:outline-none focus:border-[#7dd3fc]">
+                  <option value="CS-301">CS-301: Advanced Data Structures</option>
+                  <option value="ENG-204">ENG-204: Technical Communication</option>
+                  <option value="MATH-310">MATH-310: Linear Algebra</option>
+                  <option value="PHY-102">PHY-102: Engineering Physics II</option>
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-xs text-[#a0b4c4]">PIN / QR Code (txt_qr_code)</label>
+                <input id="txt_qr_code" type="text" placeholder="e.g. 849-210" required
+                  class="w-full h-11 px-4 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/30 text-lg font-mono font-bold tracking-widest text-[#7dd3fc] placeholder-[#a0b4c4]/30 focus:outline-none focus:border-[#7dd3fc]" />
+                <div class="text-[10px] text-[#a0b4c4] flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[12px] text-amber-400">info</span>
+                  <span>Active PIN from Instructor: <b class="text-[#7dd3fc] font-mono" id="student_hint_pin">849-210</b></span>
+                </div>
+              </div>
+
+              <button id="btn_submit_attendance" type="submit"
+                class="w-full h-11 rounded-xl bg-gradient-to-r from-[#0e4d6e] to-[#7dd3fc] text-[#001f2e] font-bold text-sm shadow-md hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-sm">how_to_reg</span>
+                <span>Submit Attendance</span>
+              </button>
+            </form>
+
+            <!-- Status Feedback Container (lbl_checkin_status) -->
+            <div id="lbl_checkin_status" class="hidden p-3 rounded-xl text-xs flex items-center gap-2 transition-all"></div>
+          </div>
+
+          <!-- FUNCTION 3: SUBMIT EXCUSE REQUEST -->
+          <div class="glass-card rounded-2xl p-6 space-y-4">
+            <div class="flex items-center gap-2 text-[#c8a0f0]">
+              <span class="material-symbols-outlined text-xl">event_busy</span>
+              <h3 class="text-base font-bold text-white">Submit Excuse Request</h3>
+            </div>
+            <p class="text-xs text-[#a0b4c4]">
+              Submit legitimate absence documentation for instructor review:
+            </p>
+
+            <form onsubmit="handleStudentExcuseSubmit(event)" class="space-y-3">
+              <div class="space-y-1">
+                <label class="text-xs text-[#a0b4c4]">Course (combo_excuse_course)</label>
+                <select id="combo_excuse_course" class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-sm text-white focus:outline-none focus:border-[#c8a0f0]">
+                  <option value="CS-301">CS-301: Advanced Data Structures</option>
+                  <option value="ENG-204">ENG-204: Technical Communication</option>
+                  <option value="MATH-310">MATH-310: Linear Algebra</option>
+                  <option value="PHY-102">PHY-102: Engineering Physics II</option>
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-xs text-[#a0b4c4]">Absence Date (date_excuse)</label>
+                <input id="date_excuse" type="date" required
+                  class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-sm text-white focus:outline-none focus:border-[#c8a0f0]" />
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-xs text-[#a0b4c4]">Reason (txt_excuse_reason)</label>
+                <textarea id="txt_excuse_reason" rows="2" placeholder="e.g. Attending ACM-ICPC regional robotics contest..." required
+                  class="w-full p-2.5 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-[#c8a0f0]"></textarea>
+              </div>
+
+              <button id="btn_submit_excuse" type="submit"
+                class="w-full h-10 rounded-xl bg-[#3d2060] hover:bg-[#4d2a73] text-[#c8a0f0] border border-[#c8a0f0]/30 font-semibold text-xs transition-all flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">send</span>
+                <span>Submit Excuse (Pending)</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- EXCUSE TRACKER -->
+          <div class="glass-card rounded-2xl p-6 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-[#7dd3fc]">history</span>
+                Submitted Excuse Requests
+              </h3>
+              <span class="text-[10px] text-[#a0b4c4]">Live Status</span>
+            </div>
+            <div id="student_excuse_list" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
+          </div>
+
+        </div>
+
+        <!-- FUNCTION 2: PERSONAL STATISTICS TABLE -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#7dd3fc]">table_chart</span>
+                Personal Attendance Statistics (table_student_stats)
+              </h3>
+              <p class="text-xs text-[#a0b4c4]">Formula: (Present + Late * 0.8) / Total Sessions</p>
+            </div>
+            <div class="text-xs text-emerald-400 flex items-center gap-1 font-mono">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              Compliant (&gt;= 80% Attendance Threshold)
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-white/10">
+            <table class="w-full text-left text-xs" id="table_student_stats">
+              <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
+                <tr>
+                  <th class="p-3.5">Course Code</th>
+                  <th class="p-3.5">Course Title</th>
+                  <th class="p-3.5 text-center">Total Sessions</th>
+                  <th class="p-3.5 text-center text-emerald-400">Present</th>
+                  <th class="p-3.5 text-center text-amber-400">Late</th>
+                  <th class="p-3.5 text-center text-rose-400">Absent</th>
+                  <th class="p-3.5 text-center text-[#c8a0f0]">Excused</th>
+                  <th class="p-3.5 text-center">Attendance (%)</th>
+                  <th class="p-3.5 text-right">Standing</th>
+                </tr>
+              </thead>
+              <tbody id="table_student_stats_body" class="divide-y divide-white/5 font-mono">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 2: INSTRUCTOR MODULE (page_instructor) -->
+      <!-- ========================================== -->
+      <section id="page_instructor" class="page-screen hidden space-y-6">
+        
+        <!-- Instructor Header & Session Bento -->
+        <div class="glass-card-glow rounded-2xl p-6 space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="text-xs font-semibold text-[#7dd3fc] tracking-wider uppercase">Instructor Portal • Faculty of Engineering</div>
+              <h2 class="text-2xl font-bold text-white mt-1">Attendance Session Management & Monitoring</h2>
+              <p class="text-xs text-[#a0b4c4]">Instructor: Dr. Evelyn Vance • Lead Faculty</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button id="btn_export_course_report" onclick="exportCourseReportCSV()"
+                class="px-4 py-2.5 rounded-xl bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-semibold flex items-center gap-2 transition-all">
+                <span class="material-symbols-outlined text-sm">download</span>
+                <span>Export Course Report (CSV)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- FUNCTION 1: SESSION CONTROLS & DYNAMIC PIN -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-white/10">
+            
+            <div class="space-y-3">
+              <label class="text-xs text-[#a0b4c4]">Active Course (combo_instructor_courses)</label>
+              <select id="combo_instructor_courses" class="w-full h-11 px-3 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/20 text-sm text-white focus:outline-none focus:border-[#7dd3fc]">
+                <option value="CS-301">CS-301: Advanced Data Structures (Hall B-12)</option>
+                <option value="CS-402">CS-402: Cloud Architecture & DevOps</option>
+              </select>
+
+              <div class="flex items-center gap-2 pt-2">
+                <button id="btn_start_session" onclick="handleStartSession()"
+                  class="flex-1 h-11 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm">play_arrow</span>
+                  <span>Start New Session</span>
+                </button>
+                <button id="btn_end_session" onclick="handleEndSession()"
+                  class="h-11 px-4 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 font-semibold text-xs transition-all flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-sm">stop</span>
+                  <span>End Session</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- DYNAMIC PIN & TIMER BENTO -->
+            <div class="md:col-span-2 flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-[#141c2e]/80 border border-[#7dd3fc]/20 gap-4">
+              <div class="space-y-1 text-center sm:text-left">
+                <div class="text-[10px] uppercase tracking-wider text-[#a0b4c4]">Dynamic Session PIN Code (lbl_dynamic_qr)</div>
+                <div id="lbl_dynamic_qr" class="text-3xl md:text-4xl font-extrabold font-mono text-[#7dd3fc] tracking-wider select-all">
+                  849-210
+                </div>
+                <div class="text-[11px] text-[#a0b4c4]">Display this code on projector screen for students to check in</div>
+              </div>
+
+              <div class="flex flex-col items-center sm:items-end space-y-1">
+                <div class="text-[10px] uppercase tracking-wider text-[#a0b4c4]">Session Countdown (lbl_timer)</div>
+                <div id="lbl_timer" class="text-xl md:text-2xl font-bold font-mono text-emerald-400 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg animate-spin">timelapse</span>
+                  <span id="countdown_timer_text">14:59 Remaining</span>
+                </div>
+                <div class="text-[10px] text-emerald-400/80">&lt;15m: Present • 15-45m: Late</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FUNCTION 2: MONITORING & MANUAL OVERRIDE (table_instructor_attendance) -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#7dd3fc]">group</span>
+                Real-Time Roster & Manual Override (table_instructor_attendance)
+              </h3>
+              <p class="text-xs text-[#a0b4c4]">
+                Instructors can manually correct status via the row dropdown for students without devices.
+              </p>
+            </div>
+            <div class="text-xs text-[#a0b4c4]">
+              Total Enrolled: <b class="text-white">6</b> • Logged: <b class="text-emerald-400" id="roster_present_count">4</b>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-white/10">
+            <table class="w-full text-left text-xs" id="table_instructor_attendance">
+              <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
+                <tr>
+                  <th class="p-3.5">Student ID</th>
+                  <th class="p-3.5">Full Name</th>
+                  <th class="p-3.5">Logged Time</th>
+                  <th class="p-3.5">Method</th>
+                  <th class="p-3.5">Updated By</th>
+                  <th class="p-3.5 text-right w-44">Status (Override ComboBox)</th>
+                </tr>
+              </thead>
+              <tbody id="table_instructor_attendance_body" class="divide-y divide-white/5">
+                <!-- Dynamically populated with status dropdowns -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FUNCTION 3: APPROVE/REJECT EXCUSES (table_instructor_excuses) -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#c8a0f0]">approval</span>
+                Review Excuse Requests (table_instructor_excuses)
+              </h3>
+              <p class="text-xs text-[#a0b4c4]">Review and approve/reject pending student absence claims</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-white/10">
+            <table class="w-full text-left text-xs" id="table_instructor_excuses">
+              <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
+                <tr>
+                  <th class="p-3.5">Student</th>
+                  <th class="p-3.5">Course</th>
+                  <th class="p-3.5">Absence Date</th>
+                  <th class="p-3.5">Reason</th>
+                  <th class="p-3.5 text-center">Status</th>
+                  <th class="p-3.5 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table_instructor_excuses_body" class="divide-y divide-white/5">
+                <!-- Dynamically populated with Approve/Reject buttons -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 3: ADVISOR MODULE (page_advisor) -->
+      <!-- ========================================== -->
+      <section id="page_advisor" class="page-screen hidden space-y-6">
+        
+        <div class="glass-card-glow rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="text-xs font-semibold text-[#c8a0f0] tracking-wider uppercase">Academic Advising • Counseling Services</div>
+            <h2 class="text-2xl font-bold text-white mt-1">Early Warning System (EWS)</h2>
+            <p class="text-xs text-[#a0b4c4]">Advisor: Marcus Brody • Student Support Services</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-semibold flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+              2 High-Risk Students Flagged
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <!-- FUNCTION 1: EARLY WARNING FILTER TABLE (table_advisor_warnings) -->
+          <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-rose-400">warning</span>
+                At-Risk Student Intervention List (table_advisor_warnings)
+              </h3>
+              <p class="text-xs text-[#a0b4c4]">
+                Automatically filters students with &lt; 80% attendance or 3 consecutive absences. Click row to open counseling notes.
+              </p>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-white/10">
+              <table class="w-full text-left text-xs" id="table_advisor_warnings">
+                <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
+                  <tr>
+                    <th class="p-3.5">Student</th>
+                    <th class="p-3.5">Course</th>
+                    <th class="p-3.5 text-center">Attendance %</th>
+                    <th class="p-3.5 text-center">Consecutive Absences</th>
+                    <th class="p-3.5 text-right">Risk Level</th>
+                  </tr>
+                </thead>
+                <tbody id="table_advisor_warnings_body" class="divide-y divide-white/5 cursor-pointer">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- FUNCTION 2: INTERVENTION & COUNSELING NOTES (txt_counseling_notes, btn_save_notes) -->
+          <div class="glass-card-glow rounded-2xl p-6 space-y-4">
+            <div class="flex items-center gap-2 text-[#c8a0f0]">
+              <span class="material-symbols-outlined text-xl">edit_note</span>
+              <h3 class="text-base font-bold text-white">Intervention Dossier</h3>
+            </div>
+            
+            <div class="p-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs space-y-1">
+              <div class="text-[#a0b4c4]">Selected Student:</div>
+              <div class="font-bold text-[#7dd3fc] text-sm" id="counseling_selected_student">Sarah Jenkins (#24094)</div>
+              <div class="text-[11px] text-[#a0b4c4]">Course: CS-301 • Attendance: 71.4%</div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs text-[#a0b4c4]">Counseling Notes (txt_counseling_notes)</label>
+              <textarea id="txt_counseling_notes" rows="4"
+                placeholder="e.g. Conducted phone counseling on 10/22. Student reported illness; scheduled academic tutoring session..."
+                class="w-full p-3 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-[#c8a0f0]"></textarea>
+            </div>
+
+            <button id="btn_save_notes" onclick="handleSaveCounselingNotes()"
+              class="w-full h-11 rounded-xl bg-gradient-to-r from-[#3d2060] to-[#c8a0f0] text-[#1a002e] font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">save</span>
+              <span>Save Counseling Notes</span>
+            </button>
+
+            <!-- Previous Notes History -->
+            <div class="pt-3 border-t border-white/10 space-y-2">
+              <div class="text-[11px] font-semibold text-[#a0b4c4]">Previous Intervention History:</div>
+              <div id="counseling_history_list" class="space-y-2 text-[11px] text-[#a0b4c4] max-h-40 overflow-y-auto"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 4: ADMIN MODULE (page_admin) -->
+      <!-- ========================================== -->
+      <section id="page_admin" class="page-screen hidden space-y-6">
+        
+        <div class="glass-card-glow rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="text-xs font-semibold text-emerald-400 tracking-wider uppercase">System Administration • Root Master Node</div>
+            <h2 class="text-2xl font-bold text-white mt-1">Institutional Administration & Data Hub</h2>
+            <p class="text-xs text-[#a0b4c4]">Administrator: Root Systems Admin • Global Privileges</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="btn_export_system_report" onclick="exportSystemReportCSV()"
+              class="px-4 py-2.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center gap-2 transition-all shadow-md">
+              <span class="material-symbols-outlined text-sm">database</span>
+              <span>Export System Report (CSV)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- FUNCTION 1: MASTER CRUD USER FORM & TABLE -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <!-- Add User Form -->
+          <div class="glass-card rounded-2xl p-6 space-y-4">
+            <div class="flex items-center gap-2 text-emerald-400">
+              <span class="material-symbols-outlined text-xl">person_add</span>
+              <h3 class="text-base font-bold text-white">Provision User Account</h3>
+            </div>
+            <p class="text-xs text-[#a0b4c4]">Create new Student, Instructor, or Advisor accounts</p>
+
+            <form onsubmit="handleAdminAddUser(event)" class="space-y-3">
+              <div class="space-y-1">
+                <label class="text-xs text-[#a0b4c4]">Account Email (txt_add_email)</label>
+                <input id="txt_add_email" type="email" placeholder="new.user@university.edu" required
+                  class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400" />
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-xs text-[#a0b4c4]">Full Name</label>
+                <input id="txt_add_name" type="text" placeholder="Johnathan Doe" required
+                  class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400" />
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-xs text-[#a0b4c4]">Assigned Role (combo_add_role)</label>
+                <select id="combo_add_role" class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400">
+                  <option value="Student">Student</option>
+                  <option value="Instructor">Instructor</option>
+                  <option value="Advisor">Advisor</option>
+                  <option value="Administrator">Administrator</option>
+                </select>
+              </div>
+
+              <button id="btn_add_user" type="submit"
+                class="w-full h-10 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md">
+                <span class="material-symbols-outlined text-sm">add_circle</span>
+                <span>Add User Account</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- User Table (table_admin_users) -->
+          <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#7dd3fc]">manage_accounts</span>
+                Active System Users (table_admin_users)
+              </h3>
+              <span class="text-xs text-[#a0b4c4]" id="admin_users_count">Total: 6 accounts</span>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-white/10 max-h-80 overflow-y-auto">
+              <table class="w-full text-left text-xs" id="table_admin_users">
+                <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+                  <tr>
+                    <th class="p-3.5">ID</th>
+                    <th class="p-3.5">Full Name</th>
+                    <th class="p-3.5">Email</th>
+                    <th class="p-3.5">Role</th>
+                    <th class="p-3.5">Status</th>
+                    <th class="p-3.5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="table_admin_users_body" class="divide-y divide-white/5">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FUNCTION 3: AUDIT LOGS -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400">policy</span>
+              Security & Operation Audit Logs (Read-only)
+            </h3>
+            <span class="text-xs text-[#a0b4c4]">Tamper-evident system activity trail</span>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-white/10 max-h-56 overflow-y-auto">
+            <table class="w-full text-left text-xs font-mono">
+              <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+                <tr>
+                  <th class="p-3">Timestamp</th>
+                  <th class="p-3">Principal</th>
+                  <th class="p-3">Action</th>
+                  <th class="p-3">Details</th>
+                </tr>
+              </thead>
+              <tbody id="admin_audit_logs_body" class="divide-y divide-white/5 text-[11px]">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- VS CODE RUN HELP MODAL -->
+  <div id="modal_help" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="glass-card-glow max-w-xl w-full rounded-2xl p-6 md:p-8 space-y-5 relative">
+      <button onclick="toggleHelpModal()" class="absolute top-4 right-4 text-[#a0b4c4] hover:text-white">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="flex items-center gap-3 text-[#7dd3fc]">
+        <span class="material-symbols-outlined text-3xl">terminal</span>
+        <div>
+          <h3 class="text-lg font-bold text-white">How to Run in VS Code with Zero Errors</h3>
+          <p class="text-xs text-[#a0b4c4]">Choose any of the following 3 easy methods:</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <!-- Option 1 -->
+        <div class="p-3.5 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/20 space-y-1.5">
+          <div class="font-bold text-[#7dd3fc] flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-[#0e4d6e] text-center leading-5 text-[11px]">1</span>
+            Simplest: Double-click index.html (Zero Installation)
+          </div>
+          <p class="text-[#a0b4c4]">
+            Simply open the project folder and double-click <code class="text-white bg-black/40 px-1 py-0.5 rounded font-mono">index.html</code> in Chrome, Edge, or Safari. Or in VS Code, right-click <code class="text-white font-mono">index.html</code> and click <b>Open with Live Server</b>!
+          </p>
+        </div>
+
+        <!-- Option 2 -->
+        <div class="p-3.5 rounded-xl bg-[#141c2e] border border-emerald-500/20 space-y-1.5">
+          <div class="font-bold text-emerald-400 flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-emerald-950 text-center leading-5 text-[11px]">2</span>
+            Standard Built-In Python Terminal (Zero pip Packages Needed)
+          </div>
+          <p class="text-[#a0b4c4]">
+            Open terminal in VS Code and type:
+          </p>
+          <pre class="bg-black/60 p-2 rounded text-emerald-300 font-mono text-[11px]">python server.py
+# or
+python main.py</pre>
+          <p class="text-[#a0b4c4]">Both scripts use Python's built-in standard library and automatically open your default browser without any missing package errors.</p>
+        </div>
+
+        <!-- Option 3 -->
+        <div class="p-3.5 rounded-xl bg-[#141c2e] border border-[#c8a0f0]/20 space-y-1.5">
+          <div class="font-bold text-[#c8a0f0] flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-[#3d2060] text-center leading-5 text-[11px]">3</span>
+            Node.js / Vite Dev Server
+          </div>
+          <pre class="bg-black/60 p-2 rounded text-[#c8eaff] font-mono text-[11px]">npm install
+npm run dev</pre>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="toggleHelpModal()" class="px-4 py-2 rounded-xl bg-[#0e4d6e] text-[#7dd3fc] font-semibold text-xs hover:bg-[#7dd3fc] hover:text-[#001f2e] transition-all">
+          Close Guide
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PURE JAVASCRIPT APPLICATION CONTROLLER -->
+  <script>
+    const STORAGE_KEY = 'sas_enterprise_attendance_v2_en';
+
+    const DEFAULT_DATA = {
+      currentUser: {
+        id: 1001,
+        email: 'a.rivera@university.edu',
+        fullName: 'Alex Rivera',
+        role: 'Student'
+      },
+      stats: [
+        { code: 'CS-301', name: 'Advanced Data Structures', total: 28, present: 25, late: 2, absent: 1, excused: 0, pct: 92.8, status: 'Good Standing' },
+        { code: 'ENG-204', name: 'Technical Communication', total: 16, present: 16, late: 0, absent: 0, excused: 0, pct: 100.0, status: 'Honor Compliance' },
+        { code: 'MATH-310', name: 'Linear Algebra', total: 24, present: 20, late: 2, absent: 2, excused: 0, pct: 88.3, status: 'Good Standing' },
+        { code: 'PHY-102', name: 'Engineering Physics II', total: 20, present: 18, late: 1, absent: 1, excused: 0, pct: 93.0, status: 'Good Standing' }
+      ],
+      session: {
+        active: true,
+        code: '849-210',
+        course: 'CS-301',
+        startTime: Date.now() - (6 * 60 * 1000), // 6 minutes ago
+        remainingSeconds: 14 * 60 + 59
+      },
+      roster: [
+        { id: '24091', name: 'Alex Rivera', time: '10:02 AM', method: 'PIN Input', status: 'Present', updatedBy: 'Self (QR)' },
+        { id: '24092', name: 'Elena Rostova', time: '10:04 AM', method: 'PIN Input', status: 'Present', updatedBy: 'Self (QR)' },
+        { id: '24093', name: 'Marcus Chen', time: '10:18 AM', method: 'PIN Input', status: 'Late', updatedBy: 'Self (QR)' },
+        { id: '24094', name: 'Sarah Jenkins', time: '--', method: 'Pending', status: 'Absent', updatedBy: 'System Auto' },
+        { id: '24108', name: 'David Kim', time: '--', method: 'Pending', status: 'Absent', updatedBy: 'System Auto' },
+        { id: '24115', name: 'Taylor Scott', time: '10:01 AM', method: 'Manual Override', status: 'Present', updatedBy: 'Dr. Vance' }
+      ],
+      excuses: [
+        { id: 1, studentId: '24094', studentName: 'Sarah Jenkins', course: 'CS-301', date: '2026-10-20', reason: 'Hospitalized for acute flu treatment', status: 'Pending' },
+        { id: 2, studentId: '24108', studentName: 'David Kim', course: 'CS-301', date: '2026-10-18', reason: 'Transit bus breakdown on route 08', status: 'Approved' },
+        { id: 3, studentId: '24091', studentName: 'Alex Rivera', course: 'MATH-310', date: '2026-10-12', reason: 'Represented university at ACM-ICPC contest', status: 'Approved' }
+      ],
+      warnings: [
+        { studentId: '24094', name: 'Sarah Jenkins', course: 'CS-301', pct: 71.4, consecutiveAbsences: 3, risk: 'Critical', notes: 'Initial warning email dispatched' },
+        { studentId: '24108', name: 'David Kim', course: 'CS-301', pct: 76.5, consecutiveAbsences: 2, risk: 'Warning', notes: 'In-person counseling scheduled' }
+      ],
+      counselingNotes: {
+        '24094': [
+          { date: '2026-10-21 14:30', advisor: 'Marcus Brody', text: 'Contacted student and guardian. Student committed to providing medical discharge paperwork and attending tutoring.' }
+        ],
+        '24108': [
+          { date: '2026-10-19 11:00', advisor: 'Marcus Brody', text: 'Discussed transit issues and offered campus shuttle schedules.' }
+        ]
+      },
+      users: [
+        { id: 1001, email: 'a.rivera@university.edu', name: 'Alex Rivera', role: 'Student', status: 'Active' },
+        { id: 1002, email: 'dr.vance@university.edu', name: 'Dr. Evelyn Vance', role: 'Instructor', status: 'Active' },
+        { id: 1003, email: 'm.brody@university.edu', name: 'Marcus Brody', role: 'Advisor', status: 'Active' },
+        { id: 1004, email: 'sysadmin@university.edu', name: 'Root Systems Admin', role: 'Administrator', status: 'Active' },
+        { id: 1005, email: 'sarah.jenkins@student.univ.edu', name: 'Sarah Jenkins', role: 'Student', status: 'Flagged (EWS)' },
+        { id: 1006, email: 'david.kim@student.univ.edu', name: 'David Kim', role: 'Student', status: 'Flagged (EWS)' }
+      ],
+      auditLogs: [
+        { time: '2026-10-22 10:18:22', user: 'Marcus Chen', action: 'Direct PIN Check-in', details: 'Status: Late (18 mins into session)' },
+        { time: '2026-10-22 10:04:15', user: 'Elena Rostova', action: 'Direct PIN Check-in', details: 'Status: Present (4 mins into session)' },
+        { time: '2026-10-22 10:02:01', user: 'Alex Rivera', action: 'Direct PIN Check-in', details: 'Status: Present (2 mins into session)' },
+        { time: '2026-10-22 10:00:00', user: 'Dr. Evelyn Vance', action: 'Start Attendance Session', details: 'Code: 849-210, Course: CS-301' }
+      ]
+    };
+
+    let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || DEFAULT_DATA;
+    let selectedStudentIdForCounseling = '24094';
+    let timerInterval = null;
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    }
+
+    function resetDataToDefault() {
+      if (confirm('Reset database to default sample institutional records?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+        saveState();
+        renderAll();
+        alert('Database successfully restored to default state.');
+      }
+    }
+
+    // Navigation Switcher (QStackedWidget simulation)
+    function switchPage(pageIndex) {
+      document.querySelectorAll('.page-screen').forEach((el, idx) => {
+        if (idx === pageIndex) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+
+      document.querySelectorAll('.nav-tab').forEach((btn, idx) => {
+        if (idx === pageIndex) {
+          btn.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#0e4d6e] text-[#c8eaff] shadow-inner';
+        } else {
+          btn.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-medium text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]';
+        }
+      });
+
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Login logic
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('txt_email').value.trim();
+      const user = appData.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+      if (user) {
+        document.getElementById('lbl_login_error').classList.add('hidden');
+        appData.currentUser = user;
+        saveState();
+
+        // Record audit
+        appData.auditLogs.unshift({
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          user: user.name,
+          action: 'User Sign-In',
+          details: `Role: ${user.role} authenticated`
+        });
+
+        updateHeaderProfile();
+
+        // Redirect based on role
+        if (user.role === 'Student') switchPage(1);
+        else if (user.role === 'Instructor') switchPage(2);
+        else if (user.role === 'Advisor') switchPage(3);
+        else switchPage(4);
+      } else {
+        const errBox = document.getElementById('lbl_login_error');
+        errBox.classList.remove('hidden');
+        document.getElementById('lbl_login_error_text').innerText = 'Invalid credentials. User email was not found.';
+      }
+    }
+
+    function autofillLogin(email, targetPage) {
+      document.getElementById('txt_email').value = email;
+      document.getElementById('txt_password').value = 'password123';
+      const user = appData.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (user) {
+        appData.currentUser = user;
+        updateHeaderProfile();
+      }
+      switchPage(targetPage);
+    }
+
+    function togglePasswordVisibility() {
+      const pwInput = document.getElementById('txt_password');
+      const icon = document.getElementById('pw_toggle_icon');
+      if (pwInput.type === 'password') {
+        pwInput.type = 'text';
+        icon.innerText = 'visibility_off';
+      } else {
+        pwInput.type = 'password';
+        icon.innerText = 'visibility';
+      }
+    }
+
+    function updateHeaderProfile() {
+      const user = appData.currentUser || { name: 'Alex Rivera', role: 'Student' };
+      document.getElementById('header_user_name').innerText = user.name;
+      document.getElementById('header_user_role').innerText = user.role;
+      const initials = user.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+      document.getElementById('user_avatar_badge').innerText = initials;
+    }
+
+    // Student Check-In Logic
+    function handleStudentCheckIn(e) {
+      e.preventDefault();
+      const course = document.getElementById('combo_student_courses').value;
+      const code = document.getElementById('txt_qr_code').value.trim();
+      const statusBox = document.getElementById('lbl_checkin_status');
+
+      if (!appData.session.active) {
+        statusBox.className = 'p-3 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs flex items-center gap-2';
+        statusBox.innerHTML = '<span class="material-symbols-outlined text-sm">cancel</span> Attendance session is currently closed.';
+        statusBox.classList.remove('hidden');
+        return;
+      }
+
+      const cleanInput = code.replace(/-/g, '').trim();
+      const cleanSession = appData.session.code.replace(/-/g, '').trim();
+
+      if (cleanInput !== cleanSession) {
+        statusBox.className = 'p-3 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs flex items-center gap-2';
+        statusBox.innerHTML = '<span class="material-symbols-outlined text-sm">close</span> Invalid PIN code. Please verify the code on screen.';
+        statusBox.classList.remove('hidden');
+        return;
+      }
+
+      // Timing window calculation: <15m Present, 15-45m Late, >45m Absent
+      const elapsedMinutes = (Date.now() - appData.session.startTime) / (1000 * 60);
+      let attendanceStatus = 'Present';
+      if (elapsedMinutes <= 15) {
+        attendanceStatus = 'Present';
+      } else if (elapsedMinutes <= 45) {
+        attendanceStatus = 'Late';
+      } else {
+        attendanceStatus = 'Absent';
+      }
+
+      // Update student stat
+      const stat = appData.stats.find(s => s.code === course);
+      if (stat) {
+        stat.total += 1;
+        if (attendanceStatus === 'Present') stat.present += 1;
+        else if (attendanceStatus === 'Late') stat.late += 1;
+        stat.pct = Math.round(((stat.present + stat.late * 0.8) / stat.total) * 1000) / 10;
+        stat.status = stat.pct >= 95 ? 'Honor Compliance' : (stat.pct >= 85 ? 'Good Standing' : 'Risk Warning');
+      }
+
+      // Update instructor roster
+      const rosterItem = appData.roster.find(r => r.id === '24091');
+      if (rosterItem) {
+        rosterItem.status = attendanceStatus;
+        rosterItem.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        rosterItem.method = 'PIN Input';
+        rosterItem.updatedBy = 'Self (QR)';
+      }
+
+      // Log audit
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: 'Alex Rivera (#24091)',
+        action: 'Student Check-in',
+        details: `Course: ${course}, Status: ${attendanceStatus} (${Math.round(elapsedMinutes)}m elapsed)`
+      });
+
+      saveState();
+      renderAll();
+
+      statusBox.className = attendanceStatus === 'Present' 
+        ? 'p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2'
+        : 'p-3 rounded-xl bg-amber-950/70 border border-amber-500/40 text-amber-300 text-xs flex items-center gap-2';
+
+      statusBox.innerHTML = `
+        <span class="material-symbols-outlined text-sm">${attendanceStatus === 'Present' ? 'check_circle' : 'schedule'}</span>
+        <span>Check-in Verified! Recorded status: <b>${attendanceStatus === 'Present' ? 'Present (On-Time)' : 'Late'}</b> (${Math.round(elapsedMinutes)} mins into session)</span>
+      `;
+      statusBox.classList.remove('hidden');
+    }
+
+    // Student Excuse Submit
+    function handleStudentExcuseSubmit(e) {
+      e.preventDefault();
+      const course = document.getElementById('combo_excuse_course').value;
+      const date = document.getElementById('date_excuse').value;
+      const reason = document.getElementById('txt_excuse_reason').value.trim();
+
+      const newExcuse = {
+        id: Date.now(),
+        studentId: '24091',
+        studentName: 'Alex Rivera',
+        course: course,
+        date: date,
+        reason: reason,
+        status: 'Pending'
+      };
+
+      appData.excuses.unshift(newExcuse);
+      saveState();
+      renderStudentExcuses();
+      renderInstructorExcuses();
+
+      document.getElementById('txt_excuse_reason').value = '';
+      alert('Excuse request dispatched to course faculty with status: Pending.');
+    }
+
+    // Instructor Session Controls
+    function handleStartSession() {
+      const course = document.getElementById('combo_instructor_courses').value;
+      const part1 = Math.floor(100 + Math.random() * 900);
+      const part2 = Math.floor(100 + Math.random() * 900);
+      const newPin = `${part1}-${part2}`;
+
+      appData.session = {
+        active: true,
+        code: newPin,
+        course: course,
+        startTime: Date.now(),
+        remainingSeconds: 15 * 60
+      };
+
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: 'Dr. Evelyn Vance',
+        action: 'Start Attendance Session',
+        details: `Course: ${course}, Code: ${newPin}`
+      });
+
+      saveState();
+      renderInstructorSession();
+      renderStudentStats();
+      startCountdownTimer();
+    }
+
+    function handleEndSession() {
+      appData.session.active = false;
+      appData.session.remainingSeconds = 0;
+      clearInterval(timerInterval);
+
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: 'Dr. Evelyn Vance',
+        action: 'End Attendance Session',
+        details: `Session finalized for ${appData.session.course}`
+      });
+
+      saveState();
+      renderInstructorSession();
+    }
+
+    function startCountdownTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!appData.session.active) {
+          clearInterval(timerInterval);
+          return;
+        }
+
+        const elapsed = Math.floor((Date.now() - appData.session.startTime) / 1000);
+        const remaining = Math.max(0, (15 * 60) - elapsed);
+        appData.session.remainingSeconds = remaining;
+
+        const minutes = Math.floor(remaining / 60);
+        const seconds = remaining % 60;
+        const text = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} Remaining`;
+        
+        const timerElem = document.getElementById('countdown_timer_text');
+        if (timerElem) timerElem.innerText = text;
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+        }
+      }, 1000);
+    }
+
+    // Manual Status Override (ComboBox inside Table)
+    function handleOverrideStatus(studentId, newStatus) {
+      const item = appData.roster.find(r => r.id === studentId);
+      if (item) {
+        const oldStatus = item.status;
+        item.status = newStatus;
+        item.updatedBy = 'Dr. Vance (Override)';
+        item.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        appData.auditLogs.unshift({
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          user: 'Dr. Evelyn Vance',
+          action: 'Manual Status Override',
+          details: `Student: ${item.name} (#${studentId}) overridden: ${oldStatus} -> ${newStatus}`
+        });
+
+        saveState();
+        renderInstructorRoster();
+        renderAuditLogs();
+      }
+    }
+
+    // Excuse Approval / Rejection
+    function handleApproveExcuse(excuseId) {
+      const ex = appData.excuses.find(e => e.id === excuseId);
+      if (ex) {
+        ex.status = 'Approved';
+        const stat = appData.stats.find(s => s.code === ex.course);
+        if (stat) stat.excused += 1;
+
+        appData.auditLogs.unshift({
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          user: 'Dr. Evelyn Vance',
+          action: 'Approve Excuse',
+          details: `Approved absence for ${ex.studentName} on ${ex.date}`
+        });
+        saveState();
+        renderInstructorExcuses();
+        renderStudentExcuses();
+        renderStudentStats();
+      }
+    }
+
+    function handleRejectExcuse(excuseId) {
+      const ex = appData.excuses.find(e => e.id === excuseId);
+      if (ex) {
+        ex.status = 'Rejected';
+        appData.auditLogs.unshift({
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          user: 'Dr. Evelyn Vance',
+          action: 'Reject Excuse',
+          details: `Rejected excuse for ${ex.studentName} on ${ex.date}`
+        });
+        saveState();
+        renderInstructorExcuses();
+        renderStudentExcuses();
+      }
+    }
+
+    // CSV Exports
+    function exportCourseReportCSV() {
+      let csv = 'StudentID,StudentName,LoggedTime,Method,UpdatedBy,Status\n';
+      appData.roster.forEach(r => {
+        csv += `"${r.id}","${r.name}","${r.time}","${r.method}","${r.updatedBy}","${r.status}"\n`;
+      });
+      downloadCSV(csv, 'CS301_Attendance_Report.csv');
+    }
+
+    function exportSystemReportCSV() {
+      let csv = 'Timestamp,Principal,Action,Details\n';
+      appData.auditLogs.forEach(l => {
+        csv += `"${l.time}","${l.user}","${l.action}","${l.details}"\n`;
+      });
+      downloadCSV(csv, 'SAS_System_Attendance_Audit_Report.csv');
+    }
+
+    function downloadCSV(content, filename) {
+      const blob = new Blob(["\uFEFF" + content], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Counseling Notes
+    function selectStudentForCounseling(studentId, name, course, pct) {
+      selectedStudentIdForCounseling = studentId;
+      document.getElementById('counseling_selected_student').innerText = `${name} (#${studentId})`;
+      renderCounselingHistory();
+    }
+
+    function handleSaveCounselingNotes() {
+      const text = document.getElementById('txt_counseling_notes').value.trim();
+      if (!text) {
+        alert('Please enter counseling notes before saving.');
+        return;
+      }
+
+      if (!appData.counselingNotes[selectedStudentIdForCounseling]) {
+        appData.counselingNotes[selectedStudentIdForCounseling] = [];
+      }
+
+      const now = new Date().toISOString().replace('T', ' ').slice(0, 16);
+      appData.counselingNotes[selectedStudentIdForCounseling].unshift({
+        date: now,
+        advisor: 'Marcus Brody',
+        text: text
+      });
+
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: 'Marcus Brody (Advisor)',
+        action: 'Save Intervention Note',
+        details: `Student #${selectedStudentIdForCounseling}: ${text.slice(0, 45)}...`
+      });
+
+      saveState();
+      document.getElementById('txt_counseling_notes').value = '';
+      renderCounselingHistory();
+      alert('Counseling notes saved to student dossier.');
+    }
+
+    // Admin Add User
+    function handleAdminAddUser(e) {
+      e.preventDefault();
+      const email = document.getElementById('txt_add_email').value.trim();
+      const name = document.getElementById('txt_add_name').value.trim();
+      const role = document.getElementById('combo_add_role').value;
+
+      const newUser = {
+        id: 1000 + appData.users.length + 1,
+        email: email,
+        name: name,
+        role: role,
+        status: 'Active'
+      };
+
+      appData.users.push(newUser);
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: 'Root Systems Admin',
+        action: 'Create User Account',
+        details: `${email} (${role})`
+      });
+
+      saveState();
+      document.getElementById('txt_add_email').value = '';
+      document.getElementById('txt_add_name').value = '';
+      renderAdminUsers();
+      renderAuditLogs();
+      alert(`User ${name} (${role}) provisioned successfully.`);
+    }
+
+    // Render Methods
+    function renderStudentStats() {
+      const tbody = document.getElementById('table_student_stats_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      let totalPresent = 0;
+      let totalSessions = 0;
+
+      appData.stats.forEach(s => {
+        totalPresent += s.present;
+        totalSessions += s.total;
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3.5 font-bold text-[#7dd3fc]">${s.code}</td>
+          <td class="p-3.5 text-white font-sans">${s.name}</td>
+          <td class="p-3.5 text-center text-[#a0b4c4]">${s.total}</td>
+          <td class="p-3.5 text-center font-bold text-emerald-400">${s.present}</td>
+          <td class="p-3.5 text-center font-bold text-amber-400">${s.late}</td>
+          <td class="p-3.5 text-center font-bold text-rose-400">${s.absent}</td>
+          <td class="p-3.5 text-center font-bold text-[#c8a0f0]">${s.excused}</td>
+          <td class="p-3.5 text-center font-bold text-white">${s.pct}%</td>
+          <td class="p-3.5 text-right font-sans">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold ${
+              s.pct >= 90 ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30' : 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
+            }">${s.status}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const overall = totalSessions > 0 ? Math.round((totalPresent / totalSessions) * 1000) / 10 : 100;
+      const statElem = document.getElementById('overall_attendance_stat');
+      if (statElem) statElem.innerText = `${overall}%`;
+
+      const hintPin = document.getElementById('student_hint_pin');
+      if (hintPin) hintPin.innerText = appData.session.active ? appData.session.code : 'Session Closed';
+    }
+
+    function renderStudentExcuses() {
+      const container = document.getElementById('student_excuse_list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const myExcuses = appData.excuses.filter(e => e.studentId === '24091');
+      if (myExcuses.length === 0) {
+        container.innerHTML = '<div class="text-xs text-[#a0b4c4] p-3 text-center">No excuse requests on file.</div>';
+        return;
+      }
+
+      myExcuses.forEach(e => {
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-xl bg-[#141c2e] border border-white/5 space-y-1';
+        div.innerHTML = `
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-[#7dd3fc]">${e.course}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
+              e.status === 'Approved' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30' :
+              e.status === 'Rejected' ? 'bg-rose-950 text-rose-300 border border-rose-500/30' :
+              'bg-amber-950 text-amber-300 border border-amber-500/30'
+            }">${e.status}</span>
+          </div>
+          <div class="text-[11px] text-white font-medium truncate">${e.reason}</div>
+          <div class="text-[10px] text-[#a0b4c4] font-mono">Date: ${e.date}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderInstructorSession() {
+      const qrElem = document.getElementById('lbl_dynamic_qr');
+      const timerElem = document.getElementById('countdown_timer_text');
+      if (qrElem) qrElem.innerText = appData.session.active ? appData.session.code : '--- CLOSED ---';
+      if (timerElem) {
+        timerElem.innerText = appData.session.active 
+          ? `${Math.floor(appData.session.remainingSeconds / 60)}:${(appData.session.remainingSeconds % 60).toString().padStart(2, '0')} Remaining`
+          : '00:00 Closed';
+      }
+    }
+
+    function renderInstructorRoster() {
+      const tbody = document.getElementById('table_instructor_attendance_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      let presentCount = 0;
+
+      appData.roster.forEach(r => {
+        if (r.status === 'Present') presentCount++;
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3.5 font-mono text-[#7dd3fc] font-semibold">#${r.id}</td>
+          <td class="p-3.5 text-white font-medium">${r.name}</td>
+          <td class="p-3.5 font-mono text-[#a0b4c4]">${r.time}</td>
+          <td class="p-3.5 text-[#a0b4c4]">${r.method}</td>
+          <td class="p-3.5 text-xs text-[#a0b4c4]">${r.updatedBy}</td>
+          <td class="p-3.5 text-right">
+            <select onchange="handleOverrideStatus('${r.id}', this.value)" 
+              class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border focus:outline-none ${
+                r.status === 'Present' ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40' :
+                r.status === 'Late' ? 'bg-amber-950/80 text-amber-300 border-amber-500/40' :
+                r.status === 'Excused' ? 'bg-[#3d2060] text-[#c8a0f0] border-[#c8a0f0]/40' :
+                'bg-rose-950/80 text-rose-300 border-rose-500/40'
+              }">
+              <option value="Present" ${r.status === 'Present' ? 'selected' : ''}>🟢 Present</option>
+              <option value="Late" ${r.status === 'Late' ? 'selected' : ''}>🟡 Late</option>
+              <option value="Absent" ${r.status === 'Absent' ? 'selected' : ''}>🔴 Absent</option>
+              <option value="Excused" ${r.status === 'Excused' ? 'selected' : ''}>🟣 Excused</option>
+            </select>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const countElem = document.getElementById('roster_present_count');
+      if (countElem) countElem.innerText = presentCount;
+    }
+
+    function renderInstructorExcuses() {
+      const tbody = document.getElementById('table_instructor_excuses_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      appData.excuses.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3.5">
+            <div class="font-medium text-white">${e.studentName}</div>
+            <div class="text-[10px] text-[#a0b4c4] font-mono">#${e.studentId}</div>
+          </td>
+          <td class="p-3.5 font-bold text-[#7dd3fc]">${e.course}</td>
+          <td class="p-3.5 font-mono text-[#a0b4c4]">${e.date}</td>
+          <td class="p-3.5 text-[#e0e8f0] text-xs max-w-xs">${e.reason}</td>
+          <td class="p-3.5 text-center">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold ${
+              e.status === 'Approved' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30' :
+              e.status === 'Rejected' ? 'bg-rose-950 text-rose-300 border border-rose-500/30' :
+              'bg-amber-950 text-amber-300 border border-amber-500/30'
+            }">${e.status}</span>
+          </td>
+          <td class="p-3.5 text-right space-x-1.5 whitespace-nowrap">
+            ${e.status === 'Pending' ? `
+              <button onclick="handleApproveExcuse(${e.id})" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-all">
+                Approve
+              </button>
+              <button onclick="handleRejectExcuse(${e.id})" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition-all">
+                Reject
+              </button>
+            ` : `<span class="text-[11px] text-[#a0b4c4] italic">Processed</span>`}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderAdvisorWarnings() {
+      const tbody = document.getElementById('table_advisor_warnings_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      appData.warnings.forEach(w => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/10 transition-colors';
+        tr.onclick = () => selectStudentForCounseling(w.studentId, w.name, w.course, w.pct);
+        tr.innerHTML = `
+          <td class="p-3.5">
+            <div class="font-bold text-white">${w.name}</div>
+            <div class="text-[10px] text-[#a0b4c4] font-mono">#${w.studentId}</div>
+          </td>
+          <td class="p-3.5 font-bold text-[#7dd3fc]">${w.course}</td>
+          <td class="p-3.5 text-center font-mono font-bold text-rose-400">${w.pct}%</td>
+          <td class="p-3.5 text-center font-mono font-bold text-amber-400">${w.consecutiveAbsences} consecutive</td>
+          <td class="p-3.5 text-right">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
+              w.risk === 'Critical' ? 'bg-rose-950 text-rose-300 border border-rose-500/50' : 'bg-amber-950 text-amber-300 border border-amber-500/50'
+            }">● ${w.risk}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderCounselingHistory() {
+      const container = document.getElementById('counseling_history_list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const notes = appData.counselingNotes[selectedStudentIdForCounseling] || [];
+      if (notes.length === 0) {
+        container.innerHTML = '<div class="text-[#a0b4c4] italic">No intervention history recorded for this student.</div>';
+        return;
+      }
+
+      notes.forEach(n => {
+        const div = document.createElement('div');
+        div.className = 'p-2.5 rounded-lg bg-[#141c2e] border border-white/5 space-y-1';
+        div.innerHTML = `
+          <div class="flex items-center justify-between text-[10px] text-[#7dd3fc]">
+            <span>${n.advisor}</span>
+            <span class="font-mono text-[#a0b4c4]">${n.date}</span>
+          </div>
+          <div class="text-white text-xs">${n.text}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderAdminUsers() {
+      const tbody = document.getElementById('table_admin_users_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      appData.users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3.5 font-mono text-[#a0b4c4]">#${u.id}</td>
+          <td class="p-3.5 font-bold text-white">${u.name}</td>
+          <td class="p-3.5 font-mono text-[#7dd3fc]">${u.email}</td>
+          <td class="p-3.5">
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
+              u.role === 'Student' ? 'bg-[#0e4d6e] text-[#c8eaff]' :
+              u.role === 'Instructor' ? 'bg-[#1a3a4e] text-[#7dd3fc]' :
+              u.role === 'Advisor' ? 'bg-[#3d2060] text-[#c8a0f0]' :
+              'bg-emerald-950 text-emerald-300'
+            }">${u.role}</span>
+          </td>
+          <td class="p-3.5 text-xs text-emerald-400">● ${u.status}</td>
+          <td class="p-3.5 text-right">
+            <button onclick="alert('User record edit permission granted for ${u.name}')" class="text-[#7dd3fc] hover:underline text-xs">Edit</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const countElem = document.getElementById('admin_users_count');
+      if (countElem) countElem.innerText = `Total: ${appData.users.length} accounts`;
+    }
+
+    function renderAuditLogs() {
+      const tbody = document.getElementById('admin_audit_logs_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      appData.auditLogs.slice(0, 15).forEach(l => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3 text-[#a0b4c4] whitespace-nowrap">${l.time}</td>
+          <td class="p-3 font-semibold text-white whitespace-nowrap">${l.user}</td>
+          <td class="p-3 text-[#7dd3fc]">${l.action}</td>
+          <td class="p-3 text-[#a0b4c4]">${l.details}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderAll() {
+      updateHeaderProfile();
+      renderStudentStats();
+      renderStudentExcuses();
+      renderInstructorSession();
+      renderInstructorRoster();
+      renderInstructorExcuses();
+      renderAdvisorWarnings();
+      renderCounselingHistory();
+      renderAdminUsers();
+      renderAuditLogs();
+    }
+
+    function toggleHelpModal() {
+      const modal = document.getElementById('modal_help');
+      modal.classList.toggle('hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      const dateElem = document.getElementById('date_excuse');
+      if (dateElem) dateElem.value = today;
+
+      renderAll();
+      startCountdownTimer();
+    });
+  </script>
+</body>
 </html>

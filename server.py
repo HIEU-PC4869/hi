@@ -21,9 +21,8 @@ os.chdir(script_dir)
 
 class SASHttpHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        # Default root path to app.html for seamless one-click loading
-        if self.path in ('/', '/index.html'):
-            self.path = '/app.html'
+        if self.path == '/':
+            self.path = '/index.html'
         return super().do_GET()
 
     def end_headers(self):
@@ -36,14 +35,14 @@ class SASHttpHandler(http.server.SimpleHTTPRequestHandler):
 def run():
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", PORT), SASHttpHandler) as httpd:
-        target_url = f"http://localhost:{PORT}/app.html"
+        target_url = f"http://localhost:{PORT}/index.html"
         print("=" * 64)
         print("  🚀 SAS Enterprise - Student Attendance & Intelligence System")
-        print(f"  🌐 Đang chạy máy chủ web cục bộ tại:")
+        print(f"  🌐 Local web server running at:")
         print(f"     👉 {target_url}")
         print("=" * 64)
-        print("  💡 Bạn có thể mở trực tiếp link trên trong Chrome, Edge, Safari...")
-        print("  🛑 Nhấn Ctrl + C để dừng máy chủ bất cứ lúc nào.")
+        print("  💡 You can open the URL above directly in Chrome, Edge, Safari...")
+        print("  🛑 Press Ctrl + C to stop the server at any time.")
         print("=" * 64)
         
         try:
@@ -54,7 +53,7 @@ def run():
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            print("\n  👋 Đã tắt máy chủ. Cảm ơn bạn đã sử dụng SAS Enterprise!")
+            print("\n  👋 Server stopped. Thank you for using SAS Enterprise!")
             sys.exit(0)
 
 if __name__ == "__main__":

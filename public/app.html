@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAS Enterprise - Student Attendance & Intelligence System (Standalone HTML)</title>
-  <meta name="description" content="Self-contained zero-dependency HTML interface for SAS Enterprise. Run directly in any browser or VS Code with 0 configuration." />
+  <title>SAS Enterprise - Student Attendance & Intelligence System</title>
+  <meta name="description" content="Institutional Student Attendance and Intelligence System featuring role-based workflows for Students, Instructors, Academic Advisors, and System Administrators." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -46,7 +46,6 @@
       color: #e0e8f0;
       font-family: 'Inter', sans-serif;
     }
-    /* Custom scrollbars */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -76,11 +75,11 @@
 </head>
 <body class="min-h-screen bg-[#0a0e1a] text-[#e0e8f0] flex flex-col selection:bg-[#0e4d6e] selection:text-[#c8eaff]">
 
-  <!-- TOP HEADER BAR -->
+  <!-- TOP HEADER NAVIGATION -->
   <header class="fixed top-0 left-0 right-0 z-50 bg-[#0f1524]/90 backdrop-blur-2xl border-b border-[#7dd3fc]/15 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
     <div class="h-16 px-4 md:px-6 flex items-center justify-between gap-4">
       
-      <!-- Brand & Icon -->
+      <!-- Brand & Hex Icon -->
       <div class="flex items-center gap-3 shrink-0 cursor-pointer" onclick="switchPage(0)">
         <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/30 shadow-lg text-[#7dd3fc]">
           <svg class="w-6 h-6 text-[#7dd3fc]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
@@ -91,7 +90,7 @@
         <div>
           <div class="text-sm md:text-base font-bold tracking-tight text-[#e0e8f0] flex items-center gap-2">
             SAS Enterprise
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30">HTML Edition</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30">v2.4 LTS</span>
           </div>
           <div class="text-[11px] text-[#a0b4c4] hidden sm:block">
             Student Attendance & Intelligence System
@@ -99,7 +98,7 @@
         </div>
       </div>
 
-      <!-- Navigation Tabs (QStackedWidget mapping) -->
+      <!-- Navigation Tabs (QStackedWidget mapping: Screens 0-4) -->
       <nav class="flex items-center p-1 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 backdrop-blur-md overflow-x-auto max-w-full">
         <button id="nav_btn_0" onclick="switchPage(0)" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]">
           0: Login
@@ -118,11 +117,11 @@
         </button>
       </nav>
 
-      <!-- User Info & VS Code Help Guide -->
+      <!-- Active User Profile & Run Guide -->
       <div class="flex items-center gap-3 shrink-0">
-        <button onclick="toggleHelpModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e4d6e]/40 hover:bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-medium transition-all active:scale-95">
+        <button onclick="toggleHelpModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e4d6e]/40 hover:bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-medium transition-all active:scale-95" title="How to run in VS Code without errors">
           <span class="material-symbols-outlined text-sm">terminal</span>
-          <span class="hidden md:inline">Cách chạy VS Code</span>
+          <span class="hidden md:inline">VS Code Run Guide</span>
         </button>
 
         <div class="flex items-center gap-2 pl-2 border-l border-white/10">
@@ -139,7 +138,7 @@
     </div>
   </header>
 
-  <!-- MAIN WRAPPER: SIDEBAR + CONTENT -->
+  <!-- MAIN WRAPPER: SIDEBAR + VIEWPORT -->
   <div class="pt-16 flex-1 flex">
 
     <!-- DESKTOP SIDEBAR -->
@@ -147,63 +146,63 @@
       <div class="space-y-6">
         <div>
           <div class="text-[11px] font-bold text-[#7dd3fc]/70 uppercase tracking-widest px-3 mb-2">
-            Vai trò hệ thống
+            Navigation Core
           </div>
           <div class="space-y-1">
             <button onclick="switchPage(1)" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#e0e8f0] hover:bg-[#1a2438] transition-all text-left group">
               <span class="material-symbols-outlined text-base text-[#7dd3fc]">school</span>
-              <span>Sinh viên (Student)</span>
+              <span>Student Module</span>
             </button>
             <button onclick="switchPage(2)" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#e0e8f0] hover:bg-[#1a2438] transition-all text-left group">
               <span class="material-symbols-outlined text-base text-[#7dd3fc]">co_present</span>
-              <span>Giảng viên (Instructor)</span>
+              <span>Instructor Module</span>
             </button>
             <button onclick="switchPage(3)" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#e0e8f0] hover:bg-[#1a2438] transition-all text-left group">
               <span class="material-symbols-outlined text-base text-[#7dd3fc]">shield_person</span>
-              <span>Cố vấn học tập (Advisor)</span>
+              <span>Academic Advisor (EWS)</span>
             </button>
             <button onclick="switchPage(4)" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#e0e8f0] hover:bg-[#1a2438] transition-all text-left group">
               <span class="material-symbols-outlined text-base text-[#7dd3fc]">admin_panel_settings</span>
-              <span>Quản trị viên (Admin)</span>
+              <span>Administrator Module</span>
             </button>
           </div>
         </div>
 
-        <!-- System Status Bento -->
+        <!-- System Architecture Bento -->
         <div class="p-3.5 rounded-xl bg-[#141c2e]/60 border border-[#7dd3fc]/10 space-y-2.5">
           <div class="flex items-center justify-between text-[11px]">
-            <span class="text-[#a0b4c4]">Môi trường:</span>
-            <span class="text-[#7dd3fc] font-mono font-medium">Standalone Web</span>
+            <span class="text-[#a0b4c4]">Architecture:</span>
+            <span class="text-[#7dd3fc] font-mono font-medium">Standalone Zero-Config</span>
           </div>
           <div class="flex items-center justify-between text-[11px]">
-            <span class="text-[#a0b4c4]">Độ trễ phản hồi:</span>
-            <span class="text-emerald-400 font-mono">0ms (Client)</span>
+            <span class="text-[#a0b4c4]">Security:</span>
+            <span class="text-emerald-400 font-mono">TLS 1.3 Active</span>
           </div>
           <div class="flex items-center justify-between text-[11px]">
-            <span class="text-[#a0b4c4]">Dữ liệu:</span>
-            <span class="text-[#c8a0f0] font-mono">Realtime Local</span>
+            <span class="text-[#a0b4c4]">Database:</span>
+            <span class="text-[#c8a0f0] font-mono">Real-time In-Memory</span>
           </div>
           <div class="pt-2 border-t border-white/5 flex items-center gap-2 text-[10px] text-emerald-400">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Chạy độc lập, không cần thư viện</span>
+            <span>Self-Contained • Runs Everywhere</span>
           </div>
         </div>
       </div>
 
-      <!-- Quick Reset Database Button -->
+      <!-- Quick Reset Database -->
       <div class="pt-4 border-t border-white/10">
         <button onclick="resetDataToDefault()" class="w-full py-2 px-3 rounded-lg bg-red-950/30 hover:bg-red-900/40 text-red-300 border border-red-500/20 text-xs flex items-center justify-center gap-2 transition-all">
           <span class="material-symbols-outlined text-sm">refresh</span>
-          <span>Khôi phục dữ liệu gốc</span>
+          <span>Reset Sample Database</span>
         </button>
       </div>
     </aside>
 
-    <!-- MAIN CONTENT VIEWPORT (QStackedWidget simulation) -->
+    <!-- MAIN VIEWPORT (QStackedWidget simulation) -->
     <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
 
       <!-- ========================================== -->
-      <!-- SCREEN 0: LOGIN (page_login) -->
+      <!-- SCREEN 0: LOGIN MODULE (page_login) -->
       <!-- ========================================== -->
       <section id="page_login" class="page-screen hidden max-w-md mx-auto py-8">
         <div class="glass-card-glow rounded-2xl p-7 md:p-8 space-y-6">
@@ -213,30 +212,30 @@
             </div>
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0e4d6e]/40 text-[#7dd3fc] text-xs font-semibold uppercase tracking-wider">
               <span class="w-1.5 h-1.5 rounded-full bg-[#7dd3fc] animate-pulse"></span>
-              Xác thực quyền truy cập
+              Identity & Access Management
             </div>
-            <h1 class="text-2xl font-bold tracking-tight text-white">Đăng nhập Cổng SAS</h1>
-            <p class="text-xs text-[#a0b4c4]">Chọn tài khoản mẫu hoặc nhập email trường</p>
+            <h1 class="text-2xl font-bold tracking-tight text-white">Sign In to Your Portal</h1>
+            <p class="text-xs text-[#a0b4c4]">Select a demo role or provide institutional credentials</p>
           </div>
 
           <!-- Error Alert (lbl_login_error) -->
           <div id="lbl_login_error" class="hidden p-3 rounded-xl bg-red-950/60 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
             <span class="material-symbols-outlined text-sm text-red-400">error</span>
-            <span id="lbl_login_error_text">Thông tin đăng nhập không hợp lệ.</span>
+            <span id="lbl_login_error_text">Authentication failed. Please verify credentials.</span>
           </div>
 
           <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
             <div class="space-y-1.5">
-              <label class="block text-xs font-medium text-[#a0b4c4]">Email tổ chức (txt_email)</label>
+              <label class="block text-xs font-medium text-[#a0b4c4]">Institutional Email (txt_email)</label>
               <div class="relative flex items-center">
-                <span class="material-symbols-outlined absolute left-3 text-[#a0b4c4] text-sm">mail</span>
+                <span class="material-symbols-outlined absolute left-3 text-[#a0b4c4] text-sm">school</span>
                 <input id="txt_email" type="email" required value="a.rivera@university.edu"
                   class="w-full h-11 pl-10 pr-4 rounded-xl bg-[#1a2438]/80 border border-[#7dd3fc]/20 text-sm text-white placeholder-[#a0b4c4]/40 focus:outline-none focus:border-[#7dd3fc] focus:ring-1 focus:ring-[#7dd3fc] transition-all" />
               </div>
             </div>
 
             <div class="space-y-1.5">
-              <label class="block text-xs font-medium text-[#a0b4c4]">Mật khẩu (txt_password)</label>
+              <label class="block text-xs font-medium text-[#a0b4c4]">Password (txt_password)</label>
               <div class="relative flex items-center">
                 <span class="material-symbols-outlined absolute left-3 text-[#a0b4c4] text-sm">lock</span>
                 <input id="txt_password" type="password" required value="password123"
@@ -249,32 +248,33 @@
 
             <button id="btn_login" type="submit"
               class="w-full h-11 rounded-xl bg-gradient-to-r from-[#0e4d6e] to-[#7dd3fc] text-[#001f2e] font-bold text-sm shadow-lg shadow-[#7dd3fc]/20 hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
-              <span>Đăng nhập hệ thống</span>
+              <span>Sign In</span>
               <span class="material-symbols-outlined text-sm">login</span>
             </button>
           </form>
 
-          <!-- Quick Autofill Role Chips -->
+          <!-- 1-Click Demo Quick Roles -->
           <div class="pt-4 border-t border-white/10 space-y-2">
-            <div class="text-[11px] font-semibold text-[#a0b4c4] uppercase tracking-wider">
-              Đăng nhập nhanh theo vai trò (1-Click):
+            <div class="text-[11px] font-semibold text-[#a0b4c4] uppercase tracking-wider flex items-center justify-between">
+              <span>Demo Quick Roles (1-Click Fill)</span>
+              <span class="text-tertiary font-mono text-[10px]">Pre-seeded</span>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <button onclick="autofillLogin('a.rivera@university.edu', 1)" class="p-2.5 rounded-lg bg-[#1a2438] hover:bg-[#202c42] border border-[#7dd3fc]/20 text-left transition-all">
-                <div class="text-xs font-bold text-[#7dd3fc]">🎓 Sinh viên</div>
+                <div class="text-xs font-bold text-[#7dd3fc]">🎓 Student</div>
                 <div class="text-[10px] text-[#a0b4c4] truncate">Alex Rivera</div>
               </button>
               <button onclick="autofillLogin('dr.vance@university.edu', 2)" class="p-2.5 rounded-lg bg-[#1a2438] hover:bg-[#202c42] border border-[#7dd3fc]/20 text-left transition-all">
-                <div class="text-xs font-bold text-[#7dd3fc]">👨‍🏫 Giảng viên</div>
+                <div class="text-xs font-bold text-[#7dd3fc]">👨‍🏫 Instructor</div>
                 <div class="text-[10px] text-[#a0b4c4] truncate">Dr. Evelyn Vance</div>
               </button>
               <button onclick="autofillLogin('m.brody@university.edu', 3)" class="p-2.5 rounded-lg bg-[#1a2438] hover:bg-[#202c42] border border-[#7dd3fc]/20 text-left transition-all">
-                <div class="text-xs font-bold text-[#c8a0f0]">🧭 Cố vấn</div>
+                <div class="text-xs font-bold text-[#c8a0f0]">🧭 Advisor</div>
                 <div class="text-[10px] text-[#a0b4c4] truncate">Marcus Brody</div>
               </button>
               <button onclick="autofillLogin('sysadmin@university.edu', 4)" class="p-2.5 rounded-lg bg-[#1a2438] hover:bg-[#202c42] border border-[#7dd3fc]/20 text-left transition-all">
-                <div class="text-xs font-bold text-emerald-400">⚙️ Quản trị</div>
-                <div class="text-[10px] text-[#a0b4c4] truncate">SysAdmin</div>
+                <div class="text-xs font-bold text-emerald-400">⚙️ Admin</div>
+                <div class="text-[10px] text-[#a0b4c4] truncate">Root SysAdmin</div>
               </button>
             </div>
           </div>
@@ -289,18 +289,18 @@
         <!-- Welcome Banner -->
         <div class="glass-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div class="text-xs font-semibold text-[#7dd3fc] tracking-wider uppercase">Cổng Sinh Viên • Student Portal</div>
-            <h2 class="text-2xl font-extrabold text-white mt-1">Xin chào, Alex Rivera</h2>
-            <p class="text-xs text-[#a0b4c4]">Mã sinh viên: #24091 • Ngành Kỹ thuật Phần mềm (Năm 3)</p>
+            <div class="text-xs font-semibold text-[#7dd3fc] tracking-wider uppercase">Student Portal • Academic Year 2026</div>
+            <h2 class="text-2xl font-extrabold text-white mt-1">Welcome back, Alex Rivera</h2>
+            <p class="text-xs text-[#a0b4c4]">Student ID: #24091 • B.S. Software Engineering (Year 3)</p>
           </div>
           <div class="flex items-center gap-3">
             <div class="px-4 py-2 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/20 text-center">
-              <div class="text-[10px] text-[#a0b4c4]">Tỷ lệ chuyên cần chung</div>
+              <div class="text-[10px] text-[#a0b4c4]">Overall Attendance</div>
               <div class="text-lg font-bold text-emerald-400" id="overall_attendance_stat">92.8%</div>
             </div>
             <div class="px-4 py-2 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/20 text-center">
-              <div class="text-[10px] text-[#a0b4c4]">Trạng thái</div>
-              <div class="text-xs font-bold text-[#7dd3fc] mt-1">Tốt (Good Standing)</div>
+              <div class="text-[10px] text-[#a0b4c4]">Academic Standing</div>
+              <div class="text-xs font-bold text-[#7dd3fc] mt-1">Good Standing</div>
             </div>
           </div>
         </div>
@@ -311,37 +311,37 @@
           <div class="glass-card-glow rounded-2xl p-6 space-y-4">
             <div class="flex items-center gap-2 text-[#7dd3fc]">
               <span class="material-symbols-outlined text-xl">qr_code_scanner</span>
-              <h3 class="text-base font-bold text-white">Điểm danh trực tiếp</h3>
+              <h3 class="text-base font-bold text-white">Direct Check-In</h3>
             </div>
             <p class="text-xs text-[#a0b4c4]">
-              Nhập mã PIN / chuỗi QR 6 chữ số đang hiển thị trên màn hình giảng đường:
+              Enter the 6-digit PIN or QR code string displayed on the classroom projection screen:
             </p>
 
             <form onsubmit="handleStudentCheckIn(event)" class="space-y-3">
               <div class="space-y-1">
-                <label class="text-xs text-[#a0b4c4]">Chọn môn học (combo_student_courses)</label>
+                <label class="text-xs text-[#a0b4c4]">Enrolled Course (combo_student_courses)</label>
                 <select id="combo_student_courses" class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/20 text-sm text-white focus:outline-none focus:border-[#7dd3fc]">
-                  <option value="CS-301">CS-301: Cấu trúc Dữ liệu Nâng cao</option>
-                  <option value="ENG-204">ENG-204: Giao tiếp Kỹ thuật</option>
-                  <option value="MATH-310">MATH-310: Đại số Tuyến tính</option>
-                  <option value="PHY-102">PHY-102: Vật lý Đại cương II</option>
+                  <option value="CS-301">CS-301: Advanced Data Structures</option>
+                  <option value="ENG-204">ENG-204: Technical Communication</option>
+                  <option value="MATH-310">MATH-310: Linear Algebra</option>
+                  <option value="PHY-102">PHY-102: Engineering Physics II</option>
                 </select>
               </div>
 
               <div class="space-y-1">
-                <label class="text-xs text-[#a0b4c4]">Mã PIN / QR (txt_qr_code)</label>
-                <input id="txt_qr_code" type="text" placeholder="Ví dụ: 849-210" required
+                <label class="text-xs text-[#a0b4c4]">PIN / QR Code (txt_qr_code)</label>
+                <input id="txt_qr_code" type="text" placeholder="e.g. 849-210" required
                   class="w-full h-11 px-4 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/30 text-lg font-mono font-bold tracking-widest text-[#7dd3fc] placeholder-[#a0b4c4]/30 focus:outline-none focus:border-[#7dd3fc]" />
                 <div class="text-[10px] text-[#a0b4c4] flex items-center gap-1">
                   <span class="material-symbols-outlined text-[12px] text-amber-400">info</span>
-                  <span>Mẹo: Giảng viên đang mở mã PIN: <b class="text-[#7dd3fc] font-mono" id="student_hint_pin">849-210</b></span>
+                  <span>Active PIN from Instructor: <b class="text-[#7dd3fc] font-mono" id="student_hint_pin">849-210</b></span>
                 </div>
               </div>
 
               <button id="btn_submit_attendance" type="submit"
                 class="w-full h-11 rounded-xl bg-gradient-to-r from-[#0e4d6e] to-[#7dd3fc] text-[#001f2e] font-bold text-sm shadow-md hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-sm">how_to_reg</span>
-                <span>Xác nhận điểm danh</span>
+                <span>Submit Attendance</span>
               </button>
             </form>
 
@@ -353,51 +353,51 @@
           <div class="glass-card rounded-2xl p-6 space-y-4">
             <div class="flex items-center gap-2 text-[#c8a0f0]">
               <span class="material-symbols-outlined text-xl">event_busy</span>
-              <h3 class="text-base font-bold text-white">Nộp đơn xin phép vắng</h3>
+              <h3 class="text-base font-bold text-white">Submit Excuse Request</h3>
             </div>
             <p class="text-xs text-[#a0b4c4]">
-              Gửi lý do vắng có lý do chính đáng tới Giảng viên phụ trách môn học.
+              Submit legitimate absence documentation for instructor review:
             </p>
 
             <form onsubmit="handleStudentExcuseSubmit(event)" class="space-y-3">
               <div class="space-y-1">
-                <label class="text-xs text-[#a0b4c4]">Môn học (combo_excuse_course)</label>
+                <label class="text-xs text-[#a0b4c4]">Course (combo_excuse_course)</label>
                 <select id="combo_excuse_course" class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-sm text-white focus:outline-none focus:border-[#c8a0f0]">
-                  <option value="CS-301">CS-301: Cấu trúc Dữ liệu Nâng cao</option>
-                  <option value="ENG-204">ENG-204: Giao tiếp Kỹ thuật</option>
-                  <option value="MATH-310">MATH-310: Đại số Tuyến tính</option>
-                  <option value="PHY-102">PHY-102: Vật lý Đại cương II</option>
+                  <option value="CS-301">CS-301: Advanced Data Structures</option>
+                  <option value="ENG-204">ENG-204: Technical Communication</option>
+                  <option value="MATH-310">MATH-310: Linear Algebra</option>
+                  <option value="PHY-102">PHY-102: Engineering Physics II</option>
                 </select>
               </div>
 
               <div class="space-y-1">
-                <label class="text-xs text-[#a0b4c4]">Ngày vắng (date_excuse)</label>
+                <label class="text-xs text-[#a0b4c4]">Absence Date (date_excuse)</label>
                 <input id="date_excuse" type="date" required
                   class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-sm text-white focus:outline-none focus:border-[#c8a0f0]" />
               </div>
 
               <div class="space-y-1">
-                <label class="text-xs text-[#a0b4c4]">Lý do vắng (txt_excuse_reason)</label>
-                <textarea id="txt_excuse_reason" rows="2" placeholder="Ví dụ: Tham gia hội thảo khoa học khoa CNTT..." required
+                <label class="text-xs text-[#a0b4c4]">Reason (txt_excuse_reason)</label>
+                <textarea id="txt_excuse_reason" rows="2" placeholder="e.g. Attending ACM-ICPC regional robotics contest..." required
                   class="w-full p-2.5 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-[#c8a0f0]"></textarea>
               </div>
 
               <button id="btn_submit_excuse" type="submit"
                 class="w-full h-10 rounded-xl bg-[#3d2060] hover:bg-[#4d2a73] text-[#c8a0f0] border border-[#c8a0f0]/30 font-semibold text-xs transition-all flex items-center justify-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">send</span>
-                <span>Gửi đơn xin phép (Pending)</span>
+                <span>Submit Excuse (Pending)</span>
               </button>
             </form>
           </div>
 
-          <!-- EXCUSE STATUS TRACKER -->
+          <!-- EXCUSE TRACKER -->
           <div class="glass-card rounded-2xl p-6 space-y-3">
             <div class="flex items-center justify-between">
               <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm text-[#7dd3fc]">history</span>
-                Đơn đã nộp gần đây
+                Submitted Excuse Requests
               </h3>
-              <span class="text-[10px] text-[#a0b4c4]">Cập nhật liên tục</span>
+              <span class="text-[10px] text-[#a0b4c4]">Live Status</span>
             </div>
             <div id="student_excuse_list" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
           </div>
@@ -410,13 +410,13 @@
             <div>
               <h3 class="text-base font-bold text-white flex items-center gap-2">
                 <span class="material-symbols-outlined text-[#7dd3fc]">table_chart</span>
-                Bảng thống kê chuyên cần cá nhân (table_student_stats)
+                Personal Attendance Statistics (table_student_stats)
               </h3>
-              <p class="text-xs text-[#a0b4c4]">Tỷ lệ có mặt tính theo công thức: (Có mặt + Trễ*0.8) / Tổng số buổi</p>
+              <p class="text-xs text-[#a0b4c4]">Formula: (Present + Late * 0.8) / Total Sessions</p>
             </div>
             <div class="text-xs text-emerald-400 flex items-center gap-1 font-mono">
               <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              Đạt chuẩn chuyên cần (&gt;= 80%)
+              Compliant (&gt;= 80% Attendance Threshold)
             </div>
           </div>
 
@@ -424,15 +424,15 @@
             <table class="w-full text-left text-xs" id="table_student_stats">
               <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
-                  <th class="p-3.5">Mã môn</th>
-                  <th class="p-3.5">Tên môn học</th>
-                  <th class="p-3.5 text-center">Tổng buổi</th>
-                  <th class="p-3.5 text-center text-emerald-400">Có mặt</th>
-                  <th class="p-3.5 text-center text-amber-400">Trễ</th>
-                  <th class="p-3.5 text-center text-rose-400">Vắng</th>
-                  <th class="p-3.5 text-center text-[#c8a0f0]">Có phép</th>
-                  <th class="p-3.5 text-center">Tỷ lệ (%)</th>
-                  <th class="p-3.5 text-right">Trạng thái</th>
+                  <th class="p-3.5">Course Code</th>
+                  <th class="p-3.5">Course Title</th>
+                  <th class="p-3.5 text-center">Total Sessions</th>
+                  <th class="p-3.5 text-center text-emerald-400">Present</th>
+                  <th class="p-3.5 text-center text-amber-400">Late</th>
+                  <th class="p-3.5 text-center text-rose-400">Absent</th>
+                  <th class="p-3.5 text-center text-[#c8a0f0]">Excused</th>
+                  <th class="p-3.5 text-center">Attendance (%)</th>
+                  <th class="p-3.5 text-right">Standing</th>
                 </tr>
               </thead>
               <tbody id="table_student_stats_body" class="divide-y divide-white/5 font-mono">
@@ -453,15 +453,15 @@
         <div class="glass-card-glow rounded-2xl p-6 space-y-6">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div class="text-xs font-semibold text-[#7dd3fc] tracking-wider uppercase">Giảng viên • Faculty Portal</div>
-              <h2 class="text-2xl font-bold text-white mt-1">Quản lý Phiên Điểm Danh Lớp Học</h2>
-              <p class="text-xs text-[#a0b4c4]">Giảng viên: Dr. Evelyn Vance • Khoa Kỹ thuật</p>
+              <div class="text-xs font-semibold text-[#7dd3fc] tracking-wider uppercase">Instructor Portal • Faculty of Engineering</div>
+              <h2 class="text-2xl font-bold text-white mt-1">Attendance Session Management & Monitoring</h2>
+              <p class="text-xs text-[#a0b4c4]">Instructor: Dr. Evelyn Vance • Lead Faculty</p>
             </div>
             <div class="flex items-center gap-3">
               <button id="btn_export_course_report" onclick="exportCourseReportCSV()"
                 class="px-4 py-2.5 rounded-xl bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-semibold flex items-center gap-2 transition-all">
                 <span class="material-symbols-outlined text-sm">download</span>
-                <span>Xuất báo cáo lớp (CSV/Excel)</span>
+                <span>Export Course Report (CSV)</span>
               </button>
             </div>
           </div>
@@ -470,7 +470,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-white/10">
             
             <div class="space-y-3">
-              <label class="text-xs text-[#a0b4c4]">Chọn lớp học (combo_instructor_courses)</label>
+              <label class="text-xs text-[#a0b4c4]">Active Course (combo_instructor_courses)</label>
               <select id="combo_instructor_courses" class="w-full h-11 px-3 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/20 text-sm text-white focus:outline-none focus:border-[#7dd3fc]">
                 <option value="CS-301">CS-301: Advanced Data Structures (Hall B-12)</option>
                 <option value="CS-402">CS-402: Cloud Architecture & DevOps</option>
@@ -480,12 +480,12 @@
                 <button id="btn_start_session" onclick="handleStartSession()"
                   class="flex-1 h-11 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
                   <span class="material-symbols-outlined text-sm">play_arrow</span>
-                  <span>Mở phiên mới</span>
+                  <span>Start New Session</span>
                 </button>
                 <button id="btn_end_session" onclick="handleEndSession()"
                   class="h-11 px-4 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 font-semibold text-xs transition-all flex items-center justify-center gap-1">
                   <span class="material-symbols-outlined text-sm">stop</span>
-                  <span>Đóng phiên</span>
+                  <span>End Session</span>
                 </button>
               </div>
             </div>
@@ -493,20 +493,20 @@
             <!-- DYNAMIC PIN & TIMER BENTO -->
             <div class="md:col-span-2 flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-[#141c2e]/80 border border-[#7dd3fc]/20 gap-4">
               <div class="space-y-1 text-center sm:text-left">
-                <div class="text-[10px] uppercase tracking-wider text-[#a0b4c4]">Mã PIN / QR phiên trực tiếp (lbl_dynamic_qr)</div>
+                <div class="text-[10px] uppercase tracking-wider text-[#a0b4c4]">Dynamic Session PIN Code (lbl_dynamic_qr)</div>
                 <div id="lbl_dynamic_qr" class="text-3xl md:text-4xl font-extrabold font-mono text-[#7dd3fc] tracking-wider select-all">
                   849-210
                 </div>
-                <div class="text-[11px] text-[#a0b4c4]">Chiếu mã này lên máy chiếu hoặc bảng lớp để sinh viên nhập</div>
+                <div class="text-[11px] text-[#a0b4c4]">Display this code on projector screen for students to check in</div>
               </div>
 
               <div class="flex flex-col items-center sm:items-end space-y-1">
-                <div class="text-[10px] uppercase tracking-wider text-[#a0b4c4]">Thời gian đếm ngược (lbl_timer)</div>
+                <div class="text-[10px] uppercase tracking-wider text-[#a0b4c4]">Session Countdown (lbl_timer)</div>
                 <div id="lbl_timer" class="text-xl md:text-2xl font-bold font-mono text-emerald-400 flex items-center gap-2">
                   <span class="material-symbols-outlined text-lg animate-spin">timelapse</span>
-                  <span id="countdown_timer_text">14:59 Còn lại</span>
+                  <span id="countdown_timer_text">14:59 Remaining</span>
                 </div>
-                <div class="text-[10px] text-emerald-400/80">&lt;15p: Có mặt • 15-45p: Đi trễ</div>
+                <div class="text-[10px] text-emerald-400/80">&lt;15m: Present • 15-45m: Late</div>
               </div>
             </div>
 
@@ -519,14 +519,14 @@
             <div>
               <h3 class="text-base font-bold text-white flex items-center gap-2">
                 <span class="material-symbols-outlined text-[#7dd3fc]">group</span>
-                Danh sách điểm danh thời gian thực (table_instructor_attendance)
+                Real-Time Roster & Manual Override (table_instructor_attendance)
               </h3>
               <p class="text-xs text-[#a0b4c4]">
-                Giảng viên có thể ghi đè thủ công (Override ComboBox) cho sinh viên quên mang thiết bị.
+                Instructors can manually correct status via the row dropdown for students without devices.
               </p>
             </div>
             <div class="text-xs text-[#a0b4c4]">
-              Sĩ số lớp: <b class="text-white">6</b> • Đã ghi nhận: <b class="text-emerald-400" id="roster_present_count">4</b>
+              Total Enrolled: <b class="text-white">6</b> • Logged: <b class="text-emerald-400" id="roster_present_count">4</b>
             </div>
           </div>
 
@@ -534,12 +534,12 @@
             <table class="w-full text-left text-xs" id="table_instructor_attendance">
               <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
-                  <th class="p-3.5">Mã SV</th>
-                  <th class="p-3.5">Họ và tên</th>
-                  <th class="p-3.5">Thời gian ghi nhận</th>
-                  <th class="p-3.5">Phương thức</th>
-                  <th class="p-3.5">Cập nhật bởi</th>
-                  <th class="p-3.5 text-right w-44">Trạng thái (Override ComboBox)</th>
+                  <th class="p-3.5">Student ID</th>
+                  <th class="p-3.5">Full Name</th>
+                  <th class="p-3.5">Logged Time</th>
+                  <th class="p-3.5">Method</th>
+                  <th class="p-3.5">Updated By</th>
+                  <th class="p-3.5 text-right w-44">Status (Override ComboBox)</th>
                 </tr>
               </thead>
               <tbody id="table_instructor_attendance_body" class="divide-y divide-white/5">
@@ -549,15 +549,15 @@
           </div>
         </div>
 
-        <!-- FUNCTION 3: APPROVE/REJECT EXCUSE REQUESTS (table_instructor_excuses) -->
+        <!-- FUNCTION 3: APPROVE/REJECT EXCUSES (table_instructor_excuses) -->
         <div class="glass-card rounded-2xl p-6 space-y-4">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-base font-bold text-white flex items-center gap-2">
                 <span class="material-symbols-outlined text-[#c8a0f0]">approval</span>
-                Duyệt đơn xin phép vắng (table_instructor_excuses)
+                Review Excuse Requests (table_instructor_excuses)
               </h3>
-              <p class="text-xs text-[#a0b4c4]">Xét duyệt đơn xin nghỉ có phép của sinh viên trong lớp CS-301</p>
+              <p class="text-xs text-[#a0b4c4]">Review and approve/reject pending student absence claims</p>
             </div>
           </div>
 
@@ -565,12 +565,12 @@
             <table class="w-full text-left text-xs" id="table_instructor_excuses">
               <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
                 <tr>
-                  <th class="p-3.5">Sinh viên</th>
-                  <th class="p-3.5">Môn học</th>
-                  <th class="p-3.5">Ngày vắng</th>
-                  <th class="p-3.5">Lý do</th>
-                  <th class="p-3.5 text-center">Trạng thái</th>
-                  <th class="p-3.5 text-right">Thao tác duyệt</th>
+                  <th class="p-3.5">Student</th>
+                  <th class="p-3.5">Course</th>
+                  <th class="p-3.5">Absence Date</th>
+                  <th class="p-3.5">Reason</th>
+                  <th class="p-3.5 text-center">Status</th>
+                  <th class="p-3.5 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody id="table_instructor_excuses_body" class="divide-y divide-white/5">
@@ -589,14 +589,14 @@
         
         <div class="glass-card-glow rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div class="text-xs font-semibold text-[#c8a0f0] tracking-wider uppercase">Cố vấn Học tập • Academic Advisor Portal</div>
-            <h2 class="text-2xl font-bold text-white mt-1">Hệ thống Cảnh báo Sớm (Early Warning System)</h2>
-            <p class="text-xs text-[#a0b4c4]">Cố vấn: Marcus Brody • Phòng Công tác Sinh viên</p>
+            <div class="text-xs font-semibold text-[#c8a0f0] tracking-wider uppercase">Academic Advising • Counseling Services</div>
+            <h2 class="text-2xl font-bold text-white mt-1">Early Warning System (EWS)</h2>
+            <p class="text-xs text-[#a0b4c4]">Advisor: Marcus Brody • Student Support Services</p>
           </div>
           <div class="flex items-center gap-2">
             <span class="px-3 py-1 rounded-full bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-semibold flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-              2 Sinh viên Nguy cơ cao
+              2 High-Risk Students Flagged
             </span>
           </div>
         </div>
@@ -608,10 +608,10 @@
             <div>
               <h3 class="text-base font-bold text-white flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-400">warning</span>
-                Danh sách Sinh viên cần can thiệp (table_advisor_warnings)
+                At-Risk Student Intervention List (table_advisor_warnings)
               </h3>
               <p class="text-xs text-[#a0b4c4]">
-                Tự động lọc sinh viên có tỷ lệ chuyên cần &lt; 80% hoặc vắng 3 buổi liên tiếp. Click vào dòng để mở can thiệp.
+                Automatically filters students with &lt; 80% attendance or 3 consecutive absences. Click row to open counseling notes.
               </p>
             </div>
 
@@ -619,11 +619,11 @@
               <table class="w-full text-left text-xs" id="table_advisor_warnings">
                 <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
                   <tr>
-                    <th class="p-3.5">Sinh viên</th>
-                    <th class="p-3.5">Môn học</th>
-                    <th class="p-3.5 text-center">Tỷ lệ</th>
-                    <th class="p-3.5 text-center">Vắng liên tiếp</th>
-                    <th class="p-3.5 text-right">Mức độ rủi ro</th>
+                    <th class="p-3.5">Student</th>
+                    <th class="p-3.5">Course</th>
+                    <th class="p-3.5 text-center">Attendance %</th>
+                    <th class="p-3.5 text-center">Consecutive Absences</th>
+                    <th class="p-3.5 text-right">Risk Level</th>
                   </tr>
                 </thead>
                 <tbody id="table_advisor_warnings_body" class="divide-y divide-white/5 cursor-pointer">
@@ -637,31 +637,31 @@
           <div class="glass-card-glow rounded-2xl p-6 space-y-4">
             <div class="flex items-center gap-2 text-[#c8a0f0]">
               <span class="material-symbols-outlined text-xl">edit_note</span>
-              <h3 class="text-base font-bold text-white">Ghi chú Can thiệp</h3>
+              <h3 class="text-base font-bold text-white">Intervention Dossier</h3>
             </div>
             
             <div class="p-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs space-y-1">
-              <div class="text-[#a0b4c4]">Đang chọn:</div>
+              <div class="text-[#a0b4c4]">Selected Student:</div>
               <div class="font-bold text-[#7dd3fc] text-sm" id="counseling_selected_student">Sarah Jenkins (#24094)</div>
-              <div class="text-[11px] text-[#a0b4c4]">Môn CS-301 • Tỷ lệ hiện tại: 71.4%</div>
+              <div class="text-[11px] text-[#a0b4c4]">Course: CS-301 • Attendance: 71.4%</div>
             </div>
 
             <div class="space-y-1.5">
-              <label class="text-xs text-[#a0b4c4]">Nhật ký tư vấn (txt_counseling_notes)</label>
+              <label class="text-xs text-[#a0b4c4]">Counseling Notes (txt_counseling_notes)</label>
               <textarea id="txt_counseling_notes" rows="4"
-                placeholder="Ví dụ: Đã gọi điện nhắc nhở ngày 22/10. Sinh viên báo bị ốm, đã hướng dẫn nộp đơn xin phép và đăng ký phụ đạo..."
+                placeholder="e.g. Conducted phone counseling on 10/22. Student reported illness; scheduled academic tutoring session..."
                 class="w-full p-3 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-[#c8a0f0]"></textarea>
             </div>
 
             <button id="btn_save_notes" onclick="handleSaveCounselingNotes()"
               class="w-full h-11 rounded-xl bg-gradient-to-r from-[#3d2060] to-[#c8a0f0] text-[#1a002e] font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
               <span class="material-symbols-outlined text-sm">save</span>
-              <span>Lưu nhật ký tư vấn</span>
+              <span>Save Counseling Notes</span>
             </button>
 
             <!-- Previous Notes History -->
             <div class="pt-3 border-t border-white/10 space-y-2">
-              <div class="text-[11px] font-semibold text-[#a0b4c4]">Lịch sử tư vấn trước đó:</div>
+              <div class="text-[11px] font-semibold text-[#a0b4c4]">Previous Intervention History:</div>
               <div id="counseling_history_list" class="space-y-2 text-[11px] text-[#a0b4c4] max-h-40 overflow-y-auto"></div>
             </div>
           </div>
@@ -677,15 +677,15 @@
         
         <div class="glass-card-glow rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div class="text-xs font-semibold text-emerald-400 tracking-wider uppercase">Quản trị Hệ thống • Administrator Portal</div>
-            <h2 class="text-2xl font-bold text-white mt-1">Trung tâm Quản trị Toàn trường</h2>
-            <p class="text-xs text-[#a0b4c4]">Quản trị viên: Root Systems Admin • CSDL SQLite / Local DB</p>
+            <div class="text-xs font-semibold text-emerald-400 tracking-wider uppercase">System Administration • Root Master Node</div>
+            <h2 class="text-2xl font-bold text-white mt-1">Institutional Administration & Data Hub</h2>
+            <p class="text-xs text-[#a0b4c4]">Administrator: Root Systems Admin • Global Privileges</p>
           </div>
           <div class="flex items-center gap-3">
             <button id="btn_export_system_report" onclick="exportSystemReportCSV()"
               class="px-4 py-2.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center gap-2 transition-all shadow-md">
               <span class="material-symbols-outlined text-sm">database</span>
-              <span>Xuất Báo cáo Toàn trường (CSV)</span>
+              <span>Export System Report (CSV)</span>
             </button>
           </div>
         </div>
@@ -697,37 +697,37 @@
           <div class="glass-card rounded-2xl p-6 space-y-4">
             <div class="flex items-center gap-2 text-emerald-400">
               <span class="material-symbols-outlined text-xl">person_add</span>
-              <h3 class="text-base font-bold text-white">Thêm tài khoản mới</h3>
+              <h3 class="text-base font-bold text-white">Provision User Account</h3>
             </div>
-            <p class="text-xs text-[#a0b4c4]">Tạo tài khoản Sinh viên, Giảng viên hoặc Cố vấn</p>
+            <p class="text-xs text-[#a0b4c4]">Create new Student, Instructor, or Advisor accounts</p>
 
             <form onsubmit="handleAdminAddUser(event)" class="space-y-3">
               <div class="space-y-1">
-                <label class="text-xs text-[#a0b4c4]">Email người dùng (txt_add_email)</label>
+                <label class="text-xs text-[#a0b4c4]">Account Email (txt_add_email)</label>
                 <input id="txt_add_email" type="email" placeholder="new.user@university.edu" required
                   class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400" />
               </div>
 
               <div class="space-y-1">
-                <label class="text-xs text-[#a0b4c4]">Họ và tên</label>
-                <input id="txt_add_name" type="text" placeholder="Nguyễn Văn A" required
+                <label class="text-xs text-[#a0b4c4]">Full Name</label>
+                <input id="txt_add_name" type="text" placeholder="Johnathan Doe" required
                   class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400" />
               </div>
 
               <div class="space-y-1">
-                <label class="text-xs text-[#a0b4c4]">Vai trò (combo_add_role)</label>
+                <label class="text-xs text-[#a0b4c4]">Assigned Role (combo_add_role)</label>
                 <select id="combo_add_role" class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400">
-                  <option value="Student">Sinh viên (Student)</option>
-                  <option value="Instructor">Giảng viên (Instructor)</option>
-                  <option value="Advisor">Cố vấn học tập (Advisor)</option>
-                  <option value="Administrator">Quản trị viên (Administrator)</option>
+                  <option value="Student">Student</option>
+                  <option value="Instructor">Instructor</option>
+                  <option value="Advisor">Advisor</option>
+                  <option value="Administrator">Administrator</option>
                 </select>
               </div>
 
               <button id="btn_add_user" type="submit"
                 class="w-full h-10 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md">
                 <span class="material-symbols-outlined text-sm">add_circle</span>
-                <span>Thêm người dùng</span>
+                <span>Add User Account</span>
               </button>
             </form>
           </div>
@@ -737,9 +737,9 @@
             <div class="flex items-center justify-between">
               <h3 class="text-base font-bold text-white flex items-center gap-2">
                 <span class="material-symbols-outlined text-[#7dd3fc]">manage_accounts</span>
-                Danh sách Người dùng Hệ thống (table_admin_users)
+                Active System Users (table_admin_users)
               </h3>
-              <span class="text-xs text-[#a0b4c4]" id="admin_users_count">Tổng cộng: 6 tài khoản</span>
+              <span class="text-xs text-[#a0b4c4]" id="admin_users_count">Total: 6 accounts</span>
             </div>
 
             <div class="overflow-x-auto rounded-xl border border-white/10 max-h-80 overflow-y-auto">
@@ -747,11 +747,11 @@
                 <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
                   <tr>
                     <th class="p-3.5">ID</th>
-                    <th class="p-3.5">Họ và tên</th>
+                    <th class="p-3.5">Full Name</th>
                     <th class="p-3.5">Email</th>
-                    <th class="p-3.5">Vai trò</th>
-                    <th class="p-3.5">Trạng thái</th>
-                    <th class="p-3.5 text-right">Thao tác</th>
+                    <th class="p-3.5">Role</th>
+                    <th class="p-3.5">Status</th>
+                    <th class="p-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="table_admin_users_body" class="divide-y divide-white/5">
@@ -768,19 +768,19 @@
           <div class="flex items-center justify-between">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
               <span class="material-symbols-outlined text-amber-400">policy</span>
-              Nhật ký Hoạt động An ninh (Audit Logs - Read-only)
+              Security & Operation Audit Logs (Read-only)
             </h3>
-            <span class="text-xs text-[#a0b4c4]">Ghi nhận ai đăng nhập, ai thay đổi trạng thái điểm danh</span>
+            <span class="text-xs text-[#a0b4c4]">Tamper-evident system activity trail</span>
           </div>
 
           <div class="overflow-x-auto rounded-xl border border-white/10 max-h-56 overflow-y-auto">
             <table class="w-full text-left text-xs font-mono">
               <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
                 <tr>
-                  <th class="p-3">Thời gian</th>
-                  <th class="p-3">Người thực hiện</th>
-                  <th class="p-3">Hành động</th>
-                  <th class="p-3">Chi tiết</th>
+                  <th class="p-3">Timestamp</th>
+                  <th class="p-3">Principal</th>
+                  <th class="p-3">Action</th>
+                  <th class="p-3">Details</th>
                 </tr>
               </thead>
               <tbody id="admin_audit_logs_body" class="divide-y divide-white/5 text-[11px]">
@@ -805,8 +805,8 @@
       <div class="flex items-center gap-3 text-[#7dd3fc]">
         <span class="material-symbols-outlined text-3xl">terminal</span>
         <div>
-          <h3 class="text-lg font-bold text-white">Cách chạy trong VS Code không bị lỗi</h3>
-          <p class="text-xs text-[#a0b4c4]">Chọn 1 trong 3 cách siêu đơn giản sau:</p>
+          <h3 class="text-lg font-bold text-white">How to Run in VS Code with Zero Errors</h3>
+          <p class="text-xs text-[#a0b4c4]">Choose any of the following 3 easy methods:</p>
         </div>
       </div>
 
@@ -815,10 +815,10 @@
         <div class="p-3.5 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/20 space-y-1.5">
           <div class="font-bold text-[#7dd3fc] flex items-center gap-2">
             <span class="w-5 h-5 rounded-full bg-[#0e4d6e] text-center leading-5 text-[11px]">1</span>
-            Cách dễ nhất: Click đúp vào file HTML (0 cài đặt)
+            Simplest: Double-click index.html (Zero Installation)
           </div>
           <p class="text-[#a0b4c4]">
-            Bạn chỉ cần mở thư mục trong VS Code, nhấp chuột phải vào file <code class="text-white bg-black/40 px-1 py-0.5 rounded">app.html</code> chọn <b>Open with Live Server</b> hoặc mở trực tiếp trên Chrome/Edge. Giao diện chạy mượt mà ngay lập tức!
+            Simply open the project folder and double-click <code class="text-white bg-black/40 px-1 py-0.5 rounded font-mono">index.html</code> in Chrome, Edge, or Safari. Or in VS Code, right-click <code class="text-white font-mono">index.html</code> and click <b>Open with Live Server</b>!
           </p>
         </div>
 
@@ -826,20 +826,22 @@
         <div class="p-3.5 rounded-xl bg-[#141c2e] border border-emerald-500/20 space-y-1.5">
           <div class="font-bold text-emerald-400 flex items-center gap-2">
             <span class="w-5 h-5 rounded-full bg-emerald-950 text-center leading-5 text-[11px]">2</span>
-            Bằng Terminal Python có sẵn (Không cần cài pip gì cả!)
+            Standard Built-In Python Terminal (Zero pip Packages Needed)
           </div>
           <p class="text-[#a0b4c4]">
-            Mở Terminal trong VS Code và gõ:
+            Open terminal in VS Code and type:
           </p>
-          <pre class="bg-black/60 p-2 rounded text-emerald-300 font-mono text-[11px]">python server.py</pre>
-          <p class="text-[#a0b4c4]">File <code class="text-white">server.py</code> dùng thư viện có sẵn của Python, tự động mở trình duyệt lên cho bạn mà không bao giờ báo lỗi thiếu package!</p>
+          <pre class="bg-black/60 p-2 rounded text-emerald-300 font-mono text-[11px]">python server.py
+# or
+python main.py</pre>
+          <p class="text-[#a0b4c4]">Both scripts use Python's built-in standard library and automatically open your default browser without any missing package errors.</p>
         </div>
 
         <!-- Option 3 -->
         <div class="p-3.5 rounded-xl bg-[#141c2e] border border-[#c8a0f0]/20 space-y-1.5">
           <div class="font-bold text-[#c8a0f0] flex items-center gap-2">
             <span class="w-5 h-5 rounded-full bg-[#3d2060] text-center leading-5 text-[11px]">3</span>
-            Bằng Node.js / Vite
+            Node.js / Vite Dev Server
           </div>
           <pre class="bg-black/60 p-2 rounded text-[#c8eaff] font-mono text-[11px]">npm install
 npm run dev</pre>
@@ -848,16 +850,15 @@ npm run dev</pre>
 
       <div class="pt-2 flex justify-end">
         <button onclick="toggleHelpModal()" class="px-4 py-2 rounded-xl bg-[#0e4d6e] text-[#7dd3fc] font-semibold text-xs hover:bg-[#7dd3fc] hover:text-[#001f2e] transition-all">
-          Đã hiểu, đóng hộp thoại
+          Close Guide
         </button>
       </div>
     </div>
   </div>
 
-  <!-- APPLICATION LOGIC IN PURE JAVASCRIPT -->
+  <!-- PURE JAVASCRIPT APPLICATION CONTROLLER -->
   <script>
-    // State storage
-    const STORAGE_KEY = 'sas_attendance_enterprise_data_v1';
+    const STORAGE_KEY = 'sas_enterprise_attendance_v2_en';
 
     const DEFAULT_DATA = {
       currentUser: {
@@ -876,7 +877,7 @@ npm run dev</pre>
         active: true,
         code: '849-210',
         course: 'CS-301',
-        startTime: Date.now() - (6 * 60 * 1000), // 6 mins ago
+        startTime: Date.now() - (6 * 60 * 1000), // 6 minutes ago
         remainingSeconds: 14 * 60 + 59
       },
       roster: [
@@ -885,23 +886,23 @@ npm run dev</pre>
         { id: '24093', name: 'Marcus Chen', time: '10:18 AM', method: 'PIN Input', status: 'Late', updatedBy: 'Self (QR)' },
         { id: '24094', name: 'Sarah Jenkins', time: '--', method: 'Pending', status: 'Absent', updatedBy: 'System Auto' },
         { id: '24108', name: 'David Kim', time: '--', method: 'Pending', status: 'Absent', updatedBy: 'System Auto' },
-        { id: '24115', name: 'Taylor Scott', time: '10:01 AM', method: 'Manual', status: 'Present', updatedBy: 'Dr. Vance' }
+        { id: '24115', name: 'Taylor Scott', time: '10:01 AM', method: 'Manual Override', status: 'Present', updatedBy: 'Dr. Vance' }
       ],
       excuses: [
-        { id: 1, studentId: '24094', studentName: 'Sarah Jenkins', course: 'CS-301', date: '2026-10-20', reason: 'Sốt xuất huyết điều trị tại viện Y', status: 'Pending' },
-        { id: 2, studentId: '24108', studentName: 'David Kim', course: 'CS-301', date: '2026-10-18', reason: 'Xe buýt tuyến 08 bị hỏng động cơ', status: 'Approved' },
-        { id: 3, studentId: '24091', studentName: 'Alex Rivera', course: 'MATH-310', date: '2026-10-12', reason: 'Thi đấu giải lập trình ACM-ICPC', status: 'Approved' }
+        { id: 1, studentId: '24094', studentName: 'Sarah Jenkins', course: 'CS-301', date: '2026-10-20', reason: 'Hospitalized for acute flu treatment', status: 'Pending' },
+        { id: 2, studentId: '24108', studentName: 'David Kim', course: 'CS-301', date: '2026-10-18', reason: 'Transit bus breakdown on route 08', status: 'Approved' },
+        { id: 3, studentId: '24091', studentName: 'Alex Rivera', course: 'MATH-310', date: '2026-10-12', reason: 'Represented university at ACM-ICPC contest', status: 'Approved' }
       ],
       warnings: [
-        { studentId: '24094', name: 'Sarah Jenkins', course: 'CS-301', pct: 71.4, consecutiveAbsences: 3, risk: 'Critical', notes: 'Đã gửi email cảnh báo lần 1' },
-        { studentId: '24108', name: 'David Kim', course: 'CS-301', pct: 76.5, consecutiveAbsences: 2, risk: 'Warning', notes: 'Cần hẹn gặp tư vấn trực tiếp' }
+        { studentId: '24094', name: 'Sarah Jenkins', course: 'CS-301', pct: 71.4, consecutiveAbsences: 3, risk: 'Critical', notes: 'Initial warning email dispatched' },
+        { studentId: '24108', name: 'David Kim', course: 'CS-301', pct: 76.5, consecutiveAbsences: 2, risk: 'Warning', notes: 'In-person counseling scheduled' }
       ],
       counselingNotes: {
         '24094': [
-          { date: '2026-10-21 14:30', advisor: 'Marcus Brody', text: 'Đã gọi điện cho gia đình và sinh viên. Em hứa sẽ bổ sung giấy khám bệnh.' }
+          { date: '2026-10-21 14:30', advisor: 'Marcus Brody', text: 'Contacted student and guardian. Student committed to providing medical discharge paperwork and attending tutoring.' }
         ],
         '24108': [
-          { date: '2026-10-19 11:00', advisor: 'Marcus Brody', text: 'Nhắc nhở về việc đi muộn nhiều buổi liên tiếp.' }
+          { date: '2026-10-19 11:00', advisor: 'Marcus Brody', text: 'Discussed transit issues and offered campus shuttle schedules.' }
         ]
       },
       users: [
@@ -929,16 +930,16 @@ npm run dev</pre>
     }
 
     function resetDataToDefault() {
-      if (confirm('Bạn có chắc chắn muốn đặt lại toàn bộ dữ liệu mẫu ban đầu?')) {
+      if (confirm('Reset database to default sample institutional records?')) {
         localStorage.removeItem(STORAGE_KEY);
         appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
         saveState();
         renderAll();
-        alert('Dữ liệu đã được đặt lại thành công!');
+        alert('Database successfully restored to default state.');
       }
     }
 
-    // Navigation Switcher
+    // Navigation Switcher (QStackedWidget simulation)
     function switchPage(pageIndex) {
       document.querySelectorAll('.page-screen').forEach((el, idx) => {
         if (idx === pageIndex) {
@@ -971,7 +972,7 @@ npm run dev</pre>
         appData.currentUser = user;
         saveState();
 
-        // Log audit
+        // Record audit
         appData.auditLogs.unshift({
           time: new Date().toISOString().replace('T', ' ').slice(0, 19),
           user: user.name,
@@ -989,7 +990,7 @@ npm run dev</pre>
       } else {
         const errBox = document.getElementById('lbl_login_error');
         errBox.classList.remove('hidden');
-        document.getElementById('lbl_login_error_text').innerText = 'Không tìm thấy tài khoản với email này trong hệ thống.';
+        document.getElementById('lbl_login_error_text').innerText = 'Invalid credentials. User email was not found.';
       }
     }
 
@@ -1033,7 +1034,7 @@ npm run dev</pre>
 
       if (!appData.session.active) {
         statusBox.className = 'p-3 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs flex items-center gap-2';
-        statusBox.innerHTML = '<span class="material-symbols-outlined text-sm">cancel</span> Hiện tại lớp học chưa mở phiên điểm danh!';
+        statusBox.innerHTML = '<span class="material-symbols-outlined text-sm">cancel</span> Attendance session is currently closed.';
         statusBox.classList.remove('hidden');
         return;
       }
@@ -1043,12 +1044,12 @@ npm run dev</pre>
 
       if (cleanInput !== cleanSession) {
         statusBox.className = 'p-3 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs flex items-center gap-2';
-        statusBox.innerHTML = '<span class="material-symbols-outlined text-sm">close</span> Mã PIN không chính xác! Vui lòng kiểm tra lại.';
+        statusBox.innerHTML = '<span class="material-symbols-outlined text-sm">close</span> Invalid PIN code. Please verify the code on screen.';
         statusBox.classList.remove('hidden');
         return;
       }
 
-      // Calculate arrival delta (minutes elapsed since session start)
+      // Timing window calculation: <15m Present, 15-45m Late, >45m Absent
       const elapsedMinutes = (Date.now() - appData.session.startTime) / (1000 * 60);
       let attendanceStatus = 'Present';
       if (elapsedMinutes <= 15) {
@@ -1059,7 +1060,7 @@ npm run dev</pre>
         attendanceStatus = 'Absent';
       }
 
-      // Update student course stat
+      // Update student stat
       const stat = appData.stats.find(s => s.code === course);
       if (stat) {
         stat.total += 1;
@@ -1078,7 +1079,7 @@ npm run dev</pre>
         rosterItem.updatedBy = 'Self (QR)';
       }
 
-      // Add to audit logs
+      // Log audit
       appData.auditLogs.unshift({
         time: new Date().toISOString().replace('T', ' ').slice(0, 19),
         user: 'Alex Rivera (#24091)',
@@ -1095,7 +1096,7 @@ npm run dev</pre>
 
       statusBox.innerHTML = `
         <span class="material-symbols-outlined text-sm">${attendanceStatus === 'Present' ? 'check_circle' : 'schedule'}</span>
-        <span>Điểm danh thành công! Trạng thái: <b>${attendanceStatus === 'Present' ? 'Có mặt (Đúng giờ)' : 'Đi trễ'}</b> (Thời gian ghi: ${Math.round(elapsedMinutes)} phút)</span>
+        <span>Check-in Verified! Recorded status: <b>${attendanceStatus === 'Present' ? 'Present (On-Time)' : 'Late'}</b> (${Math.round(elapsedMinutes)} mins into session)</span>
       `;
       statusBox.classList.remove('hidden');
     }
@@ -1123,13 +1124,12 @@ npm run dev</pre>
       renderInstructorExcuses();
 
       document.getElementById('txt_excuse_reason').value = '';
-      alert('Đơn xin phép đã được gửi đến Giảng viên phụ trách với trạng thái: Chờ duyệt (Pending)!');
+      alert('Excuse request dispatched to course faculty with status: Pending.');
     }
 
-    // Instructor Session Management
+    // Instructor Session Controls
     function handleStartSession() {
       const course = document.getElementById('combo_instructor_courses').value;
-      // Generate new 6 digit PIN
       const part1 = Math.floor(100 + Math.random() * 900);
       const part2 = Math.floor(100 + Math.random() * 900);
       const newPin = `${part1}-${part2}`;
@@ -1164,7 +1164,7 @@ npm run dev</pre>
         time: new Date().toISOString().replace('T', ' ').slice(0, 19),
         user: 'Dr. Evelyn Vance',
         action: 'End Attendance Session',
-        details: `Session closed for ${appData.session.course}`
+        details: `Session finalized for ${appData.session.course}`
       });
 
       saveState();
@@ -1185,7 +1185,7 @@ npm run dev</pre>
 
         const minutes = Math.floor(remaining / 60);
         const seconds = remaining % 60;
-        const text = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} Còn lại`;
+        const text = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} Remaining`;
         
         const timerElem = document.getElementById('countdown_timer_text');
         if (timerElem) timerElem.innerText = text;
@@ -1209,7 +1209,7 @@ npm run dev</pre>
           time: new Date().toISOString().replace('T', ' ').slice(0, 19),
           user: 'Dr. Evelyn Vance',
           action: 'Manual Status Override',
-          details: `Student: ${item.name} (${studentId}) changed from ${oldStatus} -> ${newStatus}`
+          details: `Student: ${item.name} (#${studentId}) overridden: ${oldStatus} -> ${newStatus}`
         });
 
         saveState();
@@ -1223,11 +1223,9 @@ npm run dev</pre>
       const ex = appData.excuses.find(e => e.id === excuseId);
       if (ex) {
         ex.status = 'Approved';
-        // Auto-update student stat
         const stat = appData.stats.find(s => s.code === ex.course);
-        if (stat) {
-          stat.excused += 1;
-        }
+        if (stat) stat.excused += 1;
+
         appData.auditLogs.unshift({
           time: new Date().toISOString().replace('T', ' ').slice(0, 19),
           user: 'Dr. Evelyn Vance',
@@ -1259,7 +1257,7 @@ npm run dev</pre>
 
     // CSV Exports
     function exportCourseReportCSV() {
-      let csv = 'Mã SV,Họ và tên,Thời gian ghi nhận,Phương thức,Cập nhật bởi,Trạng thái\n';
+      let csv = 'StudentID,StudentName,LoggedTime,Method,UpdatedBy,Status\n';
       appData.roster.forEach(r => {
         csv += `"${r.id}","${r.name}","${r.time}","${r.method}","${r.updatedBy}","${r.status}"\n`;
       });
@@ -1267,7 +1265,7 @@ npm run dev</pre>
     }
 
     function exportSystemReportCSV() {
-      let csv = 'Thời gian,Người thực hiện,Hành động,Chi tiết\n';
+      let csv = 'Timestamp,Principal,Action,Details\n';
       appData.auditLogs.forEach(l => {
         csv += `"${l.time}","${l.user}","${l.action}","${l.details}"\n`;
       });
@@ -1295,7 +1293,7 @@ npm run dev</pre>
     function handleSaveCounselingNotes() {
       const text = document.getElementById('txt_counseling_notes').value.trim();
       if (!text) {
-        alert('Vui lòng nhập nội dung tư vấn!');
+        alert('Please enter counseling notes before saving.');
         return;
       }
 
@@ -1314,13 +1312,13 @@ npm run dev</pre>
         time: new Date().toISOString().replace('T', ' ').slice(0, 19),
         user: 'Marcus Brody (Advisor)',
         action: 'Save Intervention Note',
-        details: `Student #${selectedStudentIdForCounseling}: ${text.slice(0, 40)}...`
+        details: `Student #${selectedStudentIdForCounseling}: ${text.slice(0, 45)}...`
       });
 
       saveState();
       document.getElementById('txt_counseling_notes').value = '';
       renderCounselingHistory();
-      alert('Đã lưu nhật ký can thiệp thành công!');
+      alert('Counseling notes saved to student dossier.');
     }
 
     // Admin Add User
@@ -1351,10 +1349,10 @@ npm run dev</pre>
       document.getElementById('txt_add_name').value = '';
       renderAdminUsers();
       renderAuditLogs();
-      alert(`Đã thêm thành công tài khoản ${name} (${role})!`);
+      alert(`User ${name} (${role}) provisioned successfully.`);
     }
 
-    // Render Functions
+    // Render Methods
     function renderStudentStats() {
       const tbody = document.getElementById('table_student_stats_body');
       if (!tbody) return;
@@ -1391,9 +1389,8 @@ npm run dev</pre>
       const statElem = document.getElementById('overall_attendance_stat');
       if (statElem) statElem.innerText = `${overall}%`;
 
-      // Update student hint pin
       const hintPin = document.getElementById('student_hint_pin');
-      if (hintPin) hintPin.innerText = appData.session.active ? appData.session.code : 'Đã đóng phiên';
+      if (hintPin) hintPin.innerText = appData.session.active ? appData.session.code : 'Session Closed';
     }
 
     function renderStudentExcuses() {
@@ -1403,7 +1400,7 @@ npm run dev</pre>
 
       const myExcuses = appData.excuses.filter(e => e.studentId === '24091');
       if (myExcuses.length === 0) {
-        container.innerHTML = '<div class="text-xs text-[#a0b4c4] p-3 text-center">Chưa có đơn xin nghỉ nào.</div>';
+        container.innerHTML = '<div class="text-xs text-[#a0b4c4] p-3 text-center">No excuse requests on file.</div>';
         return;
       }
 
@@ -1420,7 +1417,7 @@ npm run dev</pre>
             }">${e.status}</span>
           </div>
           <div class="text-[11px] text-white font-medium truncate">${e.reason}</div>
-          <div class="text-[10px] text-[#a0b4c4] font-mono">Ngày vắng: ${e.date}</div>
+          <div class="text-[10px] text-[#a0b4c4] font-mono">Date: ${e.date}</div>
         `;
         container.appendChild(div);
       });
@@ -1429,11 +1426,11 @@ npm run dev</pre>
     function renderInstructorSession() {
       const qrElem = document.getElementById('lbl_dynamic_qr');
       const timerElem = document.getElementById('countdown_timer_text');
-      if (qrElem) qrElem.innerText = appData.session.active ? appData.session.code : '--- ĐÃ ĐÓNG ---';
+      if (qrElem) qrElem.innerText = appData.session.active ? appData.session.code : '--- CLOSED ---';
       if (timerElem) {
         timerElem.innerText = appData.session.active 
-          ? `${Math.floor(appData.session.remainingSeconds / 60)}:${(appData.session.remainingSeconds % 60).toString().padStart(2, '0')} Còn lại`
-          : '00:00 Phiên đóng';
+          ? `${Math.floor(appData.session.remainingSeconds / 60)}:${(appData.session.remainingSeconds % 60).toString().padStart(2, '0')} Remaining`
+          : '00:00 Closed';
       }
     }
 
@@ -1463,10 +1460,10 @@ npm run dev</pre>
                 r.status === 'Excused' ? 'bg-[#3d2060] text-[#c8a0f0] border-[#c8a0f0]/40' :
                 'bg-rose-950/80 text-rose-300 border-rose-500/40'
               }">
-              <option value="Present" ${r.status === 'Present' ? 'selected' : ''}>🟢 Có mặt (Present)</option>
-              <option value="Late" ${r.status === 'Late' ? 'selected' : ''}>🟡 Đi trễ (Late)</option>
-              <option value="Absent" ${r.status === 'Absent' ? 'selected' : ''}>🔴 Vắng mặt (Absent)</option>
-              <option value="Excused" ${r.status === 'Excused' ? 'selected' : ''}>🟣 Có phép (Excused)</option>
+              <option value="Present" ${r.status === 'Present' ? 'selected' : ''}>🟢 Present</option>
+              <option value="Late" ${r.status === 'Late' ? 'selected' : ''}>🟡 Late</option>
+              <option value="Absent" ${r.status === 'Absent' ? 'selected' : ''}>🔴 Absent</option>
+              <option value="Excused" ${r.status === 'Excused' ? 'selected' : ''}>🟣 Excused</option>
             </select>
           </td>
         `;
@@ -1503,12 +1500,12 @@ npm run dev</pre>
           <td class="p-3.5 text-right space-x-1.5 whitespace-nowrap">
             ${e.status === 'Pending' ? `
               <button onclick="handleApproveExcuse(${e.id})" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-all">
-                Duyệt
+                Approve
               </button>
               <button onclick="handleRejectExcuse(${e.id})" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition-all">
-                Từ chối
+                Reject
               </button>
-            ` : `<span class="text-[11px] text-[#a0b4c4] italic">Đã xử lý</span>`}
+            ` : `<span class="text-[11px] text-[#a0b4c4] italic">Processed</span>`}
           </td>
         `;
         tbody.appendChild(tr);
@@ -1531,7 +1528,7 @@ npm run dev</pre>
           </td>
           <td class="p-3.5 font-bold text-[#7dd3fc]">${w.course}</td>
           <td class="p-3.5 text-center font-mono font-bold text-rose-400">${w.pct}%</td>
-          <td class="p-3.5 text-center font-mono font-bold text-amber-400">${w.consecutiveAbsences} buổi</td>
+          <td class="p-3.5 text-center font-mono font-bold text-amber-400">${w.consecutiveAbsences} consecutive</td>
           <td class="p-3.5 text-right">
             <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
               w.risk === 'Critical' ? 'bg-rose-950 text-rose-300 border border-rose-500/50' : 'bg-amber-950 text-amber-300 border border-amber-500/50'
@@ -1549,7 +1546,7 @@ npm run dev</pre>
 
       const notes = appData.counselingNotes[selectedStudentIdForCounseling] || [];
       if (notes.length === 0) {
-        container.innerHTML = '<div class="text-[#a0b4c4] italic">Chưa có ghi chú nào cho sinh viên này.</div>';
+        container.innerHTML = '<div class="text-[#a0b4c4] italic">No intervention history recorded for this student.</div>';
         return;
       }
 
@@ -1589,14 +1586,14 @@ npm run dev</pre>
           </td>
           <td class="p-3.5 text-xs text-emerald-400">● ${u.status}</td>
           <td class="p-3.5 text-right">
-            <button onclick="alert('Đã kích hoạt quyền chỉnh sửa cho ${u.name}')" class="text-[#7dd3fc] hover:underline text-xs">Chỉnh sửa</button>
+            <button onclick="alert('User record edit permission granted for ${u.name}')" class="text-[#7dd3fc] hover:underline text-xs">Edit</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
 
       const countElem = document.getElementById('admin_users_count');
-      if (countElem) countElem.innerText = `Tổng cộng: ${appData.users.length} tài khoản`;
+      if (countElem) countElem.innerText = `Total: ${appData.users.length} accounts`;
     }
 
     function renderAuditLogs() {
@@ -1635,9 +1632,7 @@ npm run dev</pre>
       modal.classList.toggle('hidden');
     }
 
-    // Initialize application
     window.addEventListener('DOMContentLoaded', () => {
-      // Set today's date for excuse input
       const today = new Date().toISOString().split('T')[0];
       const dateElem = document.getElementById('date_excuse');
       if (dateElem) dateElem.value = today;

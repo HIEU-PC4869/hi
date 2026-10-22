@@ -13,23 +13,28 @@ Strictly complies with Architecture Requirements:
 
 import os
 import sys
-from PySide6.QtCore import QFile, QIODevice, QTimer, Qt
-from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import (
-    QApplication,
-    QComboBox,
-    QHeaderView,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QStackedWidget,
-    QTableWidget,
-    QTableWidgetItem,
-    QTextEdit,
-    QDateEdit,
-    QFileDialog,
-    QMessageBox
-)
+
+try:
+    from PySide6.QtCore import QFile, QIODevice, QTimer, Qt
+    from PySide6.QtUiTools import QUiLoader
+    from PySide6.QtWidgets import (
+        QApplication,
+        QComboBox,
+        QHeaderView,
+        QLabel,
+        QLineEdit,
+        QPushButton,
+        QStackedWidget,
+        QTableWidget,
+        QTableWidgetItem,
+        QTextEdit,
+        QDateEdit,
+        QFileDialog,
+        QMessageBox
+    )
+    PYSIDE6_AVAILABLE = True
+except (ImportError, Exception) as _err:
+    PYSIDE6_AVAILABLE = False
 
 from database import init_database
 from logic import AttendanceLogic
@@ -904,15 +909,38 @@ class SASApplication:
 
 
 def main():
-    """Application runner."""
+    """Application runner with automatic web fallback."""
     init_database()
-    app = QApplication(sys.argv)
-    app.setStyleSheet(GLACIER_QSS)
 
-    ui_path = os.path.join(os.path.dirname(__file__), "main_app.ui")
-    sas_app = SASApplication(ui_path)
-    sas_app.window.show()
-    sys.exit(app.exec())
+    if not PYSIDE6_AVAILABLE:
+        print("\n" + "=" * 64)
+        print("  ⚠️ PySide6 is not detected in your Python environment.")
+        print("  🚀 Automatically launching standalone HTML web interface...")
+        print("  👉 Serving at: http://localhost:8000")
+        print("=" * 64 + "\n")
+        try:
+            import server
+            server.run()
+        except Exception as e:
+            print(f"Server startup error: {e}")
+        return
+
+    try:
+        app = QApplication(sys.argv)
+        app.setStyleSheet(GLACIER_QSS)
+
+        ui_path = os.path.join(os.path.dirname(__file__), "main_app.ui")
+        sas_app = SASApplication(ui_path)
+        sas_app.window.show()
+        sys.exit(app.exec())
+    except Exception as e:
+        print(f"\n⚠️ Unable to initialize desktop Qt display window ({e}).")
+        print("🚀 Automatically opening standalone web interface in browser...")
+        try:
+            import server
+            server.run()
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # SAS Enterprise - Linux / macOS Launcher
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-TARGET="$SCRIPT_DIR/app.html"
+TARGET="$SCRIPT_DIR/index.html"
 
 echo "======================================================"
 echo "  SAS Enterprise - Student Attendance System"
-echo "  Đang mở giao diện HTML trên trình duyệt..."
+echo "  Launching HTML interface in default browser..."
 echo "======================================================"
 
 if which xdg-open > /dev/null; then

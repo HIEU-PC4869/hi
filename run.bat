@@ -1,8 +1,8 @@
 @echo off
 title SAS Enterprise Launcher
 echo ======================================================
-echo   SAS Enterprise - He Thong Diem Danh Sinh Vien
-echo   Dang mo giao dien web HTML tren trinh duyet...
+echo   SAS Enterprise - Student Attendance System
+echo   Launching web interface in your default browser...
 echo ======================================================
-start "" "%~dp0app.html"
+start "" "%~dp0index.html"
 exit
