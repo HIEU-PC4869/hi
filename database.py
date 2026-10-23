@@ -1,6 +1,17 @@
 """
-database.py - Database layer with SQLite3 Context Manager and Secure Schema
+database.py - Model Component & Persistence / Database Layer
 SAS Enterprise - Student Attendance & Intelligence System
+
+Grounded in Software Engineering Chapter 3: Software Design:
+- Architectural Pattern: MVC Model - Model Component (Slides 17-19)
+- Layered Model: Persistence Layer (DAO) & Database Layer (Slides 25-27)
+- Database Design Levels: Concept -> Logic (Normalized Tables) -> Physic (SQLite3) (Slides 29-30)
+- Relational Conversion Rules Applied:
+  * Class to Table & Property to Column (Slide 31)
+  * Inheritance: Single Table with Discriminator `role` (`Loai_NV` pattern, Slides 41-42)
+  * 1-n Relationship: Reference Key / Foreign Key (Slides 35-36)
+  * n-n Relationship: Intermediate Table `Enrollments` (Slides 37-38)
+  * 1-1 Relationship: Merge Credentials into User Entity (Slides 32-34)
 """
 
 import sqlite3

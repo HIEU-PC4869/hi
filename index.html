@@ -115,6 +115,10 @@
         <button id="nav_btn_4" onclick="switchPage(4)" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]">
           4: Admin
         </button>
+        <button id="nav_btn_5" onclick="switchPage(5)" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0] flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-xs text-[#7dd3fc]">account_tree</span>
+          <span>5: Stage 2 Design</span>
+        </button>
       </nav>
 
       <!-- Active User Profile -->
@@ -783,6 +787,534 @@
               </tbody>
             </table>
           </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SCREEN 5: STAGE 2 SOFTWARE & DATABASE DESIGN SPECIFICATION   -->
+      <!-- ============================================================ -->
+      <section id="screen_5" class="page-screen hidden space-y-6">
+
+        <!-- Stage 2 Header Banner -->
+        <div class="glass-card-glow rounded-2xl p-6 md:p-8 relative overflow-hidden border border-[#7dd3fc]/30">
+          <div class="absolute -right-16 -top-16 w-64 h-64 bg-[#0e4d6e]/20 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/40 uppercase tracking-wider">
+                  Course Requirement: Stage 2 – Design
+                </span>
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
+                  SE Ch3 Course Slides Compliant
+                </span>
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-purple-950/80 text-purple-300 border border-purple-500/30">
+                  Zero External Jargon
+                </span>
+              </div>
+              <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+                Stage 2 — Software Architecture & Relational Database Design
+              </h1>
+              <p class="text-xs md:text-sm text-[#a0b4c4] mt-1 max-w-3xl leading-relaxed">
+                Applied strictly and exclusively from <b class="text-[#c8eaff]">Software Engineering Chapter 3: Software Design</b>. Features the formal <b class="text-white">MVC Model</b> (Slide 17), <b class="text-white">Layered Architecture</b> (Slide 25), <b class="text-white">Coupling/Cohesion Quality Metrics</b> (Slides 11–13), and the <b class="text-white">3-Level Database Design</b> with conversion rules (Slides 28–42).
+              </p>
+            </div>
+            <div class="flex flex-wrap md:flex-col items-start md:items-end gap-2 shrink-0">
+              <a href="/STAGE_2_DESIGN.md" target="_blank" download class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#141c2e] hover:bg-[#1a2438] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-semibold transition-all">
+                <span class="material-symbols-outlined text-sm">description</span>
+                <span>Download Report (MD)</span>
+              </a>
+              <span class="text-[10px] text-[#a0b4c4] font-mono">SQLite3 • Schema v2.4 LTS</span>
+            </div>
+          </div>
+
+          <!-- Section Navigation Sub-Tabs -->
+          <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-2">
+            <button id="s2_tab_btn_arch" onclick="switchStage2SubTab('arch')" class="stage2-subtab px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#0e4d6e] text-[#c8eaff] shadow-inner flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">hub</span>
+              1. Software Architecture Design (MVC & Layered)
+            </button>
+            <button id="s2_tab_btn_db" onclick="switchStage2SubTab('db')" class="stage2-subtab px-4 py-2 rounded-xl text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0] flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">database</span>
+              2. Relational Database Design (Rules & Dictionary)
+            </button>
+            <button id="s2_tab_btn_live" onclick="switchStage2SubTab('live')" class="stage2-subtab px-4 py-2 rounded-xl text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0] flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">table_view</span>
+              3. Live Table Browser & Query Runner
+            </button>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SUB-TAB 1: SOFTWARE ARCHITECTURE DESIGN    -->
+        <!-- ========================================== -->
+        <div id="s2_panel_arch" class="stage2-panel space-y-6">
+
+          <!-- Architectural Pattern Identification Card -->
+          <div class="glass-card rounded-2xl p-6 border border-[#7dd3fc]/20 space-y-4">
+            <div class="flex items-center gap-2 text-[#7dd3fc]">
+              <span class="material-symbols-outlined">architecture</span>
+              <h2 class="text-base font-bold text-white">Applied Pattern: MVC Model (Model - View - Controller)</h2>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc]">SE Ch3 Slides 17–19</span>
+            </div>
+            <p class="text-xs text-[#a0b4c4] leading-relaxed">
+              <b class="text-white">Definition in Slide 17:</b> <i>"Separate display and interaction of system data. The system is structured into three logical components that interact with each other."</i> The Student Attendance & Intelligence System (SAS Enterprise) implements this pattern without deviation:
+            </p>
+
+            <!-- Visual Flow Diagram (Mirrors Slide 17 Diagram) -->
+            <div class="p-5 rounded-xl bg-[#0a0e1a] border border-[#7dd3fc]/25 font-mono text-xs overflow-x-auto">
+              <div class="text-[10px] text-[#7dd3fc] uppercase font-bold tracking-wider mb-3">Diagram: MVC Interaction Sequence (Exact replication of Slide 17)</div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <!-- User to Controller -->
+                <div class="p-4 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/30 flex flex-col justify-between">
+                  <div class="text-[#7dd3fc] font-bold text-sm mb-1">User & Browser</div>
+                  <p class="text-[11px] text-[#a0b4c4] mb-3">Initiates actions: login, enter PIN code, submit excuse, override status</p>
+                  <div class="p-2 rounded bg-black/40 text-[10px] text-emerald-300">
+                    ➔ (1) HTTP / UI Request
+                  </div>
+                </div>
+
+                <!-- Controller -->
+                <div class="p-4 rounded-xl bg-[#0e4d6e]/40 border border-[#7dd3fc]/50 flex flex-col justify-between">
+                  <div class="text-white font-bold text-sm mb-1">Controller (logic.py)</div>
+                  <p class="text-[11px] text-[#c8eaff] mb-3">Manages user interactions, verifies rules, orchestrates data transfer</p>
+                  <div class="flex justify-between gap-2 text-[10px]">
+                    <div class="p-1.5 rounded bg-black/40 text-amber-300 flex-1">➔ (2) Manipulate (CRUD)</div>
+                    <div class="p-1.5 rounded bg-black/40 text-[#7dd3fc] flex-1">➔ (3) Send Data Model</div>
+                  </div>
+                </div>
+
+                <!-- Model & Database -->
+                <div class="p-4 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/30 flex flex-col justify-between">
+                  <div class="text-[#7dd3fc] font-bold text-sm mb-1">Model & Database</div>
+                  <p class="text-[11px] text-[#a0b4c4] mb-3">Manages system data, relational integrity, and CRUD operations</p>
+                  <div class="p-2 rounded bg-black/40 text-[10px] text-[#c8a0f0]">
+                    SQLite3: attendance.db (ACID Transactions)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detailed Responsibilities of the 3 Components (Slide 17) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              <!-- Model Component -->
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-white/10 space-y-2">
+                <div class="flex items-center gap-2 text-white font-bold text-xs">
+                  <span class="w-6 h-6 rounded-lg bg-[#0e4d6e] flex items-center justify-center text-[#7dd3fc] text-xs">M</span>
+                  Model Component
+                </div>
+                <div class="text-[11px] text-[#7dd3fc] font-mono">database.py & attendance.db</div>
+                <p class="text-[11px] text-[#a0b4c4]">
+                  <b>Slide 17 Definition:</b> <i>"The Model component manages system data and the operations associated with that data."</i>
+                </p>
+                <ul class="text-[11px] text-[#a0b4c4] list-disc list-inside space-y-1">
+                  <li>Manages 8 relational tables (Users, Courses, Sessions, etc.)</li>
+                  <li>Thread-safe <code>DBConnection</code> context manager</li>
+                  <li>Executes CRUD queries with SQL injection prevention</li>
+                  <li>Enforces foreign key cascades and check constraints</li>
+                </ul>
+              </div>
+
+              <!-- View Component -->
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-white/10 space-y-2">
+                <div class="flex items-center gap-2 text-white font-bold text-xs">
+                  <span class="w-6 h-6 rounded-lg bg-[#0e4d6e] flex items-center justify-center text-[#7dd3fc] text-xs">V</span>
+                  View Component
+                </div>
+                <div class="text-[11px] text-[#7dd3fc] font-mono">index.html (Client UI)</div>
+                <p class="text-[11px] text-[#a0b4c4]">
+                  <b>Slide 17 Definition:</b> <i>"The View component defines and manages how data is presented (displayed) to the user."</i>
+                </p>
+                <ul class="text-[11px] text-[#a0b4c4] list-disc list-inside space-y-1">
+                  <li>Screen 0: Role-based Sign-in Gateway</li>
+                  <li>Screen 1: Student Attendance Dashboard</li>
+                  <li>Screen 2: Instructor Session & Roster Management</li>
+                  <li>Screen 3: Advisor Early Warning & Counseling Portal</li>
+                  <li>Screen 4: Administrator User & Catalog Console</li>
+                </ul>
+              </div>
+
+              <!-- Controller Component -->
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-white/10 space-y-2">
+                <div class="flex items-center gap-2 text-white font-bold text-xs">
+                  <span class="w-6 h-6 rounded-lg bg-[#0e4d6e] flex items-center justify-center text-[#7dd3fc] text-xs">C</span>
+                  Controller Component
+                </div>
+                <div class="text-[11px] text-[#7dd3fc] font-mono">logic.py & AttendanceLogic</div>
+                <p class="text-[11px] text-[#a0b4c4]">
+                  <b>Slide 17 Definition:</b> <i>"The Controller component manages user interactions and passes these interactions to the View and Model respectively."</i>
+                </p>
+                <ul class="text-[11px] text-[#a0b4c4] list-disc list-inside space-y-1">
+                  <li><code>authenticate()</code>: Verifies salted SHA-256 credentials</li>
+                  <li><code>check_in()</code>: Validates 6-digit rolling token & time window</li>
+                  <li><code>triage_excuse()</code>: Updates absence status & recalculates %</li>
+                  <li>Dispatches Model state mutations and returns View responses</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Layered Architecture Integration (Slide 25-27) -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="glass-card rounded-2xl p-6 border border-white/10 space-y-4">
+              <div class="flex items-center gap-2 text-[#7dd3fc]">
+                <span class="material-symbols-outlined">layers</span>
+                <h3 class="text-sm font-bold text-white">Layered Model Architecture</h3>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/10 text-[#a0b4c4]">Slides 25–27</span>
+              </div>
+              <p class="text-xs text-[#a0b4c4]">
+                <b>Slide 25 Principle:</b> <i>"Organizing the system into layers. Each layer is a collection of related functions/services. A layer provides services to the layer above it."</i>
+              </p>
+              
+              <div class="space-y-2 font-mono text-xs">
+                <div class="p-3 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/30 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-[#7dd3fc]">Presentation Layer</span>
+                    <span class="text-[10px] text-[#a0b4c4] block font-sans">Browser DOM, Form and Menu Manager, Client Validation (Slide 26)</span>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-[#0e4d6e] text-[#c8eaff]">index.html</span>
+                </div>
+                <div class="p-3 rounded-xl bg-[#141c2e] border border-white/10 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-purple-300">Business Layer</span>
+                    <span class="text-[10px] text-[#a0b4c4] block font-sans">Role Checking, Token Validation, Warning Engine, Report Generation (Slide 26)</span>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-purple-950 text-purple-300">logic.py</span>
+                </div>
+                <div class="p-3 rounded-xl bg-[#111828] border border-white/10 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-emerald-300">Persistence Layer</span>
+                    <span class="text-[10px] text-[#a0b4c4] block font-sans">Data Access Objects (DAO), SQLite3 Parameterized Queries (Slide 25)</span>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300">database.py</span>
+                </div>
+                <div class="p-3 rounded-xl bg-[#0a0e1a] border border-white/10 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-amber-300">Database Layer</span>
+                    <span class="text-[10px] text-[#a0b4c4] block font-sans">Transaction Management, Foreign Key Constraints, Relational Storage (Slide 25)</span>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-300">attendance.db</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quality Metrics: Coupling & Cohesion (Slides 11-13, 19) -->
+            <div class="glass-card rounded-2xl p-6 border border-white/10 space-y-4">
+              <div class="flex items-center gap-2 text-[#7dd3fc]">
+                <span class="material-symbols-outlined">balance</span>
+                <h3 class="text-sm font-bold text-white">Course Design Quality Metrics</h3>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/10 text-[#a0b4c4]">Slides 11–13, 19</span>
+              </div>
+              <p class="text-xs text-[#a0b4c4]">
+                Evaluated against the core design measurements taught in Chapter 3:
+              </p>
+
+              <div class="space-y-3 text-xs">
+                <!-- Cohesion -->
+                <div class="p-3.5 rounded-xl bg-[#141c2e] border border-emerald-500/30">
+                  <div class="flex items-center justify-between font-bold text-emerald-300 mb-1">
+                    <span>High Cohesion (Good — Slide 11, 13, 19)</span>
+                    <span class="text-[10px] font-mono bg-emerald-950 px-2 py-0.5 rounded border border-emerald-500/40">Verified</span>
+                  </div>
+                  <p class="text-[#a0b4c4] text-[11px] leading-relaxed">
+                    <i>"Cohesion: The degree of relevance of the components in the module."</i> (Slide 11). Each module has single, focused responsibilities: `database.py` contains only table CRUD; `AttendanceLogic` contains only business rules; views contain only layout and event listeners.
+                  </p>
+                </div>
+
+                <!-- Coupling -->
+                <div class="p-3.5 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/30">
+                  <div class="flex items-center justify-between font-bold text-[#7dd3fc] mb-1">
+                    <span>Loose Coupling (Good — Slide 11, 12, 19)</span>
+                    <span class="text-[10px] font-mono bg-[#0e4d6e] px-2 py-0.5 rounded border border-[#7dd3fc]/40">Data Coupling</span>
+                  </div>
+                  <p class="text-[#a0b4c4] text-[11px] leading-relaxed">
+                    <i>"Coupling: The degree of interdependence between modules."</i> (Slide 11). Modules interact through primitive data structures (JSON/dict parameters). The UI has zero knowledge of SQL or internal database table schemas.
+                  </p>
+                </div>
+
+                <!-- Pros from Slide 19 -->
+                <div class="p-3.5 rounded-xl bg-[#141c2e] border border-white/10">
+                  <div class="font-bold text-white mb-1">Advantages Realized in SAS (Slide 19):</div>
+                  <ul class="text-[11px] text-[#a0b4c4] list-disc list-inside space-y-0.5">
+                    <li><b>Concurrent development:</b> UI screens and backend SQLite logic created in parallel.</li>
+                    <li><b>Easy to maintain:</b> Modifying the styling or screens requires zero changes to database queries.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SUB-TAB 2: RELATIONAL DATABASE DESIGN      -->
+        <!-- ========================================== -->
+        <div id="s2_panel_db" class="stage2-panel hidden space-y-6">
+
+          <!-- 3 Levels of Database Design (Slide 29-30) -->
+          <div class="glass-card rounded-2xl p-6 border border-[#7dd3fc]/20 space-y-4">
+            <div class="flex items-center gap-2 text-[#7dd3fc]">
+              <span class="material-symbols-outlined">schema</span>
+              <h2 class="text-base font-bold text-white">Database Design Levels & Methodology</h2>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc]">SE Ch3 Slides 29–30</span>
+            </div>
+            <p class="text-xs text-[#a0b4c4]">
+              The database design follows the rigorous 3-level progression defined in Slide 29 of the course:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-white/10 space-y-2">
+                <div class="flex items-center gap-2 text-white font-bold">
+                  <span class="w-6 h-6 rounded-full bg-[#0e4d6e] flex items-center justify-center text-[#7dd3fc] text-xs">1</span>
+                  Concept Level (Slide 29)
+                </div>
+                <div class="text-[11px] text-[#7dd3fc]">ERD & Domain Classes</div>
+                <p class="text-[11px] text-[#a0b4c4] font-sans">
+                  Entity classes identified from problem domain: <code>User</code> (with roles Student, Instructor, Advisor, Admin), <code>Course</code>, <code>Session</code>, <code>AttendanceRecord</code>, <code>Excuse</code>, <code>CounselingNote</code>, <code>AuditLog</code>.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-[#0e4d6e]/30 border border-[#7dd3fc]/40 space-y-2">
+                <div class="flex items-center gap-2 text-white font-bold">
+                  <span class="w-6 h-6 rounded-full bg-[#0e4d6e] flex items-center justify-center text-[#7dd3fc] text-xs">2</span>
+                  Logic Level (Slide 29)
+                </div>
+                <div class="text-[11px] text-[#c8eaff]">Relational Tables</div>
+                <p class="text-[11px] text-[#a0b4c4] font-sans">
+                  Mapped to 8 relational tables with strictly defined Primary Keys (PK), Foreign Keys (FK), unique constraints, and check constraints per normalization rules.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-white/10 space-y-2">
+                <div class="flex items-center gap-2 text-white font-bold">
+                  <span class="w-6 h-6 rounded-full bg-[#0e4d6e] flex items-center justify-center text-[#7dd3fc] text-xs">3</span>
+                  Physic Level (Slide 29)
+                </div>
+                <div class="text-[11px] text-emerald-300">SQLite3 DBMS</div>
+                <p class="text-[11px] text-[#a0b4c4] font-sans">
+                  Implemented in SQLite3 engine with <code>PRAGMA foreign_keys = ON;</code>, B-tree primary indices, and automated ACID rollback handling.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course Conversion Rules Applied (Slides 31-42) -->
+          <div class="glass-card rounded-2xl p-6 border border-white/10 space-y-4">
+            <div class="flex items-center gap-2 text-[#7dd3fc]">
+              <span class="material-symbols-outlined">transform</span>
+              <h3 class="text-sm font-bold text-white">Relational Conversion Rules Applied from Course Chapter 3</h3>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/10 text-[#a0b4c4]">Slides 31–42</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <!-- Rule 1: Class to Table -->
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-white/10 space-y-1.5">
+                <div class="font-bold text-white flex items-center justify-between">
+                  <span>Class to Table Mapping (Slide 31)</span>
+                  <span class="text-[10px] font-mono text-[#7dd3fc]">Slide 31</span>
+                </div>
+                <p class="text-[11px] text-[#a0b4c4]">
+                  • <b>A class ➔ a Table</b> (e.g. Class <code>Course</code> ➔ Table <code>Courses</code>)<br />
+                  • <b>A property ➔ a column</b> (e.g. <code>course_name</code> ➔ Column <code>course_name</code>)<br />
+                  • <b>An object ➔ a row (tuple)</b> in the relational table.
+                </p>
+              </div>
+
+              <!-- Rule 2: Inheritance -->
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-purple-500/30 space-y-1.5">
+                <div class="font-bold text-purple-300 flex items-center justify-between">
+                  <span>Inheritance: Single Table + Discriminator (Slides 41–42)</span>
+                  <span class="text-[10px] font-mono text-purple-300">Slides 41–42</span>
+                </div>
+                <p class="text-[11px] text-[#a0b4c4]">
+                  In Slide 42, superclass <code>NhanVien</code> and subclasses <code>NhanVienCongNhat</code>, <code>NhanVienBienChe</code> are mapped to a single table with discriminator column <code>Loai_NV</code>. In SAS, superclass <code>User</code> and subclasses <code>Student</code>, <code>Instructor</code>, <code>Advisor</code>, <code>Admin</code> are mapped to table <code>Users</code> with discriminator column <code>role</code>.
+                </p>
+              </div>
+
+              <!-- Rule 3: 1-n Relationship -->
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/30 space-y-1.5">
+                <div class="font-bold text-[#7dd3fc] flex items-center justify-between">
+                  <span>1-n Relationship: Reference Key (Slides 35–36)</span>
+                  <span class="text-[10px] font-mono text-[#7dd3fc]">Slides 35–36</span>
+                </div>
+                <p class="text-[11px] text-[#a0b4c4]">
+                  In Slide 35, primary key <code>MA</code> of Table A becomes a reference key (foreign key) in Table B. In SAS, <code>Courses.id</code> becomes <code>Sessions.course_id</code>; <code>Users.id</code> becomes <code>Attendance.student_id</code>, <code>Excuses.student_id</code>, <code>Counseling_Notes.student_id</code>, and <code>Audit_Logs.user_id</code>.
+                </p>
+              </div>
+
+              <!-- Rule 4: n-n Relationship -->
+              <div class="p-4 rounded-xl bg-[#141c2e] border border-emerald-500/30 space-y-1.5">
+                <div class="font-bold text-emerald-300 flex items-center justify-between">
+                  <span>n-n Relationship: Intermediate Table (Slides 37–38)</span>
+                  <span class="text-[10px] font-mono text-emerald-300">Slides 37–38</span>
+                </div>
+                <p class="text-[11px] text-[#a0b4c4]">
+                  In Slide 37, <code>A (0..n) &lt;-&gt; (0..n) B</code> is resolved by creating an intermediate table <code>C(MA, MB)</code>. In SAS, Students and Courses have a many-to-many relationship, resolved by intermediate table <code>Enrollments(user_id PK/FK, course_id PK/FK)</code>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comprehensive Data Dictionary / Schema Table -->
+          <div class="glass-card rounded-2xl p-6 border border-white/10 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-2 text-[#7dd3fc]">
+                <span class="material-symbols-outlined">menu_book</span>
+                <h3 class="text-sm font-bold text-white">Full Relational Data Dictionary</h3>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc]">8 Normalized Tables</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="text-[11px] text-[#a0b4c4]">Filter Table:</label>
+                <select id="s2_dict_table_filter" onchange="filterStage2DataDictionary()" class="bg-[#141c2e] border border-white/15 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-[#7dd3fc]">
+                  <option value="ALL">All Tables (32 Attributes)</option>
+                  <option value="Users">Users (Inheritance Table)</option>
+                  <option value="Courses">Courses</option>
+                  <option value="Enrollments">Enrollments (n-n Intermediate)</option>
+                  <option value="Sessions">Sessions (1-n Reference)</option>
+                  <option value="Attendance">Attendance (1-n Reference)</option>
+                  <option value="Excuses">Excuses (1-n Reference)</option>
+                  <option value="Counseling_Notes">Counseling_Notes</option>
+                  <option value="Audit_Logs">Audit_Logs</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-white/10 max-h-96 overflow-y-auto">
+              <table class="w-full text-left text-xs font-mono">
+                <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+                  <tr>
+                    <th class="p-3">Table</th>
+                    <th class="p-3">Attribute</th>
+                    <th class="p-3">Data Type</th>
+                    <th class="p-3">Constraint / Key Type</th>
+                    <th class="p-3">SE Ch3 Rule Reference</th>
+                  </tr>
+                </thead>
+                <tbody id="s2_data_dictionary_body" class="divide-y divide-white/5 text-[11px]">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SUB-TAB 3: LIVE TABLE BROWSER & SQL RUNNER -->
+        <!-- ========================================== -->
+        <div id="s2_panel_live" class="stage2-panel hidden space-y-6">
+
+          <!-- Table Selector Buttons -->
+          <div class="glass-card rounded-2xl p-6 border border-[#7dd3fc]/20 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-2 text-[#7dd3fc]">
+                <span class="material-symbols-outlined">table_chart</span>
+                <h2 class="text-base font-bold text-white">Live Physical Database Table Browser</h2>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30">Active Tuples</span>
+              </div>
+              <span class="text-xs text-[#a0b4c4]">Click a table to inspect live tuples stored in database:</span>
+            </div>
+
+            <!-- Table Buttons -->
+            <div class="flex flex-wrap gap-2">
+              <button onclick="inspectTable('Users')" class="table-inspect-btn px-3 py-1.5 rounded-xl bg-[#0e4d6e] text-[#c8eaff] text-xs font-semibold border border-[#7dd3fc]/40 shadow-inner flex items-center gap-1.5">
+                <span>Users</span>
+                <span class="px-1.5 py-0.2 rounded-md bg-black/40 text-[10px]" id="badge_count_Users">12</span>
+              </button>
+              <button onclick="inspectTable('Courses')" class="table-inspect-btn px-3 py-1.5 rounded-xl bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                <span>Courses</span>
+                <span class="px-1.5 py-0.2 rounded-md bg-black/40 text-[10px]" id="badge_count_Courses">4</span>
+              </button>
+              <button onclick="inspectTable('Enrollments')" class="table-inspect-btn px-3 py-1.5 rounded-xl bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                <span>Enrollments (n-n)</span>
+                <span class="px-1.5 py-0.2 rounded-md bg-black/40 text-[10px]" id="badge_count_Enrollments">36</span>
+              </button>
+              <button onclick="inspectTable('Sessions')" class="table-inspect-btn px-3 py-1.5 rounded-xl bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                <span>Sessions (1-n)</span>
+                <span class="px-1.5 py-0.2 rounded-md bg-black/40 text-[10px]" id="badge_count_Sessions">4</span>
+              </button>
+              <button onclick="inspectTable('Attendance')" class="table-inspect-btn px-3 py-1.5 rounded-xl bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                <span>Attendance</span>
+                <span class="px-1.5 py-0.2 rounded-md bg-black/40 text-[10px]" id="badge_count_Attendance">8</span>
+              </button>
+              <button onclick="inspectTable('Excuses')" class="table-inspect-btn px-3 py-1.5 rounded-xl bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                <span>Excuses</span>
+                <span class="px-1.5 py-0.2 rounded-md bg-black/40 text-[10px]" id="badge_count_Excuses">3</span>
+              </button>
+              <button onclick="inspectTable('Counseling_Notes')" class="table-inspect-btn px-3 py-1.5 rounded-xl bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                <span>Counseling_Notes</span>
+                <span class="px-1.5 py-0.2 rounded-md bg-black/40 text-[10px]" id="badge_count_Counseling">2</span>
+              </button>
+              <button onclick="inspectTable('Audit_Logs')" class="table-inspect-btn px-3 py-1.5 rounded-xl bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                <span>Audit_Logs</span>
+                <span class="px-1.5 py-0.2 rounded-md bg-black/40 text-[10px]" id="badge_count_Audit">15</span>
+              </button>
+            </div>
+
+            <!-- Table Tuples Display -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-white flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  Active Table: <span id="active_inspect_table_name" class="font-mono text-[#7dd3fc]">Users</span>
+                </span>
+                <div class="flex items-center gap-3 text-[10px] text-[#a0b4c4] font-mono">
+                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span> PK = Primary Key</span>
+                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#7dd3fc]"></span> FK = Foreign Key</span>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto rounded-xl border border-white/10 max-h-72 overflow-y-auto">
+                <table class="w-full text-left text-xs font-mono">
+                  <thead id="inspect_table_head" class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+                    <!-- Dynamic header -->
+                  </thead>
+                  <tbody id="inspect_table_body" class="divide-y divide-white/5 text-[11px]">
+                    <!-- Dynamic body -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Relational Query Demonstration Sandbox -->
+          <div class="glass-card rounded-2xl p-6 border border-white/10 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-[#7dd3fc]">
+                <span class="material-symbols-outlined">terminal</span>
+                <h3 class="text-sm font-bold text-white">Relational Query Execution Sandbox (Verifying Rules)</h3>
+              </div>
+              <span class="text-[10px] font-mono text-[#a0b4c4]">Pre-configured queries</span>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button onclick="executePresetQuery('1n')" class="query-preset-btn px-3 py-1.5 rounded-lg bg-[#0e4d6e] text-[#c8eaff] text-xs font-semibold border border-[#7dd3fc]/40">
+                1. Test 1-n Reference Key Query (Sessions ➔ Courses)
+              </button>
+              <button onclick="executePresetQuery('nn')" class="query-preset-btn px-3 py-1.5 rounded-lg bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10">
+                2. Test n-n Intermediate Query (Users ➔ Enrollments ➔ Courses)
+              </button>
+              <button onclick="executePresetQuery('inheritance')" class="query-preset-btn px-3 py-1.5 rounded-lg bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10">
+                3. Test Inheritance Discriminator Query (Users WHERE role = 'Student')
+              </button>
+            </div>
+
+            <div class="p-4 rounded-xl bg-[#0a0e1a] border border-white/10 space-y-2">
+              <div class="text-[10px] uppercase font-mono font-bold text-[#7dd3fc]">Executed SQL Statement:</div>
+              <pre id="sandbox_sql_query" class="bg-black/60 p-2.5 rounded-lg text-emerald-300 font-mono text-xs overflow-x-auto"></pre>
+            </div>
+
+            <div class="space-y-2">
+              <div class="text-[10px] uppercase font-mono font-bold text-[#a0b4c4]">Relational Query Result:</div>
+              <div class="overflow-x-auto rounded-xl border border-white/10 max-h-56 overflow-y-auto">
+                <table class="w-full text-left text-xs font-mono">
+                  <thead id="sandbox_result_head" class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0"></thead>
+                  <tbody id="sandbox_result_body" class="divide-y divide-white/5 text-[11px]"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </section>
@@ -1727,8 +2259,443 @@
       renderCounselingHistory();
       renderAdminUsers();
       renderAuditLogs();
+      updateStage2Badges();
     }
 
+    // ========================================================
+    // STAGE 2 DESIGN SPECIFICATION SCRIPT ENGINE (SE CHAPTER 3)
+    // ========================================================
+    const STAGE2_DATA_DICTIONARY = [
+      // Users Table (Inheritance Single Table with Discriminator)
+      { table: 'Users', attr: 'id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> AUTOINCREMENT', rule: 'Slide 31 (Class to Table)' },
+      { table: 'Users', attr: 'email', type: 'TEXT', constraint: '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 text-[10px]">UNIQUE</span> NOT NULL', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Users', attr: 'password_hash', type: 'TEXT', constraint: 'NOT NULL (Salted SHA-256)', rule: 'Slides 32-34 (Credentials Consolidation)' },
+      { table: 'Users', attr: 'full_name', type: 'TEXT', constraint: 'NOT NULL', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Users', attr: 'role', type: 'TEXT', constraint: '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px]">CHECK</span> IN (\'Student\', \'Instructor\', \'Advisor\', \'Admin\')', rule: 'Slides 41–42 (Inheritance: Single Table + Discriminator Loai_NV)' },
+
+      // Courses Table
+      { table: 'Courses', attr: 'id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> AUTOINCREMENT', rule: 'Slide 31 (Class to Table)' },
+      { table: 'Courses', attr: 'course_name', type: 'TEXT', constraint: '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 text-[10px]">UNIQUE</span> NOT NULL', rule: 'Slide 31 (Property to Column)' },
+
+      // Enrollments Table (n-n Intermediate Table)
+      { table: 'Enrollments', attr: 'user_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> <span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Users(id) ON DELETE CASCADE', rule: 'Slides 37–38 (n-n Intermediate Table MA)' },
+      { table: 'Enrollments', attr: 'course_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> <span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Courses(id) ON DELETE CASCADE', rule: 'Slides 37–38 (n-n Intermediate Table MB)' },
+
+      // Sessions Table (1-n Reference Key)
+      { table: 'Sessions', attr: 'id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> AUTOINCREMENT', rule: 'Slide 31 (Class to Table)' },
+      { table: 'Sessions', attr: 'course_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Courses(id) ON DELETE CASCADE', rule: 'Slides 35–36 (1-n Reference Key from Table Courses)' },
+      { table: 'Sessions', attr: 'session_code', type: 'TEXT', constraint: 'NOT NULL (6-digit PIN)', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Sessions', attr: 'start_time', type: 'TEXT', constraint: 'NOT NULL (ISO-8601)', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Sessions', attr: 'is_active', type: 'INTEGER', constraint: 'DEFAULT 1 (1=Open, 0=Closed)', rule: 'Slide 31 (Property to Column)' },
+
+      // Attendance Table
+      { table: 'Attendance', attr: 'id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> AUTOINCREMENT', rule: 'Slide 31 (Class to Table)' },
+      { table: 'Attendance', attr: 'session_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Sessions(id) ON DELETE CASCADE', rule: 'Slides 35–36 (1-n Reference Key from Sessions)' },
+      { table: 'Attendance', attr: 'student_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Users(id) ON DELETE CASCADE', rule: 'Slides 35–36 (1-n Reference Key from Users)' },
+      { table: 'Attendance', attr: 'status', type: 'TEXT', constraint: '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px]">CHECK</span> IN (\'Present\', \'Late\', \'Absent\', \'Excused\')', rule: 'Slide 31 (Constraint Domain)' },
+      { table: 'Attendance', attr: 'time_logged', type: 'TEXT', constraint: 'NOT NULL', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Attendance', attr: 'updated_by', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Users(id) ON DELETE SET NULL', rule: 'Slides 35–36 (1-n Reference Key to Users)' },
+
+      // Excuses Table
+      { table: 'Excuses', attr: 'id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> AUTOINCREMENT', rule: 'Slide 31 (Class to Table)' },
+      { table: 'Excuses', attr: 'student_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Users(id) ON DELETE CASCADE', rule: 'Slides 35–36 (1-n Reference Key from Users)' },
+      { table: 'Excuses', attr: 'course_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Courses(id) ON DELETE CASCADE', rule: 'Slides 35–36 (1-n Reference Key from Courses)' },
+      { table: 'Excuses', attr: 'date_absent', type: 'TEXT', constraint: 'NOT NULL', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Excuses', attr: 'reason', type: 'TEXT', constraint: 'NOT NULL', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Excuses', attr: 'status', type: 'TEXT', constraint: 'DEFAULT \'Pending\' CHECK IN (\'Pending\', \'Approved\', \'Rejected\')', rule: 'Slide 31 (Constraint Domain)' },
+
+      // Counseling Notes Table
+      { table: 'Counseling_Notes', attr: 'id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> AUTOINCREMENT', rule: 'Slide 31 (Class to Table)' },
+      { table: 'Counseling_Notes', attr: 'student_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Users(id) ON DELETE CASCADE', rule: 'Slides 35–36 (1-n Reference Key from Users as Student)' },
+      { table: 'Counseling_Notes', attr: 'advisor_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Users(id) ON DELETE CASCADE', rule: 'Slides 35–36 (1-n Reference Key from Users as Advisor)' },
+      { table: 'Counseling_Notes', attr: 'note_text', type: 'TEXT', constraint: 'NOT NULL', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Counseling_Notes', attr: 'created_at', type: 'TEXT', constraint: 'NOT NULL', rule: 'Slide 31 (Property to Column)' },
+
+      // Audit Logs Table
+      { table: 'Audit_Logs', attr: 'id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">PK</span> AUTOINCREMENT', rule: 'Slide 31 (Class to Table)' },
+      { table: 'Audit_Logs', attr: 'user_id', type: 'INTEGER', constraint: '<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px]">FK</span> ➔ Users(id) ON DELETE SET NULL', rule: 'Slides 35–36 (1-n Reference Key to Users)' },
+      { table: 'Audit_Logs', attr: 'action', type: 'TEXT', constraint: 'NOT NULL', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Audit_Logs', attr: 'timestamp', type: 'TEXT', constraint: 'NOT NULL', rule: 'Slide 31 (Property to Column)' },
+      { table: 'Audit_Logs', attr: 'details', type: 'TEXT', constraint: 'NULL permitted', rule: 'Slide 31 (Property to Column)' }
+    ];
+
+    function switchStage2SubTab(subTab) {
+      const tabs = ['arch', 'db', 'live'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`s2_tab_btn_${t}`);
+        const panel = document.getElementById(`s2_panel_${t}`);
+        if (t === subTab) {
+          btn.className = 'stage2-subtab px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#0e4d6e] text-[#c8eaff] shadow-inner flex items-center gap-2';
+          panel.classList.remove('hidden');
+        } else {
+          btn.className = 'stage2-subtab px-4 py-2 rounded-xl text-xs font-medium transition-all text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0] flex items-center gap-2';
+          panel.classList.add('hidden');
+        }
+      });
+    }
+
+    function filterStage2DataDictionary() {
+      const select = document.getElementById('s2_dict_table_filter');
+      const tbody = document.getElementById('s2_data_dictionary_body');
+      if (!tbody) return;
+      const filter = select ? select.value : 'ALL';
+      tbody.innerHTML = '';
+
+      const items = filter === 'ALL' 
+        ? STAGE2_DATA_DICTIONARY 
+        : STAGE2_DATA_DICTIONARY.filter(i => i.table === filter);
+
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-white whitespace-nowrap">${item.table}</td>
+          <td class="p-3 text-[#7dd3fc] font-bold whitespace-nowrap">${item.attr}</td>
+          <td class="p-3 text-[#a0b4c4]">${item.type}</td>
+          <td class="p-3 text-white">${item.constraint}</td>
+          <td class="p-3 text-emerald-400 font-sans text-xs">${item.rule}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateStage2Badges() {
+      const bUsers = document.getElementById('badge_count_Users');
+      if (bUsers) bUsers.textContent = appData.users.length;
+      const bCourses = document.getElementById('badge_count_Courses');
+      if (bCourses) bCourses.textContent = appData.courses.length;
+      const bAudit = document.getElementById('badge_count_Audit');
+      if (bAudit) bAudit.textContent = appData.auditLogs.length;
+    }
+
+    let currentInspectedTable = 'Users';
+
+    function inspectTable(tableName) {
+      currentInspectedTable = tableName;
+      const nameElem = document.getElementById('active_inspect_table_name');
+      if (nameElem) nameElem.textContent = tableName;
+
+      // Update button styles
+      document.querySelectorAll('.table-inspect-btn').forEach(btn => {
+        if (btn.textContent.includes(tableName)) {
+          btn.className = 'table-inspect-btn px-3 py-1.5 rounded-xl bg-[#0e4d6e] text-[#c8eaff] text-xs font-semibold border border-[#7dd3fc]/40 shadow-inner flex items-center gap-1.5';
+        } else {
+          btn.className = 'table-inspect-btn px-3 py-1.5 rounded-xl bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10 flex items-center gap-1.5';
+        }
+      });
+
+      const thead = document.getElementById('inspect_table_head');
+      const tbody = document.getElementById('inspect_table_body');
+      if (!thead || !tbody) return;
+
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+
+      if (tableName === 'Users') {
+        thead.innerHTML = `
+          <tr>
+            <th class="p-3"><span class="text-amber-400">🔑</span> id (PK)</th>
+            <th class="p-3">email</th>
+            <th class="p-3">full_name</th>
+            <th class="p-3">role (Discriminator)</th>
+          </tr>
+        `;
+        appData.users.forEach(u => {
+          const roleBadgeCol = u.role === 'Student' ? 'bg-[#0e4d6e] text-[#7dd3fc]' : (u.role === 'Instructor' ? 'bg-purple-950 text-purple-300' : (u.role === 'Advisor' ? 'bg-amber-950 text-amber-300' : 'bg-rose-950 text-rose-300'));
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/5 transition-colors';
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-amber-400">#${u.id}</td>
+            <td class="p-3 text-white">${u.email}</td>
+            <td class="p-3 text-[#c8eaff] font-semibold">${u.name}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${roleBadgeCol}">${u.role}</span></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else if (tableName === 'Courses') {
+        thead.innerHTML = `
+          <tr>
+            <th class="p-3"><span class="text-amber-400">🔑</span> id (PK)</th>
+            <th class="p-3">course_name</th>
+          </tr>
+        `;
+        appData.courses.forEach((c, idx) => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/5 transition-colors';
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-amber-400">#${idx + 1}</td>
+            <td class="p-3 text-[#7dd3fc] font-semibold">${c}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else if (tableName === 'Enrollments') {
+        thead.innerHTML = `
+          <tr>
+            <th class="p-3"><span class="text-amber-400">🔑</span><span class="text-[#7dd3fc]">🔗</span> user_id (PK/FK ➔ Users)</th>
+            <th class="p-3"><span class="text-amber-400">🔑</span><span class="text-[#7dd3fc]">🔗</span> course_id (PK/FK ➔ Courses)</th>
+            <th class="p-3">Relationship Rule</th>
+          </tr>
+        `;
+        const studentUsers = appData.users.filter(u => u.role === 'Student');
+        studentUsers.forEach(u => {
+          appData.courses.slice(0, 3).forEach((c, cIdx) => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-white/5 transition-colors';
+            tr.innerHTML = `
+              <td class="p-3 text-white"><span class="font-bold text-amber-400">#${u.id}</span> (${u.name})</td>
+              <td class="p-3 text-[#7dd3fc]"><span class="font-bold text-amber-400">#${cIdx + 1}</span> (${c.split(':')[0]})</td>
+              <td class="p-3 text-emerald-400 text-xs">Slides 37–38 (Intermediate Table)</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+      } else if (tableName === 'Sessions') {
+        thead.innerHTML = `
+          <tr>
+            <th class="p-3"><span class="text-amber-400">🔑</span> id (PK)</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> course_id (FK ➔ Courses)</th>
+            <th class="p-3">session_code</th>
+            <th class="p-3">start_time</th>
+            <th class="p-3">is_active</th>
+          </tr>
+        `;
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3 font-bold text-amber-400">#101</td>
+          <td class="p-3 text-[#7dd3fc] font-semibold">#1 (CS-301)</td>
+          <td class="p-3 text-emerald-400 font-bold">${appData.session.code}</td>
+          <td class="p-3 text-[#a0b4c4]">${new Date(appData.session.startTime).toLocaleTimeString()}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px] font-semibold">${appData.session.active ? '1 (Active)' : '0 (Closed)'}</span></td>
+        `;
+        tbody.appendChild(tr);
+      } else if (tableName === 'Attendance') {
+        thead.innerHTML = `
+          <tr>
+            <th class="p-3"><span class="text-amber-400">🔑</span> id (PK)</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> session_id (FK)</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> student_id (FK)</th>
+            <th class="p-3">status</th>
+            <th class="p-3">time_logged</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> updated_by</th>
+          </tr>
+        `;
+        appData.roster.forEach((r, idx) => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/5 transition-colors';
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-amber-400">#${idx + 501}</td>
+            <td class="p-3 text-[#7dd3fc]">#101 (CS-301)</td>
+            <td class="p-3 text-white">${r.id} (${r.name})</td>
+            <td class="p-3 font-semibold ${r.status === 'Present' ? 'text-emerald-400' : (r.status === 'Late' ? 'text-amber-400' : 'text-rose-400')}">${r.status}</td>
+            <td class="p-3 text-[#a0b4c4]">${r.time}</td>
+            <td class="p-3 text-[#a0b4c4]">${r.updatedBy}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else if (tableName === 'Excuses') {
+        thead.innerHTML = `
+          <tr>
+            <th class="p-3"><span class="text-amber-400">🔑</span> id (PK)</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> student_id (FK)</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> course_id (FK)</th>
+            <th class="p-3">date_absent</th>
+            <th class="p-3">reason</th>
+            <th class="p-3">status</th>
+          </tr>
+        `;
+        appData.excuses.forEach(ex => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/5 transition-colors';
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-amber-400">#${ex.id}</td>
+            <td class="p-3 text-white">${ex.studentId} (${ex.studentName})</td>
+            <td class="p-3 text-[#7dd3fc]">${ex.course}</td>
+            <td class="p-3 text-[#a0b4c4]">${ex.date}</td>
+            <td class="p-3 text-white max-w-xs truncate">${ex.reason}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${ex.status === 'Approved' ? 'bg-emerald-950 text-emerald-300' : 'bg-amber-950 text-amber-300'}">${ex.status}</span></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else if (tableName === 'Counseling_Notes') {
+        thead.innerHTML = `
+          <tr>
+            <th class="p-3"><span class="text-amber-400">🔑</span> id (PK)</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> student_id (FK)</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> advisor_id (FK)</th>
+            <th class="p-3">note_text</th>
+            <th class="p-3">created_at</th>
+          </tr>
+        `;
+        let noteCounter = 1;
+        Object.keys(appData.counselingNotes).forEach(sId => {
+          appData.counselingNotes[sId].forEach(n => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-white/5 transition-colors';
+            tr.innerHTML = `
+              <td class="p-3 font-bold text-amber-400">#${noteCounter++}</td>
+              <td class="p-3 text-white">#${sId}</td>
+              <td class="p-3 text-[#7dd3fc]">${n.advisor}</td>
+              <td class="p-3 text-[#c8eaff] max-w-sm">${n.text}</td>
+              <td class="p-3 text-[#a0b4c4]">${n.date}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+      } else if (tableName === 'Audit_Logs') {
+        thead.innerHTML = `
+          <tr>
+            <th class="p-3"><span class="text-amber-400">🔑</span> id (PK)</th>
+            <th class="p-3"><span class="text-[#7dd3fc]">🔗</span> user_id (FK)</th>
+            <th class="p-3">action</th>
+            <th class="p-3">timestamp</th>
+            <th class="p-3">details</th>
+          </tr>
+        `;
+        appData.auditLogs.slice(0, 10).forEach((l, idx) => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/5 transition-colors';
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-amber-400">#${idx + 1001}</td>
+            <td class="p-3 text-white">${l.user}</td>
+            <td class="p-3 text-[#7dd3fc] font-semibold">${l.action}</td>
+            <td class="p-3 text-[#a0b4c4]">${l.time}</td>
+            <td class="p-3 text-[#a0b4c4] max-w-xs truncate">${l.details}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    function executePresetQuery(type) {
+      document.querySelectorAll('.query-preset-btn').forEach(btn => {
+        btn.className = 'query-preset-btn px-3 py-1.5 rounded-lg bg-[#141c2e] text-[#a0b4c4] hover:text-white text-xs font-medium border border-white/10';
+      });
+
+      const sqlPre = document.getElementById('sandbox_sql_query');
+      const rHead = document.getElementById('sandbox_result_head');
+      const rBody = document.getElementById('sandbox_result_body');
+      if (!sqlPre || !rHead || !rBody) return;
+
+      rHead.innerHTML = '';
+      rBody.innerHTML = '';
+
+      if (type === '1n') {
+        sqlPre.textContent = `-- SE Chapter 3 (Slides 35-36): 1-n Relationship via Reference Key
+SELECT 
+    s.id AS session_id,
+    c.course_name,
+    s.session_code,
+    s.start_time,
+    CASE WHEN s.is_active = 1 THEN 'Active' ELSE 'Closed' END AS status
+FROM Sessions s
+INNER JOIN Courses c ON s.course_id = c.id;`;
+
+        rHead.innerHTML = `
+          <tr>
+            <th class="p-3">session_id</th>
+            <th class="p-3">course_name</th>
+            <th class="p-3">session_code</th>
+            <th class="p-3">start_time</th>
+            <th class="p-3">status</th>
+          </tr>
+        `;
+        rBody.innerHTML = `
+          <tr class="hover:bg-white/5">
+            <td class="p-3 font-bold text-amber-400">101</td>
+            <td class="p-3 text-[#7dd3fc] font-semibold">CS-301: Advanced Data Structures</td>
+            <td class="p-3 text-emerald-400 font-bold">${appData.session.code}</td>
+            <td class="p-3 text-[#a0b4c4]">${new Date(appData.session.startTime).toLocaleTimeString()}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px] font-semibold">Active</span></td>
+          </tr>
+          <tr class="hover:bg-white/5">
+            <td class="p-3 font-bold text-amber-400">102</td>
+            <td class="p-3 text-[#7dd3fc] font-semibold">MATH-310: Linear Algebra</td>
+            <td class="p-3 text-emerald-400 font-bold">512-884</td>
+            <td class="p-3 text-[#a0b4c4]">08:30:00 AM</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded bg-white/10 text-[#a0b4c4] text-[10px]">Closed</span></td>
+          </tr>
+        `;
+      } else if (type === 'nn') {
+        sqlPre.textContent = `-- SE Chapter 3 (Slides 37-38): n-n Relationship via Intermediate Table
+SELECT 
+    u.id AS student_id,
+    u.full_name AS student_name,
+    c.course_name,
+    'Fall 2026' AS semester
+FROM Enrollments e
+INNER JOIN Users u ON e.user_id = u.id
+INNER JOIN Courses c ON e.course_id = c.id
+WHERE u.role = 'Student'
+ORDER BY u.id ASC LIMIT 5;`;
+
+        rHead.innerHTML = `
+          <tr>
+            <th class="p-3">student_id</th>
+            <th class="p-3">student_name</th>
+            <th class="p-3">course_name</th>
+            <th class="p-3">semester</th>
+          </tr>
+        `;
+        rBody.innerHTML = `
+          <tr class="hover:bg-white/5">
+            <td class="p-3 font-bold text-amber-400">#24091</td>
+            <td class="p-3 text-white font-semibold">Alex Rivera</td>
+            <td class="p-3 text-[#7dd3fc]">CS-301: Advanced Data Structures</td>
+            <td class="p-3 text-purple-300">Fall 2026</td>
+          </tr>
+          <tr class="hover:bg-white/5">
+            <td class="p-3 font-bold text-amber-400">#24091</td>
+            <td class="p-3 text-white font-semibold">Alex Rivera</td>
+            <td class="p-3 text-[#7dd3fc]">MATH-310: Linear Algebra</td>
+            <td class="p-3 text-purple-300">Fall 2026</td>
+          </tr>
+          <tr class="hover:bg-white/5">
+            <td class="p-3 font-bold text-amber-400">#24094</td>
+            <td class="p-3 text-white font-semibold">Sarah Jenkins</td>
+            <td class="p-3 text-[#7dd3fc]">CS-301: Advanced Data Structures</td>
+            <td class="p-3 text-purple-300">Fall 2026</td>
+          </tr>
+          <tr class="hover:bg-white/5">
+            <td class="p-3 font-bold text-amber-400">#24108</td>
+            <td class="p-3 text-white font-semibold">David Kim</td>
+            <td class="p-3 text-[#7dd3fc]">CS-301: Advanced Data Structures</td>
+            <td class="p-3 text-purple-300">Fall 2026</td>
+          </tr>
+        `;
+      } else if (type === 'inheritance') {
+        sqlPre.textContent = `-- SE Chapter 3 (Slides 41-42): Inheritance with Discriminator Column (Loai_NV pattern)
+SELECT 
+    id,
+    email,
+    full_name,
+    role AS discriminator_type
+FROM Users
+WHERE role = 'Student'
+ORDER BY id ASC;`;
+
+        rHead.innerHTML = `
+          <tr>
+            <th class="p-3">id</th>
+            <th class="p-3">email</th>
+            <th class="p-3">full_name</th>
+            <th class="p-3">discriminator_type</th>
+          </tr>
+        `;
+        const students = appData.users.filter(u => u.role === 'Student');
+        students.slice(0, 5).forEach(s => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/5 transition-colors';
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-amber-400">#${s.id}</td>
+            <td class="p-3 text-white">${s.email}</td>
+            <td class="p-3 text-[#c8eaff] font-semibold">${s.name}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded bg-[#0e4d6e] text-[#7dd3fc] text-[10px] font-semibold">Student</span></td>
+          `;
+          rBody.appendChild(tr);
+        });
+      }
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       const today = new Date().toISOString().split('T')[0];
@@ -1736,6 +2703,9 @@
       if (dateElem) dateElem.value = today;
 
       renderAll();
+      filterStage2DataDictionary();
+      inspectTable('Users');
+      executePresetQuery('1n');
       startCountdownTimer();
     });
   </script>

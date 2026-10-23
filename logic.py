@@ -1,6 +1,15 @@
 """
-logic.py - Controller & Model Business Logic Layer
+logic.py - Controller Component & Business Layer
 SAS Enterprise - Student Attendance & Intelligence System
+
+Grounded in Software Engineering Chapter 3: Software Design:
+- Architectural Pattern: MVC Model - Controller Component (Slides 17-19)
+  * Slide 17: "The Controller component manages user interactions and passes these interactions to the View and Model respectively."
+- Layered Model: Business Layer (Slides 25-27)
+  * Slide 26: Role Checking, PIN Token Validation, Warning Engine, Report Generation
+- Quality Metrics:
+  * High Cohesion (Slides 11, 13, 19): Grouping of related business actions into focused Controller methods
+  * Loose Coupling (Slides 11, 12, 19): Interaction with View and Model via clean data contracts (no direct SQL in UI)
 """
 
 import csv
@@ -13,8 +22,8 @@ from database import DBConnection, hash_password, init_database
 
 class AttendanceLogic:
     """
-    Central Controller Logic for SAS Enterprise.
-    Decoupled from PySide6 UI views to fulfill Model-View-Controller architecture.
+    Central Controller Component for SAS Enterprise (SE Chapter 3, Slide 17).
+    Decoupled from UI views to fulfill Model-View-Controller architecture.
     """
 
     def __init__(self, db_path=None):
