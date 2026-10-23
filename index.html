@@ -117,14 +117,9 @@
         </button>
       </nav>
 
-      <!-- Active User Profile & Run Guide -->
+      <!-- Active User Profile -->
       <div class="flex items-center gap-3 shrink-0">
-        <button onclick="toggleHelpModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e4d6e]/40 hover:bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-medium transition-all active:scale-95" title="How to run in VS Code without errors">
-          <span class="material-symbols-outlined text-sm">terminal</span>
-          <span class="hidden md:inline">VS Code Run Guide</span>
-        </button>
-
-        <div class="flex items-center gap-2 pl-2 border-l border-white/10">
+        <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-full bg-[#1e293b] border border-[#7dd3fc]/40 flex items-center justify-center font-bold text-xs text-[#7dd3fc]" id="user_avatar_badge">
             AR
           </div>
@@ -795,64 +790,77 @@
     </main>
   </div>
 
-  <!-- VS CODE RUN HELP MODAL -->
-  <div id="modal_help" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div class="glass-card-glow max-w-xl w-full rounded-2xl p-6 md:p-8 space-y-5 relative">
-      <button onclick="toggleHelpModal()" class="absolute top-4 right-4 text-[#a0b4c4] hover:text-white">
+
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toast_container" class="fixed top-20 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- EDIT USER RECORD MODAL -->
+  <div id="modal_edit_user" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="glass-card-glow max-w-md w-full rounded-2xl p-6 md:p-7 space-y-5 relative">
+      <button onclick="closeEditUserModal()" class="absolute top-4 right-4 text-[#a0b4c4] hover:text-white">
         <span class="material-symbols-outlined">close</span>
       </button>
 
       <div class="flex items-center gap-3 text-[#7dd3fc]">
-        <span class="material-symbols-outlined text-3xl">terminal</span>
+        <div class="w-10 h-10 rounded-xl bg-[#0e4d6e]/40 border border-[#7dd3fc]/30 flex items-center justify-center text-[#7dd3fc]">
+          <span class="material-symbols-outlined text-xl">manage_accounts</span>
+        </div>
         <div>
-          <h3 class="text-lg font-bold text-white">How to Run in VS Code with Zero Errors</h3>
-          <p class="text-xs text-[#a0b4c4]">Choose any of the following 3 easy methods:</p>
+          <h3 class="text-base font-bold text-white">Edit User Record</h3>
+          <p class="text-[11px] text-[#a0b4c4]">Update user identity, role, or access status</p>
         </div>
       </div>
 
-      <div class="space-y-4 text-xs">
-        <!-- Option 1 -->
-        <div class="p-3.5 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/20 space-y-1.5">
-          <div class="font-bold text-[#7dd3fc] flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-[#0e4d6e] text-center leading-5 text-[11px]">1</span>
-            Simplest: Double-click index.html (Zero Installation)
-          </div>
-          <p class="text-[#a0b4c4]">
-            Simply open the project folder and double-click <code class="text-white bg-black/40 px-1 py-0.5 rounded font-mono">index.html</code> in Chrome, Edge, or Safari. Or in VS Code, right-click <code class="text-white font-mono">index.html</code> and click <b>Open with Live Server</b>!
-          </p>
+      <form id="form_edit_user" onsubmit="handleSaveEditUser(event)" class="space-y-3.5 text-xs">
+        <input type="hidden" id="edit_user_id" />
+        
+        <div class="space-y-1">
+          <label class="text-[#a0b4c4] font-medium">Full Name</label>
+          <input id="edit_user_name" type="text" required class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]" />
         </div>
 
-        <!-- Option 2 -->
-        <div class="p-3.5 rounded-xl bg-[#141c2e] border border-emerald-500/20 space-y-1.5">
-          <div class="font-bold text-emerald-400 flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-emerald-950 text-center leading-5 text-[11px]">2</span>
-            Standard Built-In Python Terminal (Zero pip Packages Needed)
-          </div>
-          <p class="text-[#a0b4c4]">
-            Open terminal in VS Code and type:
-          </p>
-          <pre class="bg-black/60 p-2 rounded text-emerald-300 font-mono text-[11px]">python server.py
-# or
-python main.py</pre>
-          <p class="text-[#a0b4c4]">Both scripts use Python's built-in standard library and automatically open your default browser without any missing package errors.</p>
+        <div class="space-y-1">
+          <label class="text-[#a0b4c4] font-medium">Email Address</label>
+          <input id="edit_user_email" type="email" required class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]" />
         </div>
 
-        <!-- Option 3 -->
-        <div class="p-3.5 rounded-xl bg-[#141c2e] border border-[#c8a0f0]/20 space-y-1.5">
-          <div class="font-bold text-[#c8a0f0] flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-[#3d2060] text-center leading-5 text-[11px]">3</span>
-            Node.js / Vite Dev Server
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4] font-medium">Role</label>
+            <select id="edit_user_role" class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]">
+              <option value="Student">Student</option>
+              <option value="Instructor">Instructor</option>
+              <option value="Advisor">Advisor</option>
+              <option value="Administrator">Administrator</option>
+            </select>
           </div>
-          <pre class="bg-black/60 p-2 rounded text-[#c8eaff] font-mono text-[11px]">npm install
-npm run dev</pre>
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4] font-medium">Status</label>
+            <select id="edit_user_status" class="w-full h-10 px-3 rounded-xl bg-[#1a2438] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]">
+              <option value="Active">Active</option>
+              <option value="Flagged (EWS)">Flagged (EWS)</option>
+              <option value="Suspended">Suspended</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="pt-2 flex justify-end">
-        <button onclick="toggleHelpModal()" class="px-4 py-2 rounded-xl bg-[#0e4d6e] text-[#7dd3fc] font-semibold text-xs hover:bg-[#7dd3fc] hover:text-[#001f2e] transition-all">
-          Close Guide
-        </button>
-      </div>
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+          <button type="button" onclick="handleDeleteUserFromModal()" class="px-3 py-2 rounded-xl bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 font-semibold transition-all flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">delete</span>
+            <span>Delete User</span>
+          </button>
+          
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="closeEditUserModal()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-[#a0b4c4] font-medium transition-colors">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#0e4d6e] to-[#7dd3fc] text-[#001f2e] font-bold shadow-md hover:opacity-95 transition-all">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -924,19 +932,43 @@ npm run dev</pre>
     let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || DEFAULT_DATA;
     let selectedStudentIdForCounseling = '24094';
     let timerInterval = null;
+    let currentEditingUserId = null;
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     }
 
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast_container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      const isErr = type === 'error';
+      const isWarn = type === 'warning';
+      const borderCol = isErr ? 'border-rose-500/40 bg-rose-950/95 text-rose-200' : (isWarn ? 'border-amber-500/40 bg-amber-950/95 text-amber-200' : 'border-[#7dd3fc]/40 bg-[#141c2e]/95 text-[#e0e8f0]');
+      const icon = isErr ? 'error' : (isWarn ? 'warning' : 'check_circle');
+      const iconCol = isErr ? 'text-rose-400' : (isWarn ? 'text-amber-400' : 'text-[#7dd3fc]');
+      
+      toast.className = `flex items-center gap-2.5 px-4 py-3 rounded-xl border ${borderCol} shadow-2xl backdrop-blur-xl text-xs pointer-events-auto transition-all duration-300 transform translate-x-10 opacity-0`;
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-base ${iconCol}">${icon}</span>
+        <span class="font-medium">${message}</span>
+      `;
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-x-10', 'opacity-0');
+      });
+      setTimeout(() => {
+        toast.classList.add('translate-x-10', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
     function resetDataToDefault() {
-      if (confirm('Reset database to default sample institutional records?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
-        saveState();
-        renderAll();
-        alert('Database successfully restored to default state.');
-      }
+      localStorage.removeItem(STORAGE_KEY);
+      appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      saveState();
+      renderAll();
+      showToast('Database successfully restored to default sample records.');
     }
 
     // Navigation Switcher (QStackedWidget simulation)
@@ -1124,7 +1156,7 @@ npm run dev</pre>
       renderInstructorExcuses();
 
       document.getElementById('txt_excuse_reason').value = '';
-      alert('Excuse request dispatched to course faculty with status: Pending.');
+      showToast('Excuse request dispatched to course faculty with status: Pending.');
     }
 
     // Instructor Session Controls
@@ -1293,7 +1325,7 @@ npm run dev</pre>
     function handleSaveCounselingNotes() {
       const text = document.getElementById('txt_counseling_notes').value.trim();
       if (!text) {
-        alert('Please enter counseling notes before saving.');
+        showToast('Please enter counseling notes before saving.', 'warning');
         return;
       }
 
@@ -1318,7 +1350,7 @@ npm run dev</pre>
       saveState();
       document.getElementById('txt_counseling_notes').value = '';
       renderCounselingHistory();
-      alert('Counseling notes saved to student dossier.');
+      showToast('Counseling notes saved to student dossier.');
     }
 
     // Admin Add User
@@ -1349,7 +1381,7 @@ npm run dev</pre>
       document.getElementById('txt_add_name').value = '';
       renderAdminUsers();
       renderAuditLogs();
-      alert(`User ${name} (${role}) provisioned successfully.`);
+      showToast(`User ${name} (${role}) provisioned successfully.`);
     }
 
     // Render Methods
@@ -1586,7 +1618,10 @@ npm run dev</pre>
           </td>
           <td class="p-3.5 text-xs text-emerald-400">● ${u.status}</td>
           <td class="p-3.5 text-right">
-            <button onclick="alert('User record edit permission granted for ${u.name}')" class="text-[#7dd3fc] hover:underline text-xs">Edit</button>
+            <button onclick="openEditUserModal(${u.id})" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0e4d6e]/40 hover:bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-semibold transition-all">
+              <span class="material-symbols-outlined text-[12px]">edit</span>
+              <span>Edit</span>
+            </button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -1594,6 +1629,73 @@ npm run dev</pre>
 
       const countElem = document.getElementById('admin_users_count');
       if (countElem) countElem.innerText = `Total: ${appData.users.length} accounts`;
+    }
+
+    // Edit User Modal Handlers
+    function openEditUserModal(userId) {
+      const user = appData.users.find(u => u.id === userId);
+      if (!user) return;
+      currentEditingUserId = userId;
+      document.getElementById('edit_user_id').value = user.id;
+      document.getElementById('edit_user_name').value = user.name;
+      document.getElementById('edit_user_email').value = user.email;
+      document.getElementById('edit_user_role').value = user.role;
+      document.getElementById('edit_user_status').value = user.status;
+      document.getElementById('modal_edit_user').classList.remove('hidden');
+    }
+
+    function closeEditUserModal() {
+      document.getElementById('modal_edit_user').classList.add('hidden');
+      currentEditingUserId = null;
+    }
+
+    function handleSaveEditUser(e) {
+      e.preventDefault();
+      if (!currentEditingUserId) return;
+      const user = appData.users.find(u => u.id === currentEditingUserId);
+      if (user) {
+        user.name = document.getElementById('edit_user_name').value.trim();
+        user.email = document.getElementById('edit_user_email').value.trim();
+        user.role = document.getElementById('edit_user_role').value;
+        user.status = document.getElementById('edit_user_status').value;
+
+        appData.auditLogs.unshift({
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          user: appData.currentUser ? appData.currentUser.name : 'Root Systems Admin',
+          action: 'Modify User Record',
+          details: `Updated account #${user.id} (${user.name}, ${user.role})`
+        });
+
+        saveState();
+        closeEditUserModal();
+        renderAdminUsers();
+        renderAuditLogs();
+        updateHeaderProfile();
+        showToast(`User record for ${user.name} updated successfully.`);
+      }
+    }
+
+    function handleDeleteUserFromModal() {
+      if (!currentEditingUserId) return;
+      const user = appData.users.find(u => u.id === currentEditingUserId);
+      if (!user) return;
+      
+      const removedId = currentEditingUserId;
+      const removedName = user.name;
+      appData.users = appData.users.filter(u => u.id !== removedId);
+      
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: appData.currentUser ? appData.currentUser.name : 'Root Systems Admin',
+        action: 'Deprovision User',
+        details: `Deleted account #${removedId} (${removedName})`
+      });
+
+      saveState();
+      closeEditUserModal();
+      renderAdminUsers();
+      renderAuditLogs();
+      showToast(`Account #${removedId} removed from system.`, 'warning');
     }
 
     function renderAuditLogs() {
@@ -1627,10 +1729,6 @@ npm run dev</pre>
       renderAuditLogs();
     }
 
-    function toggleHelpModal() {
-      const modal = document.getElementById('modal_help');
-      modal.classList.toggle('hidden');
-    }
 
     window.addEventListener('DOMContentLoaded', () => {
       const today = new Date().toISOString().split('T')[0];
