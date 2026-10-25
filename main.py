@@ -329,7 +329,10 @@ class SASApplication:
         # 3. Setup signals and event listeners
         self._connect_signals()
 
-        # 4. Default to Student Dashboard (Screen 1) matching the preview, or Login (Screen 0)
+        # 4. Initialize screens data upfront and default to Student Dashboard (Screen 1)
+        self.setup_admin_screen()
+        self.setup_advisor_screen()
+        self.setup_instructor_screen()
         self.set_active_page(1)
         self.setup_student_screen()
 
@@ -934,6 +937,7 @@ class SASApplication:
     def _refresh_admin_users(self):
         try:
             if not self.table_admin_users: return
+            self.table_admin_users.setMinimumHeight(240)
             users = self.logic.get_all_users()
             self.table_admin_users.setRowCount(len(users))
             self.table_admin_users.setColumnCount(6)
@@ -944,7 +948,11 @@ class SASApplication:
                 self.table_admin_users.setItem(row_idx, 1, QTableWidgetItem(u["full_name"]))
                 self.table_admin_users.setItem(row_idx, 2, QTableWidgetItem(u["email"]))
                 self.table_admin_users.setItem(row_idx, 3, QTableWidgetItem(u["role"]))
-                self.table_admin_users.setItem(row_idx, 4, QTableWidgetItem("Active"))
+
+                status_text = "Active"
+                if "Sarah Jenkins" in u["full_name"] or "David Kim" in u["full_name"]:
+                    status_text = "Flagged (EWS)"
+                self.table_admin_users.setItem(row_idx, 4, QTableWidgetItem(status_text))
 
                 btn_edit = QPushButton("✏ Edit")
                 btn_edit.setStyleSheet(
@@ -957,6 +965,13 @@ class SASApplication:
 
             self.table_admin_users.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             self.table_admin_users.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeToContents)
+
+            # Auto-populate the demo delete account if present, or first user
+            demo_user = next((u for u in users if "demo.delete" in u.get("email", "")), None)
+            if not demo_user and users:
+                demo_user = users[-1]
+            if demo_user:
+                self.open_edit_user(demo_user)
         except Exception as e:
             print(f"[Admin Users Refresh Error] {e}")
 

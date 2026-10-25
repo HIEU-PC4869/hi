@@ -1328,9 +1328,24 @@
           </item>
           <item>
            <widget class="QTableWidget" name="table_admin_users">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>240</height>
+             </size>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
             <column>
              <property name="text">
-              <string>User ID</string>
+              <string>ID</string>
              </property>
             </column>
             <column>
@@ -1340,12 +1355,12 @@
             </column>
             <column>
              <property name="text">
-              <string>Institutional Email</string>
+              <string>Email</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Assigned Role</string>
+              <string>Role</string>
              </property>
             </column>
             <column>
@@ -1358,6 +1373,258 @@
               <string>Actions</string>
              </property>
             </column>
+            <row>
+             <property name="text">
+              <string>1</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>2</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>3</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>4</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>5</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>6</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>7</string>
+             </property>
+            </row>
+            <!-- Row 0: Alex Rivera -->
+            <item row="0" column="0">
+             <property name="text">
+              <string>USR-1</string>
+             </property>
+            </item>
+            <item row="0" column="1">
+             <property name="text">
+              <string>Alex Rivera</string>
+             </property>
+            </item>
+            <item row="0" column="2">
+             <property name="text">
+              <string>a.rivera@university.edu</string>
+             </property>
+            </item>
+            <item row="0" column="3">
+             <property name="text">
+              <string>Student</string>
+             </property>
+            </item>
+            <item row="0" column="4">
+             <property name="text">
+              <string>Active</string>
+             </property>
+            </item>
+            <item row="0" column="5">
+             <property name="text">
+              <string>✏ Edit</string>
+             </property>
+            </item>
+            <!-- Row 1: Dr. Evelyn Vance -->
+            <item row="1" column="0">
+             <property name="text">
+              <string>USR-2</string>
+             </property>
+            </item>
+            <item row="1" column="1">
+             <property name="text">
+              <string>Dr. Evelyn Vance</string>
+             </property>
+            </item>
+            <item row="1" column="2">
+             <property name="text">
+              <string>dr.vance@university.edu</string>
+             </property>
+            </item>
+            <item row="1" column="3">
+             <property name="text">
+              <string>Instructor</string>
+             </property>
+            </item>
+            <item row="1" column="4">
+             <property name="text">
+              <string>Active</string>
+             </property>
+            </item>
+            <item row="1" column="5">
+             <property name="text">
+              <string>✏ Edit</string>
+             </property>
+            </item>
+            <!-- Row 2: Marcus Brody -->
+            <item row="2" column="0">
+             <property name="text">
+              <string>USR-3</string>
+             </property>
+            </item>
+            <item row="2" column="1">
+             <property name="text">
+              <string>Marcus Brody</string>
+             </property>
+            </item>
+            <item row="2" column="2">
+             <property name="text">
+              <string>m.brody@university.edu</string>
+             </property>
+            </item>
+            <item row="2" column="3">
+             <property name="text">
+              <string>Advisor</string>
+             </property>
+            </item>
+            <item row="2" column="4">
+             <property name="text">
+              <string>Active</string>
+             </property>
+            </item>
+            <item row="2" column="5">
+             <property name="text">
+              <string>✏ Edit</string>
+             </property>
+            </item>
+            <!-- Row 3: Root Systems Admin -->
+            <item row="3" column="0">
+             <property name="text">
+              <string>USR-4</string>
+             </property>
+            </item>
+            <item row="3" column="1">
+             <property name="text">
+              <string>Root Systems Admin</string>
+             </property>
+            </item>
+            <item row="3" column="2">
+             <property name="text">
+              <string>sysadmin@university.edu</string>
+             </property>
+            </item>
+            <item row="3" column="3">
+             <property name="text">
+              <string>Administrator</string>
+             </property>
+            </item>
+            <item row="3" column="4">
+             <property name="text">
+              <string>Active</string>
+             </property>
+            </item>
+            <item row="3" column="5">
+             <property name="text">
+              <string>✏ Edit</string>
+             </property>
+            </item>
+            <!-- Row 4: Sarah Jenkins -->
+            <item row="4" column="0">
+             <property name="text">
+              <string>USR-6</string>
+             </property>
+            </item>
+            <item row="4" column="1">
+             <property name="text">
+              <string>Sarah Jenkins</string>
+             </property>
+            </item>
+            <item row="4" column="2">
+             <property name="text">
+              <string>s.jenkins@university.edu</string>
+             </property>
+            </item>
+            <item row="4" column="3">
+             <property name="text">
+              <string>Student</string>
+             </property>
+            </item>
+            <item row="4" column="4">
+             <property name="text">
+              <string>Flagged (EWS)</string>
+             </property>
+            </item>
+            <item row="4" column="5">
+             <property name="text">
+              <string>✏ Edit</string>
+             </property>
+            </item>
+            <!-- Row 5: Demo Account (Test Delete) -->
+            <item row="5" column="0">
+             <property name="text">
+              <string>USR-13</string>
+             </property>
+            </item>
+            <item row="5" column="1">
+             <property name="text">
+              <string>Demo Account (Test Delete)</string>
+             </property>
+            </item>
+            <item row="5" column="2">
+             <property name="text">
+              <string>demo.delete@university.edu</string>
+             </property>
+            </item>
+            <item row="5" column="3">
+             <property name="text">
+              <string>Student</string>
+             </property>
+            </item>
+            <item row="5" column="4">
+             <property name="text">
+              <string>Active</string>
+             </property>
+            </item>
+            <item row="5" column="5">
+             <property name="text">
+              <string>✏ Edit</string>
+             </property>
+            </item>
+            <!-- Row 6: Temporary Student (To Delete) -->
+            <item row="6" column="0">
+             <property name="text">
+              <string>USR-14</string>
+             </property>
+            </item>
+            <item row="6" column="1">
+             <property name="text">
+              <string>Temporary Student (To Delete)</string>
+             </property>
+            </item>
+            <item row="6" column="2">
+             <property name="text">
+              <string>temp.student@university.edu</string>
+             </property>
+            </item>
+            <item row="6" column="3">
+             <property name="text">
+              <string>Student</string>
+             </property>
+            </item>
+            <item row="6" column="4">
+             <property name="text">
+              <string>Active</string>
+             </property>
+            </item>
+            <item row="6" column="5">
+             <property name="text">
+              <string>✏ Edit</string>
+             </property>
+            </item>
            </widget>
           </item>
 
@@ -1384,6 +1651,9 @@
                    <property name="readOnly">
                     <bool>true</bool>
                    </property>
+                   <property name="text">
+                    <string>USR-13</string>
+                   </property>
                    <property name="placeholderText">
                     <string>#ID</string>
                    </property>
@@ -1402,6 +1672,9 @@
                  </item>
                  <item>
                   <widget class="QLineEdit" name="edit_user_name">
+                   <property name="text">
+                    <string>Demo Account (Test Delete)</string>
+                   </property>
                    <property name="placeholderText">
                     <string>Update full name...</string>
                    </property>
@@ -1420,6 +1693,9 @@
                  </item>
                  <item>
                   <widget class="QLineEdit" name="edit_user_email">
+                   <property name="text">
+                    <string>demo.delete@university.edu</string>
+                   </property>
                    <property name="placeholderText">
                     <string>Update email address...</string>
                    </property>

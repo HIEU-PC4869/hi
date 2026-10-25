@@ -193,6 +193,8 @@ def _seed_mock_data(cursor):
         ("k.vance@university.edu", pw_hash, "Kassandra Vance", "Student"),
         ("t.almansoor@university.edu", pw_hash, "Tariq Al-Mansoor", "Student"),
         ("e.wu@university.edu", pw_hash, "Elena Wu", "Student"),
+        ("demo.delete@university.edu", pw_hash, "Demo Account (Test Delete)", "Student"),
+        ("temp.student@university.edu", pw_hash, "Temporary Student (To Delete)", "Student"),
     ]
     cursor.executemany(
         "INSERT INTO Users (email, password_hash, full_name, role) VALUES (?, ?, ?, ?);",
