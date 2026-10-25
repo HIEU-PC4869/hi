@@ -672,6 +672,107 @@ class AttendanceLogic:
             print(f"[Logic Error] Get courses error: {e}")
             return []
 
+    def add_course(self, course_code: str, course_name: str) -> Tuple[bool, str]:
+        """Add a course to curriculum catalog (Courses entity - Slide 31)."""
+        try:
+            code = course_code.strip()
+            name = course_name.strip()
+            if not code or not name:
+                return False, "Course code and title cannot be empty."
+            full_title = f"{code}: {name}"
+
+            with DBConnection(self.db_path) if self.db_path else DBConnection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO Courses (course_name) VALUES (?);", (full_title,))
+                c_id = cursor.lastrowid
+                cursor.execute("""
+                    INSERT INTO Audit_Logs (user_id, action, timestamp, details)
+                    VALUES (NULL, 'Course Registered', ?, ?);
+                """, (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f"Registered course #{c_id}: {full_title}"))
+                return True, f"Course '{full_title}' successfully registered."
+        except Exception as e:
+            print(f"[Logic Error] Add course error: {e}")
+            return False, f"Failed to register course: {e}"
+
+    def delete_course(self, course_id: int) -> bool:
+        """Delete course from catalog."""
+        try:
+            with DBConnection(self.db_path) if self.db_path else DBConnection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("DELETE FROM Courses WHERE id = ?;", (course_id,))
+                cursor.execute("""
+                    INSERT INTO Audit_Logs (user_id, action, timestamp, details)
+                    VALUES (NULL, 'Course Deleted', ?, ?);
+                """, (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f"Course ID #{course_id} deleted."))
+                return True
+        except Exception as e:
+            print(f"[Logic Error] Delete course error: {e}")
+            return False
+
+    def get_enrollments(self) -> List[Dict[str, Any]]:
+        """Get all student-course enrollments (n-n Relation - Slides 37-38)."""
+        try:
+            with DBConnection(self.db_path) if self.db_path else DBConnection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT e.user_id, u.full_name as student_name, e.course_id, c.course_name, 'Fall 2026' as semester
+                    FROM Enrollments e
+                    JOIN Users u ON e.user_id = u.id
+                    JOIN Courses c ON e.course_id = c.id
+                    ORDER BY u.full_name ASC;
+                """)
+                return [dict(r) for r in cursor.fetchall()]
+        except Exception as e:
+            print(f"[Logic Error] Get enrollments error: {e}")
+            return []
+
+    def add_enrollment(self, user_id: int, course_id: int, semester: str = "Fall 2026") -> Tuple[bool, str]:
+        """Enroll student in course (n-n Intermediate table - Slides 37-38)."""
+        try:
+            with DBConnection(self.db_path) if self.db_path else DBConnection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT OR IGNORE INTO Enrollments (user_id, course_id) VALUES (?, ?);", (user_id, course_id))
+                cursor.execute("""
+                    INSERT INTO Audit_Logs (user_id, action, timestamp, details)
+                    VALUES (NULL, 'Student Enrolled', ?, ?);
+                """, (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f"Enrolled User #{user_id} into Course #{course_id} ({semester})"))
+                return True, "Enrollment assigned successfully."
+        except Exception as e:
+            print(f"[Logic Error] Add enrollment error: {e}")
+            return False, f"Failed to assign enrollment: {e}"
+
+    def delete_enrollment(self, user_id: int, course_id: int) -> bool:
+        """Drop student enrollment."""
+        try:
+            with DBConnection(self.db_path) if self.db_path else DBConnection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("DELETE FROM Enrollments WHERE user_id = ? AND course_id = ?;", (user_id, course_id))
+                cursor.execute("""
+                    INSERT INTO Audit_Logs (user_id, action, timestamp, details)
+                    VALUES (NULL, 'Student Dropped Course', ?, ?);
+                """, (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f"Dropped User #{user_id} from Course #{course_id}"))
+                return True
+        except Exception as e:
+            print(f"[Logic Error] Delete enrollment error: {e}")
+            return False
+
+    def get_student_excuses(self, student_id: int) -> List[Dict[str, Any]]:
+        """Get excuses submitted by a specific student."""
+        try:
+            with DBConnection(self.db_path) if self.db_path else DBConnection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT ex.id, c.course_name, ex.date_absent, ex.reason, ex.status
+                    FROM Excuses ex
+                    JOIN Courses c ON ex.course_id = c.id
+                    WHERE ex.student_id = ?
+                    ORDER BY ex.id DESC;
+                """, (student_id,))
+                return [dict(r) for r in cursor.fetchall()]
+        except Exception as e:
+            print(f"[Logic Error] Get student excuses error: {e}")
+            return []
+
     def get_audit_logs(self, limit: int = 50) -> List[Dict[str, Any]]:
         """Retrieve recent institutional audit logs."""
         try:

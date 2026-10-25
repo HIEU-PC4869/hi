@@ -705,6 +705,39 @@
             </column>
            </widget>
           </item>
+
+          <!-- Student Excuses History Table -->
+          <item>
+           <widget class="QLabel" name="lbl_my_excuses_title">
+            <property name="text">
+             <string>&lt;h3 style=&quot;margin:8px 0 0 0; color:#e0e8f0;&quot;&gt;My Submitted Excuse Requests&lt;/h3&gt;&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;Official justification requests submitted for faculty review.&lt;/span&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="table_student_excuses">
+            <column>
+             <property name="text">
+              <string>Course</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Date Absent</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Reason</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Status</string>
+             </property>
+            </column>
+           </widget>
+          </item>
          </layout>
         </widget>
 
@@ -1098,14 +1131,14 @@
                <item>
                 <widget class="QLabel" name="lbl_adv_counsel_meta">
                  <property name="text">
-                  <string>&lt;span style=&quot;font-size:11px; color:#a0b4c4;&quot;&gt;Select a student on the left to review or append counseling history.&lt;/span&gt;</string>
+                  <string>&lt;b style=&quot;color:#7dd3fc;&quot;&gt;Selected Dossier:&lt;/b&gt; Sarah Jenkins (#24094) • CS-301 • 71.4%</string>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QTextEdit" name="txt_counseling_notes">
                  <property name="placeholderText">
-                  <string>Click a student to view records and record notes...</string>
+                  <string>Record intervention details, academic tutoring agreements, or contact records...</string>
                  </property>
                 </widget>
                </item>
@@ -1114,6 +1147,32 @@
                  <property name="text">
                   <string>💾 Save Intervention Notes</string>
                  </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_counseling_hist_header">
+                 <property name="text">
+                  <string>&lt;span style=&quot;font-size:11px; font-weight:bold; color:#a0b4c4;&quot;&gt;PREVIOUS INTERVENTION HISTORY&lt;/span&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QTableWidget" name="table_counseling_history">
+                 <column>
+                  <property name="text">
+                   <string>Date</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Advisor</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Notes</string>
+                  </property>
+                 </column>
                 </widget>
                </item>
               </layout>
@@ -1190,6 +1249,24 @@
                 <widget class="QLineEdit" name="txt_add_email">
                  <property name="placeholderText">
                   <string>first.last@university.edu</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="pNameCol">
+               <item>
+                <widget class="QLabel" name="lbl_p_name">
+                 <property name="text">
+                  <string>FULL NAME</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="txt_add_name">
+                 <property name="placeholderText">
+                  <string>e.g. Johnathan Doe</string>
                  </property>
                 </widget>
                </item>
@@ -1273,9 +1350,151 @@
             </column>
             <column>
              <property name="text">
-              <string>Course Allocations</string>
+              <string>Status</string>
              </property>
             </column>
+           </widget>
+          </item>
+
+          <!-- FUNCTION 2: CURRICULUM & ENROLLMENTS (COURSES & ENROLLMENTS ENTITIES) -->
+          <item>
+           <layout class="QHBoxLayout" name="adminCurriculumRow">
+            <property name="spacing">
+             <number>16</number>
+            </property>
+
+            <!-- Course Catalog Management (Courses Entity - Slide 31) -->
+            <item>
+             <widget class="QGroupBox" name="grp_courses">
+              <property name="title">
+               <string>Course Catalog Management (Courses Entity - Slide 31)</string>
+              </property>
+              <layout class="QVBoxLayout" name="courseCatLayout">
+               <item>
+                <layout class="QHBoxLayout" name="courseAddRow">
+                 <item>
+                  <widget class="QLineEdit" name="txt_add_course_code">
+                   <property name="placeholderText">
+                    <string>Code (e.g. CS-405)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="txt_add_course_name">
+                   <property name="placeholderText">
+                    <string>Course Title</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_add_course">
+                   <property name="text">
+                    <string>+ Register</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QTableWidget" name="table_admin_courses">
+                 <column>
+                  <property name="text">
+                   <string>Course ID (PK)</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Course Title</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Student Enrollments Management (n-n Intermediate Entity - Slides 37-38) -->
+            <item>
+             <widget class="QGroupBox" name="grp_enrollments">
+              <property name="title">
+               <string>Student Enrollments Management (n-n Relation - Slides 37-38)</string>
+              </property>
+              <layout class="QVBoxLayout" name="enrollMgmtLayout">
+               <item>
+                <layout class="QHBoxLayout" name="enrollAddRow">
+                 <item>
+                  <widget class="QComboBox" name="combo_enroll_student"/>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="combo_enroll_course"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_enroll_student">
+                   <property name="text">
+                    <string>🔗 Assign</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QTableWidget" name="table_admin_enrollments">
+                 <column>
+                  <property name="text">
+                   <string>Student (FK)</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Course (FK)</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Term</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+           </layout>
+          </item>
+
+          <!-- FUNCTION 3: SECURITY & AUDIT TRAIL LOGS -->
+          <item>
+           <widget class="QGroupBox" name="grp_audit">
+            <property name="title">
+             <string>Security &amp; Operation Audit Trail (Read-only Tamper-evident Trail)</string>
+            </property>
+            <layout class="QVBoxLayout" name="auditLayout">
+             <item>
+              <widget class="QTableWidget" name="table_admin_audit_logs">
+               <column>
+                <property name="text">
+                 <string>Timestamp</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Principal</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Action</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Details</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>

@@ -370,6 +370,7 @@ class SASApplication:
         self.date_excuse: QDateEdit = self.window.findChild(QDateEdit, "date_excuse")
         self.txt_excuse_reason: QTextEdit = self.window.findChild(QTextEdit, "txt_excuse_reason")
         self.btn_submit_excuse: QPushButton = self.window.findChild(QPushButton, "btn_submit_excuse")
+        self.table_student_excuses: QTableWidget = self.window.findChild(QTableWidget, "table_student_excuses")
 
         # Screen 2: Instructor Module
         self.combo_instructor_courses: QComboBox = self.window.findChild(QComboBox, "combo_instructor_courses")
@@ -387,13 +388,25 @@ class SASApplication:
         self.table_advisor_warnings: QTableWidget = self.window.findChild(QTableWidget, "table_advisor_warnings")
         self.txt_counseling_notes: QTextEdit = self.window.findChild(QTextEdit, "txt_counseling_notes")
         self.btn_save_notes: QPushButton = self.window.findChild(QPushButton, "btn_save_notes")
+        self.lbl_adv_counsel_meta: QLabel = self.window.findChild(QLabel, "lbl_adv_counsel_meta")
+        self.table_counseling_history: QTableWidget = self.window.findChild(QTableWidget, "table_counseling_history")
 
         # Screen 4: Administrator Module
         self.table_admin_users: QTableWidget = self.window.findChild(QTableWidget, "table_admin_users")
         self.txt_add_email: QLineEdit = self.window.findChild(QLineEdit, "txt_add_email")
+        self.txt_add_name: QLineEdit = self.window.findChild(QLineEdit, "txt_add_name")
         self.combo_add_role: QComboBox = self.window.findChild(QComboBox, "combo_add_role")
         self.btn_add_user: QPushButton = self.window.findChild(QPushButton, "btn_add_user")
         self.btn_export_system_report: QPushButton = self.window.findChild(QPushButton, "btn_export_system_report")
+        self.txt_add_course_code: QLineEdit = self.window.findChild(QLineEdit, "txt_add_course_code")
+        self.txt_add_course_name: QLineEdit = self.window.findChild(QLineEdit, "txt_add_course_name")
+        self.btn_add_course: QPushButton = self.window.findChild(QPushButton, "btn_add_course")
+        self.table_admin_courses: QTableWidget = self.window.findChild(QTableWidget, "table_admin_courses")
+        self.combo_enroll_student: QComboBox = self.window.findChild(QComboBox, "combo_enroll_student")
+        self.combo_enroll_course: QComboBox = self.window.findChild(QComboBox, "combo_enroll_course")
+        self.btn_enroll_student: QPushButton = self.window.findChild(QPushButton, "btn_enroll_student")
+        self.table_admin_enrollments: QTableWidget = self.window.findChild(QTableWidget, "table_admin_enrollments")
+        self.table_admin_audit_logs: QTableWidget = self.window.findChild(QTableWidget, "table_admin_audit_logs")
 
     def _connect_signals(self):
         """Bind UI user events to controller methods."""
@@ -464,6 +477,10 @@ class SASApplication:
             self.btn_add_user.clicked.connect(self.handle_admin_add_user)
         if self.btn_export_system_report:
             self.btn_export_system_report.clicked.connect(self.handle_admin_export_report)
+        if self.btn_add_course:
+            self.btn_add_course.clicked.connect(self.handle_admin_add_course)
+        if self.btn_enroll_student:
+            self.btn_enroll_student.clicked.connect(self.handle_admin_enroll_student)
 
     def _fill_credentials(self, email: str, pw: str):
         if self.txt_email: self.txt_email.setText(email)
@@ -561,10 +578,25 @@ class SASApplication:
                 self.date_excuse.setDate(QDate.currentDate())
 
             self._refresh_student_stats_table(stats)
+            self._refresh_student_excuses(student_id)
             if self.lbl_checkin_status:
                 self.lbl_checkin_status.setText("● Ready for check-in")
         except Exception as e:
             print(f"[Student Setup Error] {e}")
+
+    def _refresh_student_excuses(self, student_id: int):
+        try:
+            if not self.table_student_excuses: return
+            excuses = self.logic.get_student_excuses(student_id)
+            self.table_student_excuses.setRowCount(len(excuses))
+            for row_idx, ex in enumerate(excuses):
+                self.table_student_excuses.setItem(row_idx, 0, QTableWidgetItem(ex["course_name"].split(":")[0]))
+                self.table_student_excuses.setItem(row_idx, 1, QTableWidgetItem(ex["date_absent"]))
+                self.table_student_excuses.setItem(row_idx, 2, QTableWidgetItem(ex["reason"]))
+                self.table_student_excuses.setItem(row_idx, 3, QTableWidgetItem(ex["status"]))
+            self.table_student_excuses.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        except Exception as e:
+            print(f"[Student Excuses Refresh Error] {e}")
 
     def _refresh_student_stats_table(self, stats):
         try:
@@ -825,13 +857,21 @@ class SASApplication:
             student_id = int(self.table_advisor_warnings.item(row, 0).text())
             student_name = self.table_advisor_warnings.item(row, 1).text()
 
+            if self.lbl_adv_counsel_meta:
+                self.lbl_adv_counsel_meta.setText(f"<b>Selected Dossier:</b> {student_name} (#{student_id})")
+
             notes = self.logic.get_counseling_notes(student_id)
-            if notes and self.txt_counseling_notes:
-                history_text = "\n---\n".join([f"[{n['created_at']} by {n['advisor_name']}]:\n{n['note_text']}" for n in notes])
-                self.txt_counseling_notes.setText(history_text)
-            elif self.txt_counseling_notes:
-                self.txt_counseling_notes.setPlaceholderText(f"No prior counseling notes for {student_name}. Type here to add one...")
+            if self.txt_counseling_notes:
                 self.txt_counseling_notes.clear()
+                self.txt_counseling_notes.setPlaceholderText(f"Record intervention notes for {student_name}...")
+
+            if self.table_counseling_history:
+                self.table_counseling_history.setRowCount(len(notes))
+                for idx, n in enumerate(notes):
+                    self.table_counseling_history.setItem(idx, 0, QTableWidgetItem(n["created_at"]))
+                    self.table_counseling_history.setItem(idx, 1, QTableWidgetItem(n["advisor_name"]))
+                    self.table_counseling_history.setItem(idx, 2, QTableWidgetItem(n["note_text"]))
+                self.table_counseling_history.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         except Exception as e:
             print(f"[Advisor Select Error] {e}")
 
@@ -854,6 +894,8 @@ class SASApplication:
             ok = self.logic.save_counseling_note(student_id, advisor_id, notes_text)
             if ok:
                 QMessageBox.information(self.window, "Saved", "Intervention notes logged successfully.")
+                self.txt_counseling_notes.clear()
+                self._on_advisor_student_selected()
         except Exception as e:
             QMessageBox.critical(self.window, "Save Note Error", str(e))
 
@@ -863,6 +905,9 @@ class SASApplication:
     def setup_admin_screen(self):
         try:
             self._refresh_admin_users()
+            self._refresh_admin_courses()
+            self._refresh_admin_enrollments()
+            self._refresh_admin_audit_logs()
         except Exception as e:
             print(f"[Admin Setup Error] {e}")
 
@@ -877,24 +922,125 @@ class SASApplication:
                 self.table_admin_users.setItem(row_idx, 1, QTableWidgetItem(u["full_name"]))
                 self.table_admin_users.setItem(row_idx, 2, QTableWidgetItem(u["email"]))
                 self.table_admin_users.setItem(row_idx, 3, QTableWidgetItem(u["role"]))
-                self.table_admin_users.setItem(row_idx, 4, QTableWidgetItem(", ".join(u.get("courses", [])) or "None"))
+                self.table_admin_users.setItem(row_idx, 4, QTableWidgetItem("Active"))
 
             self.table_admin_users.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         except Exception as e:
             print(f"[Admin Users Refresh Error] {e}")
 
+    def _refresh_admin_courses(self):
+        try:
+            if not self.table_admin_courses: return
+            courses = self.logic.get_all_courses()
+            self.table_admin_courses.setRowCount(len(courses))
+
+            for row_idx, c in enumerate(courses):
+                self.table_admin_courses.setItem(row_idx, 0, QTableWidgetItem(f"#{c['id']}"))
+                self.table_admin_courses.setItem(row_idx, 1, QTableWidgetItem(c["course_name"]))
+
+            self.table_admin_courses.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+            # Update enrollment course dropdown
+            if self.combo_enroll_course:
+                self.combo_enroll_course.clear()
+                for c in courses:
+                    self.combo_enroll_course.addItem(c["course_name"], c["id"])
+        except Exception as e:
+            print(f"[Admin Courses Refresh Error] {e}")
+
+    def _refresh_admin_enrollments(self):
+        try:
+            if not self.table_admin_enrollments: return
+            enrollments = self.logic.get_enrollments()
+            self.table_admin_enrollments.setRowCount(len(enrollments))
+
+            for row_idx, en in enumerate(enrollments):
+                self.table_admin_enrollments.setItem(row_idx, 0, QTableWidgetItem(f"#{en['user_id']} ({en['student_name']})"))
+                self.table_admin_enrollments.setItem(row_idx, 1, QTableWidgetItem(en["course_name"].split(":")[0]))
+                self.table_admin_enrollments.setItem(row_idx, 2, QTableWidgetItem(en.get("semester", "Fall 2026")))
+
+            self.table_admin_enrollments.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+            # Update student dropdown with student-role users
+            if self.combo_enroll_student:
+                self.combo_enroll_student.clear()
+                users = self.logic.get_all_users()
+                for u in users:
+                    if u["role"] == "Student":
+                        self.combo_enroll_student.addItem(f"{u['full_name']} (#{u['id']})", u["id"])
+        except Exception as e:
+            print(f"[Admin Enrollments Refresh Error] {e}")
+
+    def _refresh_admin_audit_logs(self):
+        try:
+            if not self.table_admin_audit_logs: return
+            logs = self.logic.get_audit_logs(limit=25)
+            self.table_admin_audit_logs.setRowCount(len(logs))
+
+            for row_idx, l in enumerate(logs):
+                self.table_admin_audit_logs.setItem(row_idx, 0, QTableWidgetItem(l["timestamp"]))
+                self.table_admin_audit_logs.setItem(row_idx, 1, QTableWidgetItem(l.get("full_name") or l.get("email") or "System"))
+                self.table_admin_audit_logs.setItem(row_idx, 2, QTableWidgetItem(l["action"]))
+                self.table_admin_audit_logs.setItem(row_idx, 3, QTableWidgetItem(l.get("details") or ""))
+
+            self.table_admin_audit_logs.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        except Exception as e:
+            print(f"[Admin Audit Refresh Error] {e}")
+
     def handle_admin_add_user(self):
         try:
             email = self.txt_add_email.text().strip()
+            name = self.txt_add_name.text().strip() if self.txt_add_name else ""
             role = self.combo_add_role.currentText()
 
-            ok, msg = self.logic.add_user(email=email, role=role)
+            ok, msg = self.logic.add_user(email=email, role=role, full_name=name or None)
             if ok:
                 QMessageBox.information(self.window, "User Added", msg)
                 self.txt_add_email.clear()
+                if self.txt_add_name: self.txt_add_name.clear()
                 self._refresh_admin_users()
+                self._refresh_admin_enrollments()
+                self._refresh_admin_audit_logs()
             else:
                 QMessageBox.warning(self.window, "Enrollment Failed", msg)
+        except Exception as e:
+            QMessageBox.critical(self.window, "Error", str(e))
+
+    def handle_admin_add_course(self):
+        try:
+            code = self.txt_add_course_code.text().strip()
+            name = self.txt_add_course_name.text().strip()
+
+            ok, msg = self.logic.add_course(code, name)
+            if ok:
+                QMessageBox.information(self.window, "Course Registered", msg)
+                self.txt_add_course_code.clear()
+                self.txt_add_course_name.clear()
+                self._refresh_admin_courses()
+                self._refresh_admin_audit_logs()
+            else:
+                QMessageBox.warning(self.window, "Registration Failed", msg)
+        except Exception as e:
+            QMessageBox.critical(self.window, "Error", str(e))
+
+    def handle_admin_enroll_student(self):
+        try:
+            if not self.combo_enroll_student or not self.combo_enroll_course: return
+            user_id = self.combo_enroll_student.currentData()
+            course_id = self.combo_enroll_course.currentData()
+
+            if not user_id or not course_id:
+                QMessageBox.warning(self.window, "Selection Required", "Please select both a student and a course.")
+                return
+
+            ok, msg = self.logic.add_enrollment(user_id, course_id)
+            if ok:
+                QMessageBox.information(self.window, "Enrollment Added", msg)
+                self._refresh_admin_enrollments()
+                self._refresh_admin_users()
+                self._refresh_admin_audit_logs()
+            else:
+                QMessageBox.warning(self.window, "Assignment Failed", msg)
         except Exception as e:
             QMessageBox.critical(self.window, "Error", str(e))
 
