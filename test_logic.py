@@ -133,6 +133,33 @@ class TestSASAttendance(unittest.TestCase):
         ok = self.logic.review_excuse(exc_id, "Approved", instructor_id=2)
         self.assertTrue(ok)
 
+    def test_07_admin_user_crud(self):
+        # 1. Add user
+        ok, msg = self.logic.add_user("test.student@univ.edu", "Student", "Test Student")
+        self.assertTrue(ok)
+
+        users = self.logic.get_all_users()
+        created = next((u for u in users if u["email"] == "test.student@univ.edu"), None)
+        self.assertIsNotNone(created)
+        uid = created["id"]
+
+        # 2. Update user
+        ok, msg = self.logic.update_user(uid, "test.updated@univ.edu", "Test Student Updated", "Student", "Active")
+        self.assertTrue(ok)
+
+        updated_users = self.logic.get_all_users()
+        updated = next((u for u in updated_users if u["id"] == uid), None)
+        self.assertIsNotNone(updated)
+        self.assertEqual(updated["email"], "test.updated@univ.edu")
+        self.assertEqual(updated["full_name"], "Test Student Updated")
+
+        # 3. Delete user
+        ok, msg = self.logic.delete_user(uid)
+        self.assertTrue(ok)
+
+        remaining_users = self.logic.get_all_users()
+        self.assertIsNone(next((u for u in remaining_users if u["id"] == uid), None))
+
 
 if __name__ == "__main__":
     unittest.main()

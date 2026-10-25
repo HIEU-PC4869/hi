@@ -30,7 +30,8 @@ try:
         QTextEdit,
         QDateEdit,
         QFileDialog,
-        QMessageBox
+        QMessageBox,
+        QGroupBox
     )
     PYSIDE6_AVAILABLE = True
 except (ImportError, Exception) as _err:
@@ -408,6 +409,17 @@ class SASApplication:
         self.table_admin_enrollments: QTableWidget = self.window.findChild(QTableWidget, "table_admin_enrollments")
         self.table_admin_audit_logs: QTableWidget = self.window.findChild(QTableWidget, "table_admin_audit_logs")
 
+        # Screen 4: Edit User Record Panel
+        self.grp_edit_user: QGroupBox = self.window.findChild(QGroupBox, "grp_edit_user")
+        self.edit_user_id: QLineEdit = self.window.findChild(QLineEdit, "edit_user_id")
+        self.edit_user_name: QLineEdit = self.window.findChild(QLineEdit, "edit_user_name")
+        self.edit_user_email: QLineEdit = self.window.findChild(QLineEdit, "edit_user_email")
+        self.edit_user_role: QComboBox = self.window.findChild(QComboBox, "edit_user_role")
+        self.edit_user_status: QComboBox = self.window.findChild(QComboBox, "edit_user_status")
+        self.btn_save_edit_user: QPushButton = self.window.findChild(QPushButton, "btn_save_edit_user")
+        self.btn_delete_user: QPushButton = self.window.findChild(QPushButton, "btn_delete_user")
+        self.btn_cancel_edit_user: QPushButton = self.window.findChild(QPushButton, "btn_cancel_edit_user")
+
     def _connect_signals(self):
         """Bind UI user events to controller methods."""
         # Top Header Navigation Tabs
@@ -481,6 +493,14 @@ class SASApplication:
             self.btn_add_course.clicked.connect(self.handle_admin_add_course)
         if self.btn_enroll_student:
             self.btn_enroll_student.clicked.connect(self.handle_admin_enroll_student)
+        if self.btn_save_edit_user:
+            self.btn_save_edit_user.clicked.connect(self.handle_save_edit_user)
+        if self.btn_delete_user:
+            self.btn_delete_user.clicked.connect(self.handle_delete_user_from_modal)
+        if self.btn_cancel_edit_user:
+            self.btn_cancel_edit_user.clicked.connect(self.handle_cancel_edit_user)
+        if self.table_admin_users:
+            self.table_admin_users.itemSelectionChanged.connect(self._on_admin_user_selected)
 
     def _fill_credentials(self, email: str, pw: str):
         if self.txt_email: self.txt_email.setText(email)
@@ -916,6 +936,8 @@ class SASApplication:
             if not self.table_admin_users: return
             users = self.logic.get_all_users()
             self.table_admin_users.setRowCount(len(users))
+            self.table_admin_users.setColumnCount(6)
+            self.table_admin_users.setHorizontalHeaderLabels(["ID", "Full Name", "Email", "Role", "Status", "Actions"])
 
             for row_idx, u in enumerate(users):
                 self.table_admin_users.setItem(row_idx, 0, QTableWidgetItem(f"USR-{u['id']}"))
@@ -924,9 +946,128 @@ class SASApplication:
                 self.table_admin_users.setItem(row_idx, 3, QTableWidgetItem(u["role"]))
                 self.table_admin_users.setItem(row_idx, 4, QTableWidgetItem("Active"))
 
+                btn_edit = QPushButton("✏ Edit")
+                btn_edit.setStyleSheet(
+                    "background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #0284c7, stop:1 #2563eb); "
+                    "color: #ffffff; font-weight: bold; font-size: 11px; padding: 4px 10px; border-radius: 4px; border: none;"
+                )
+                btn_edit.setCursor(Qt.PointingHandCursor)
+                btn_edit.clicked.connect(lambda checked=False, target_user=u: self.open_edit_user(target_user))
+                self.table_admin_users.setCellWidget(row_idx, 5, btn_edit)
+
             self.table_admin_users.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+            self.table_admin_users.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeToContents)
         except Exception as e:
             print(f"[Admin Users Refresh Error] {e}")
+
+    def open_edit_user(self, user: dict):
+        """Populate the Edit User Record panel with selected user information."""
+        try:
+            if not user: return
+            if self.edit_user_id:
+                self.edit_user_id.setText(f"USR-{user['id']}")
+            if self.edit_user_name:
+                self.edit_user_name.setText(user.get("full_name", ""))
+            if self.edit_user_email:
+                self.edit_user_email.setText(user.get("email", ""))
+            if self.edit_user_role:
+                idx = self.edit_user_role.findText(user.get("role", "Student"))
+                if idx >= 0:
+                    self.edit_user_role.setCurrentIndex(idx)
+            if self.edit_user_status:
+                self.edit_user_status.setCurrentIndex(0)
+            if self.grp_edit_user:
+                self.grp_edit_user.setVisible(True)
+        except Exception as e:
+            print(f"[Open Edit User Error] {e}")
+
+    def _on_admin_user_selected(self):
+        """When an admin selects a user in table_admin_users, load details into edit panel."""
+        try:
+            if not self.table_admin_users: return
+            selected_items = self.table_admin_users.selectedItems()
+            if not selected_items: return
+            row = selected_items[0].row()
+            id_item = self.table_admin_users.item(row, 0)
+            if not id_item: return
+            user_id_str = id_item.text().replace("USR-", "").strip()
+            if not user_id_str.isdigit(): return
+            user_id = int(user_id_str)
+            users = self.logic.get_all_users()
+            target_user = next((u for u in users if u["id"] == user_id), None)
+            if target_user:
+                self.open_edit_user(target_user)
+        except Exception as e:
+            print(f"[Admin User Selection Error] {e}")
+
+    def handle_save_edit_user(self):
+        """Save changes made in the Edit User Record panel."""
+        try:
+            if not self.edit_user_id: return
+            raw_id = self.edit_user_id.text().replace("USR-", "").strip()
+            if not raw_id or not raw_id.isdigit():
+                QMessageBox.warning(self.window, "Selection Required", "Please select a user to edit.")
+                return
+            user_id = int(raw_id)
+            name = self.edit_user_name.text().strip() if self.edit_user_name else ""
+            email = self.edit_user_email.text().strip() if self.edit_user_email else ""
+            role = self.edit_user_role.currentText() if self.edit_user_role else "Student"
+            status = self.edit_user_status.currentText() if self.edit_user_status else "Active"
+
+            if not email or not name:
+                QMessageBox.warning(self.window, "Missing Information", "User Full Name and Email Address cannot be empty.")
+                return
+
+            ok, msg = self.logic.update_user(user_id=user_id, email=email, full_name=name, role=role, status=status)
+            if ok:
+                QMessageBox.information(self.window, "User Updated", f"User USR-{user_id} updated successfully.")
+                self._refresh_admin_users()
+                self._refresh_admin_enrollments()
+                self._refresh_admin_audit_logs()
+            else:
+                QMessageBox.warning(self.window, "Update Failed", msg)
+        except Exception as e:
+            QMessageBox.critical(self.window, "Update Error", str(e))
+
+    def handle_delete_user_from_modal(self):
+        """Delete user after confirmation."""
+        try:
+            if not self.edit_user_id: return
+            raw_id = self.edit_user_id.text().replace("USR-", "").strip()
+            if not raw_id or not raw_id.isdigit():
+                QMessageBox.warning(self.window, "Selection Required", "Please select a user first.")
+                return
+            user_id = int(raw_id)
+            name = self.edit_user_name.text().strip() if self.edit_user_name else f"USR-{user_id}"
+
+            confirm = QMessageBox.question(
+                self.window,
+                "Confirm Deletion",
+                f"Are you sure you want to permanently delete user {name} (USR-{user_id})?\n"
+                f"This will remove associated attendance records, enrollments, and counseling notes via CASCADE.",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+            if confirm == QMessageBox.Yes:
+                ok, msg = self.logic.delete_user(user_id)
+                if ok:
+                    QMessageBox.information(self.window, "User Deleted", msg)
+                    self.handle_cancel_edit_user()
+                    self._refresh_admin_users()
+                    self._refresh_admin_enrollments()
+                    self._refresh_admin_audit_logs()
+                else:
+                    QMessageBox.warning(self.window, "Delete Failed", msg)
+        except Exception as e:
+            QMessageBox.critical(self.window, "Delete Error", str(e))
+
+    def handle_cancel_edit_user(self):
+        """Reset and clear edit fields."""
+        if self.edit_user_id: self.edit_user_id.clear()
+        if self.edit_user_name: self.edit_user_name.clear()
+        if self.edit_user_email: self.edit_user_email.clear()
+        if self.edit_user_role: self.edit_user_role.setCurrentIndex(0)
+        if self.edit_user_status: self.edit_user_status.setCurrentIndex(0)
 
     def _refresh_admin_courses(self):
         try:

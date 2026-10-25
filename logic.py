@@ -646,7 +646,33 @@ class AttendanceLogic:
             print(f"[Logic Error] Add user error: {e}")
             return False, f"Failed to add user: {e}"
 
-    def delete_user(self, user_id: int) -> bool:
+    def update_user(self, user_id: int, email: str, full_name: str, role: str, status: str = "Active") -> Tuple[bool, str]:
+        """Update an existing user's details (Full Name, Email, Role, Status)."""
+        try:
+            email = email.strip()
+            name = full_name.strip()
+            if not email or "@" not in email:
+                return False, "Please enter a valid email address."
+            if not name:
+                return False, "Full Name cannot be empty."
+
+            with DBConnection(self.db_path) if self.db_path else DBConnection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    UPDATE Users
+                    SET email = ?, full_name = ?, role = ?
+                    WHERE id = ?;
+                """, (email, name, role, user_id))
+                cursor.execute("""
+                    INSERT INTO Audit_Logs (user_id, action, timestamp, details)
+                    VALUES (NULL, 'User Account Updated', ?, ?);
+                """, (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f"Updated User #{user_id} ({name}, {role}, {status})"))
+                return True, f"User #{user_id} ({name}) updated successfully."
+        except Exception as e:
+            print(f"[Logic Error] Update user error: {e}")
+            return False, f"Failed to update user: {e}"
+
+    def delete_user(self, user_id: int) -> Tuple[bool, str]:
         """Delete user by ID."""
         try:
             with DBConnection(self.db_path) if self.db_path else DBConnection() as conn:
@@ -656,10 +682,10 @@ class AttendanceLogic:
                     INSERT INTO Audit_Logs (user_id, action, timestamp, details)
                     VALUES (NULL, 'User Deleted', ?, ?);
                 """, (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), f"User ID #{user_id} deleted."))
-                return True
+                return True, f"User ID #{user_id} deleted successfully."
         except Exception as e:
             print(f"[Logic Error] Delete user error: {e}")
-            return False
+            return False, f"Failed to delete user: {e}"
 
     def get_all_courses(self) -> List[Dict[str, Any]]:
         """Fetch all courses."""

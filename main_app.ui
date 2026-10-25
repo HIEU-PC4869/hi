@@ -1353,6 +1353,180 @@
               <string>Status</string>
              </property>
             </column>
+            <column>
+             <property name="text">
+              <string>Actions</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+
+          <!-- EDIT USER RECORD PANEL (Matches HTML Modal Functionality) -->
+          <item>
+           <widget class="QGroupBox" name="grp_edit_user">
+            <property name="title">
+             <string>Edit User Record (Select a User from Table or Click Edit)</string>
+            </property>
+            <layout class="QVBoxLayout" name="editUserLayout">
+             <item>
+              <layout class="QHBoxLayout" name="editInputsRow">
+               <item>
+                <layout class="QVBoxLayout" name="editIdCol">
+                 <item>
+                  <widget class="QLabel" name="lbl_edit_user_id">
+                   <property name="text">
+                    <string>USER ID</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="edit_user_id">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="placeholderText">
+                    <string>#ID</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="editNameCol">
+                 <item>
+                  <widget class="QLabel" name="lbl_edit_name">
+                   <property name="text">
+                    <string>FULL NAME</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="edit_user_name">
+                   <property name="placeholderText">
+                    <string>Update full name...</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="editEmailCol">
+                 <item>
+                  <widget class="QLabel" name="lbl_edit_email">
+                   <property name="text">
+                    <string>EMAIL ADDRESS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="edit_user_email">
+                   <property name="placeholderText">
+                    <string>Update email address...</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="editRoleCol">
+                 <item>
+                  <widget class="QLabel" name="lbl_edit_role">
+                   <property name="text">
+                    <string>ASSIGNED ROLE</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="edit_user_role">
+                   <item>
+                    <property name="text">
+                     <string>Student</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Instructor</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Advisor</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Administrator</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="editStatusCol">
+                 <item>
+                  <widget class="QLabel" name="lbl_edit_status">
+                   <property name="text">
+                    <string>STATUS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="edit_user_status">
+                   <item>
+                    <property name="text">
+                     <string>Active</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Flagged (EWS)</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Suspended</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="editActionsRow">
+               <item>
+                <widget class="QPushButton" name="btn_delete_user">
+                 <property name="text">
+                  <string>🗑 Delete User</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="editSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_cancel_edit_user">
+                 <property name="text">
+                  <string>Cancel</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_save_edit_user">
+                 <property name="text">
+                  <string>💾 Save Changes</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </widget>
           </item>
 
