@@ -1,5 +1,6 @@
 import React from 'react';
 import { User } from '../types';
+import { canAccessScreen } from '../utils/rbac';
 
 interface HeaderProps {
   currentScreen: number; // 0: Login, 1: Student, 2: Instructor, 3: Advisor, 4: Admin
@@ -7,6 +8,7 @@ interface HeaderProps {
   currentUser: User | null;
   onOpenPythonModal: () => void;
   onOpenHtmlGuide: () => void;
+  onLogout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   currentUser,
   onOpenPythonModal,
   onOpenHtmlGuide,
+  onLogout,
 }) => {
   const pages = [
     { id: 0, label: '0: Login' },
@@ -44,25 +47,32 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Center Nav bar */}
         <div className="flex items-center gap-3 flex-1 justify-center max-w-3xl">
-          <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#141c2e]/60 border border-[#7dd3fc]/10 backdrop-blur-md">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-xs text-[#a0b4c4] font-medium">HTML & Web Ready</span>
+          <div className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 backdrop-blur-md">
+            <span className="material-symbols-outlined text-xs text-emerald-400">lock</span>
+            <span className="text-xs text-emerald-300 font-mono font-medium">HTTPS Strict (TLS 1.3)</span>
           </div>
 
           <nav className="flex items-center p-1 rounded-xl bg-[#111828]/80 border border-[#7dd3fc]/10 backdrop-blur-md">
             {pages.map((p) => {
               const isActive = currentScreen === p.id;
+              const isAllowed = canAccessScreen(currentUser?.role || 'Student', p.id);
               return (
                 <button
                   key={p.id}
                   onClick={() => onSelectScreen(p.id)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isActive
                       ? 'bg-[#0e4d6e] text-[#c8eaff] font-semibold shadow-inner'
-                      : 'text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]'
+                      : isAllowed
+                      ? 'text-[#a0b4c4] hover:bg-[#1a2438] hover:text-[#e0e8f0]'
+                      : 'text-[#a0b4c4]/40 hover:bg-[#1a2438]/40 cursor-not-allowed opacity-50'
                   }`}
+                  title={isAllowed ? p.label : `Restricted: Role [${currentUser?.role}] cannot access`}
                 >
-                  {p.label}
+                  <span>{p.label}</span>
+                  {!isAllowed && (
+                    <span className="material-symbols-outlined text-[11px] text-amber-400">lock</span>
+                  )}
                 </button>
               );
             })}
@@ -72,10 +82,10 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onOpenHtmlGuide}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e4d6e] hover:bg-[#7dd3fc] text-[#c8eaff] hover:text-[#001f2e] border border-[#7dd3fc]/40 text-xs font-bold shadow-md transition-all active:scale-95"
-            title="Chạy bản HTML trực tiếp trên VS Code không cần cài đặt"
+            title="Run standalone HTML edition directly without extra setup"
           >
             <span className="material-symbols-outlined text-sm">html</span>
-            <span>Bản HTML (VS Code)</span>
+            <span>HTML Edition</span>
           </button>
 
           {/* Python Architecture button */}
@@ -118,6 +128,17 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
           </div>
+
+          {/* Logout Button */}
+          <button
+            onClick={onLogout}
+            type="button"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3d1414]/80 hover:bg-[#ff6b6b] text-[#ff8080] hover:text-[#0a0e1a] border border-[#ff6b6b]/40 text-xs font-semibold shadow-md transition-all active:scale-95 cursor-pointer ml-1"
+            title="Sign out of the system"
+          >
+            <span className="material-symbols-outlined text-sm leading-none">logout</span>
+            <span className="hidden sm:inline">Sign Out</span>
+          </button>
         </div>
       </div>
     </header>

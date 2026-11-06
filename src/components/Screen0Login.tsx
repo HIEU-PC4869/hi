@@ -38,13 +38,24 @@ export const Screen0Login: React.FC<Screen0LoginProps> = ({ onLoginSuccess, user
         else if (email.includes('brody') || email.includes('advisor')) fallbackRole = 'Advisor';
         else if (email.includes('admin')) fallbackRole = 'Administrator';
 
+        const rawName = email.split('@')[0];
+        const cleanName = rawName
+          .replace(/[._-]+/g, ' ')
+          .split(' ')
+          .filter(Boolean)
+          .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+          .join(' ') || 'Authenticated User';
+
         const customUser: User = {
           id: Math.floor(1000 + Math.random() * 9000),
           email: email.trim(),
-          fullName: email.split('@')[0].replace('.', ' ').toUpperCase(),
+          fullName: cleanName,
           role: fallbackRole,
           status: 'Active',
           courses: ['CS-301', 'ENG-204'],
+          major: fallbackRole === 'Student' ? 'B.S. Software Engineering • Year 3' : undefined,
+          department: fallbackRole === 'Student' ? 'Dept. of Computer Science' : 'Faculty of Engineering',
+          studentId: fallbackRole === 'Student' ? String(Math.floor(24000 + Math.random() * 999)) : undefined,
           lastLogin: 'Just now',
         };
         setIsSubmitting(false);
@@ -235,10 +246,10 @@ export const Screen0Login: React.FC<Screen0LoginProps> = ({ onLoginSuccess, user
             </span>
             <span className="text-[10px] text-[#c8a0f0] font-mono">One-Click Switch</span>
           </div>
-          <div className="grid grid-cols-2 gap-2" id="role_chip_group">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2" id="role_chip_group">
             <button
               type="button"
-              onClick={() => selectRoleDemo('a.rivera@university.edu', 'Student')}
+              onClick={() => selectRoleDemo('alex.rivera@student.univ.edu', 'Student')}
               className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all duration-150 ${
                 selectedRoleChip === 'Student'
                   ? 'bg-[#1a2438]/90 ring-1 ring-[#7dd3fc]/40 text-[#e0e8f0]'
@@ -254,7 +265,31 @@ export const Screen0Login: React.FC<Screen0LoginProps> = ({ onLoginSuccess, user
 
             <button
               type="button"
-              onClick={() => selectRoleDemo('dr.vance@university.edu', 'Instructor')}
+              onClick={() => selectRoleDemo('sarah.jenkins@student.univ.edu', 'Student')}
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all duration-150 bg-[#1a2438]/40 hover:bg-[#1a2438] text-[#a0b4c4] hover:text-[#e0e8f0]"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+              <div className="truncate">
+                <div className="text-[11px] font-medium leading-tight text-amber-300">Sarah Jenkins</div>
+                <div className="text-[9px] text-[#a0b4c4] leading-tight truncate">Student ID: #24094</div>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => selectRoleDemo('david.kim@student.univ.edu', 'Student')}
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all duration-150 bg-[#1a2438]/40 hover:bg-[#1a2438] text-[#a0b4c4] hover:text-[#e0e8f0]"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0"></span>
+              <div className="truncate">
+                <div className="text-[11px] font-medium leading-tight text-sky-300">David Kim</div>
+                <div className="text-[9px] text-[#a0b4c4] leading-tight truncate">Student ID: #24108</div>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => selectRoleDemo('dr.vance@faculty.univ.edu', 'Instructor')}
               className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all duration-150 ${
                 selectedRoleChip === 'Instructor'
                   ? 'bg-[#1a2438]/90 ring-1 ring-[#7dd3fc]/40 text-[#e0e8f0]'
@@ -270,7 +305,7 @@ export const Screen0Login: React.FC<Screen0LoginProps> = ({ onLoginSuccess, user
 
             <button
               type="button"
-              onClick={() => selectRoleDemo('m.brody@university.edu', 'Advisor')}
+              onClick={() => selectRoleDemo('m.brody@counseling.univ.edu', 'Advisor')}
               className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all duration-150 ${
                 selectedRoleChip === 'Advisor'
                   ? 'bg-[#1a2438]/90 ring-1 ring-[#7dd3fc]/40 text-[#e0e8f0]'
@@ -286,7 +321,7 @@ export const Screen0Login: React.FC<Screen0LoginProps> = ({ onLoginSuccess, user
 
             <button
               type="button"
-              onClick={() => selectRoleDemo('sysadmin@university.edu', 'Administrator')}
+              onClick={() => selectRoleDemo('sysadmin@univ.edu', 'Administrator')}
               className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all duration-150 ${
                 selectedRoleChip === 'Administrator'
                   ? 'bg-[#1a2438]/90 ring-1 ring-[#7dd3fc]/40 text-[#e0e8f0]'

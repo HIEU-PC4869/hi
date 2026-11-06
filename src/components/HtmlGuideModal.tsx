@@ -117,19 +117,30 @@ export const HtmlGuideModal: React.FC<HtmlGuideModalProps> = ({ isOpen, onClose 
             <pre className="p-2.5 rounded-lg bg-black/60 text-[#c8eaff] font-mono text-xs select-all">npm install
 npm run dev</pre>
           </div>
+
+          {/* Security & HTTPS Section */}
+          <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/30 space-y-1.5">
+            <div className="font-bold text-emerald-400 flex items-center gap-2 text-sm">
+              <span className="material-symbols-outlined text-base">lock</span>
+              Bảo mật HTTPS & TLS 1.3 Tự Động
+            </div>
+            <p className="text-[#a0b4c4] text-xs leading-relaxed">
+              Cả file <code className="text-white font-mono bg-black/40 px-1 py-0.5 rounded">index.html</code> và <code className="text-white font-mono bg-black/40 px-1 py-0.5 rounded">app.html</code> đều chứa chính sách <code className="text-emerald-300 font-mono">Content-Security-Policy: upgrade-insecure-requests</code> cùng script tự động nâng cấp mọi kết nối HTTP sang HTTPS và mã hóa TLS 1.3 trên môi trường mạng.
+            </p>
+          </div>
         </div>
 
         {/* Footer */}
         <div className="pt-3 border-t border-white/10 flex items-center justify-between">
           <div className="text-[11px] text-emerald-400 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Đã tích hợp đầy đủ 5 vai trò: Login, Sinh viên, Giảng viên, Cố vấn, Quản trị
+            <span>Fully Integrated: Login, Student, Instructor, Advisor, Administrator (Strict RBAC & HTTPS)</span>
           </div>
           <button
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
           >
-            Đóng
+            Close
           </button>
         </div>
 

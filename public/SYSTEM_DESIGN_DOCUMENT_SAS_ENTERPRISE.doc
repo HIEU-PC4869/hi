@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset='utf-8'>
+<title>System Design Document - SAS Enterprise</title>
+<style>
+body { font-family: 'Calibri', 'Segoe UI', Arial, sans-serif; font-size: 11pt; line-height: 1.5; color: #1a202c; margin: 1in; }
+h1 { font-size: 20pt; color: #0f2b48; border-bottom: 2px solid #0f2b48; padding-bottom: 6px; margin-top: 24pt; }
+h2 { font-size: 15pt; color: #1a4d75; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-top: 18pt; }
+h3 { font-size: 12.5pt; color: #2d3748; margin-top: 14pt; }
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; font-size: 10pt; }
+th, td { border: 1px solid #94a3b8; padding: 6pt 8pt; text-align: left; }
+th { background-color: #f1f5f9; color: #0f172a; font-weight: bold; }
+code, pre { font-family: 'Consolas', 'Courier New', monospace; font-size: 9.5pt; background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 6pt; border-radius: 4pt; }
+.badge { font-weight: bold; padding: 2pt 5pt; border-radius: 3pt; font-size: 9pt; }
+.header-box { background-color: #f0f7ff; border: 1px solid #bae6fd; padding: 12pt; border-radius: 6pt; margin-bottom: 20pt; }
+</style>
+</head>
+<body>
+<div class='header-box'>
+<h1 style='margin-top:0;'>SYSTEM DESIGN DOCUMENT (SDD)</h1>
+<h3 style='margin-top:0; color:#0369a1;'>PROJECT: SMART STUDENT ATTENDANCE & ACADEMIC INTELLIGENCE SYSTEM (SAS ENTERPRISE)</h3>
+<p><b>Standard:</b> IEEE Std 1016-2009 & Software Engineering Curriculum (Chapter 3: System Design & Architecture)<br>
+<b>Architectural Patterns:</b> MVC (Model - View - Controller), Layered Architecture (4 Tiers), Client - Server Model<br>
+<b>Database:</b> SQLite3 Relational Database / RDBMS (Third Normal Form - 3NF)</p>
+</div>
+
+<h2>TABLE OF CONTENTS</h2>
+<ol>
+<li><b>SECTION 1: SYSTEM OVERVIEW & DESIGN OBJECTIVES</b></li>
+<li><b>SECTION 2: ARCHITECTURAL DESIGN (MVC, LAYERED, CLIENT-SERVER)</b></li>
+<li><b>SECTION 3: DATABASE & RELATIONAL DATA MODEL DESIGN (3NF)</b></li>
+<li><b>SECTION 4: OBJECT-ORIENTED CLASS DESIGN (OOA/OOD)</b></li>
+<li><b>SECTION 5: USER INTERFACE & EXPERIENCE DESIGN (UI/UX)</b></li>
+<li><b>SECTION 6: SECURITY & DATA INTEGRITY DESIGN</b></li>
+</ol>
+
+<h2>SECTION 1: SYSTEM OVERVIEW & DESIGN OBJECTIVES</h2>
+<h3>1.1. Project Introduction</h3>
+<p><b>SAS Enterprise</b> is an institutional software solution for university attendance tracking, cumulative compliance calculation, and proactive academic risk prevention (Early Warning System - EWS). The system strictly enforces four distinct user roles:</p>
+<ul>
+<li><b>Student:</b> Perform real-time check-in via 6-digit dynamic PINs during active sessions, view cumulative attendance compliance (%), and submit absence excuse petitions.</li>
+<li><b>Instructor:</b> Initiate and manage 15-minute live sessions, monitor live attendee rosters, perform manual status overrides in-table, review excuse slips, and export audit reports to CSV.</li>
+<li><b>Academic Advisor:</b> Automatically detect students at critical academic risk (&lt;80% attendance or &ge;3 consecutive absences), review historical dossiers, and record intervention counseling notes.</li>
+<li><b>System Administrator:</b> Master user lifecycle management (CRUD: create, edit profile, safe delete), course curriculum catalog registration, enrollment assignments (n-n), and tamper-evident security audit trail inspection.</li>
+</ul>
+
+<h3>1.2. Design Objectives & Quality Criteria (Ch3 Slides 11–13)</h3>
+<ul>
+<li><b>High Cohesion (Slide 13):</b> Each module and class encapsulates a single, dedicated responsibility (Model manages persistence, Controller executes business logic, View handles presentation).</li>
+<li><b>Loose Coupling (Slide 12):</b> Communication between the Presentation Layer and Business Logic/Persistence layers occurs strictly via primitive data types and JSON payloads (Data Coupling), with zero SQL exposure in the UI.</li>
+<li><b>Maintainability & Extensibility (Slide 19):</b> Front-end interface redesigns can occur independently without altering backend business algorithms or database schemas.</li>
+</ul>
+
+<h2>SECTION 2: ARCHITECTURAL DESIGN</h2>
+<h3>2.1. Model - View - Controller (MVC) Architecture (Slides 17–19)</h3>
+<p>As defined in Slide 17: <i>'Separate display and interaction of system data. The system is structured into three logical components that interact with each other.'</i></p>
+<ul>
+<li><b>Model (database.py & attendance.db):</b> Manages relational entity schemas, connection pooling, and ACID database transactions using parameterized SQL queries.</li>
+<li><b>View (index.html):</b> Renders visual presentation across five role-specific dashboards. Listens for user gestures (clicks, PIN inputs, modal forms) without containing raw SQL.</li>
+<li><b>Controller (logic.py - AttendanceLogic & server.py):</b> Enforces business validation (SHA-256 salted hashes, 15m/45m timing windows, EWS heuristic detection), directs the Model to persist state, and returns formatted responses to the View.</li>
+</ul>
+
+<h3>2.2. Layered Architecture Model (Slides 25–27)</h3>
+<p>The system is organized into four horizontal tiers:</p>
+<ol>
+<li><b>Presentation Layer (Slide 26):</b> Built with semantic HTML5, utility-first Tailwind CSS, and reactive JavaScript DOM. Manages forms, live 15-minute countdown timers, dynamic tables, and modal dialogs.</li>
+<li><b>Business Logic Layer (Slide 26):</b> Encapsulated in <code>logic.py</code> (<code>AttendanceLogic</code> class). Evaluates authorization, timing windows, EWS criteria, and CSV generation.</li>
+<li><b>Persistence / Data Access Layer (Slide 25):</b> Managed by <code>database.py</code> utilizing the Data Access Object (DAO) pattern and Python Context Managers (<code>with DBConnection():</code>).</li>
+<li><b>Database Layer (Slide 25):</b> Relational SQLite3 database engine (<code>attendance.db</code>), enforcing foreign key constraints at runtime via <code>PRAGMA foreign_keys = ON;</code>.</li>
+</ol>
+
+<h3>2.3. Client - Server Model (Slides 23–24)</h3>
+<ul>
+<li><b>Client (Web Browser):</b> Modern Single Page Application (SPA) providing sub-100ms view switching latency.</li>
+<li><b>Server (server.py & main.py):</b> Standard Python HTTP server routing API requests, interfacing with SQLite, and serving web assets.</li>
+</ul>
+
+<h2>SECTION 3: DATABASE & RELATIONAL DATA MODEL DESIGN</h2>
+<h3>3.1. Three Levels of Database Design (Slides 29–30)</h3>
+<ul>
+<li><b>Conceptual Level:</b> Entity-Relationship Diagram (ERD) defining 8 business entities: Users, Courses, Enrollments, Sessions, Attendance, Excuses, Counseling_Notes, Audit_Logs.</li>
+<li><b>Logical Level:</b> Normalized relational schemas in Third Normal Form (3NF), defining Primary Keys (PK), Foreign Keys (FK), UNIQUE constraints, and CHECK rules.</li>
+<li><b>Physical Level:</b> Implemented on SQLite3 with B-Tree indices, AUTOINCREMENT keys, and foreign key cascade rules.</li>
+</ul>
+
+<h3>3.2. Mapping Rules from Class Diagram to Relational Schema (Slides 31–42)</h3>
+<ul>
+<li><b>Rule 1: Class to Table & Property to Column Mapping (Slide 31):</b> Domain classes map to tables; properties map to columns; instances map to tuples.</li>
+<li><b>Rule 2: Single Table Inheritance (Loai_NV Pattern - Slides 39–42):</b> The <code>User</code> superclass and subclasses (<code>Student</code>, <code>Instructor</code>, <code>Advisor</code>, <code>Administrator</code>) are mapped into a single unified table (<code>Users</code>) with a discriminator column (<code>role</code>). This eliminates expensive multi-table JOINs during authentication.</li>
+<li><b>Rule 3: Many-to-Many Relationship Resolution (Slides 37–38):</b> The n-n relation between students and courses is resolved into an intermediate associative table (<code>Enrollments</code>) with composite constraint <code>UNIQUE(user_id, course_id)</code>.</li>
+</ul>
+
+<h3>3.3. Data Dictionary of the 8 Normalized Entities (3NF)</h3>
+<table>
+<tr><th>Table</th><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+<tr><td rowspan='6'><b>Users</b></td><td>id</td><td>INTEGER</td><td>PK, AUTOINCREMENT</td><td>Unique user identifier</td></tr>
+<tr><td>email</td><td>TEXT</td><td>NOT NULL, UNIQUE</td><td>Institutional login email</td></tr>
+<tr><td>password_hash</td><td>TEXT</td><td>NOT NULL</td><td>Salted SHA-256 password hash</td></tr>
+<tr><td>full_name</td><td>TEXT</td><td>NOT NULL</td><td>Full legal name of user</td></tr>
+<tr><td>role</td><td>TEXT</td><td>NOT NULL, CHECK</td><td>Role discriminator (Student, Instructor, Advisor, Administrator)</td></tr>
+<tr><td>status</td><td>TEXT</td><td>Default 'Active'</td><td>Operational state (Active, Flagged (EWS), Suspended)</td></tr>
+
+<tr><td rowspan='2'><b>Courses</b></td><td>id</td><td>INTEGER</td><td>PK, AUTOINCREMENT</td><td>Unique course identifier</td></tr>
+<tr><td>course_name</td><td>TEXT</td><td>NOT NULL, UNIQUE</td><td>Official course code and title (e.g. CS-301)</td></tr>
+
+<tr><td rowspan='4'><b>Enrollments</b></td><td>id</td><td>INTEGER</td><td>PK, AUTOINCREMENT</td><td>Enrollment mapping record ID</td></tr>
+<tr><td>user_id</td><td>INTEGER</td><td>FK -> Users(id), CASCADE</td><td>Student foreign key reference</td></tr>
+<tr><td>course_id</td><td>INTEGER</td><td>FK -> Courses(id), CASCADE</td><td>Course foreign key reference</td></tr>
+<tr><td>semester</td><td>TEXT</td><td>Default 'Fall 2026'</td><td>Registered academic semester (UNIQUE user_id, course_id)</td></tr>
+
+<tr><td rowspan='6'><b>Sessions</b></td><td>id</td><td>INTEGER</td><td>PK, AUTOINCREMENT</td><td>Unique session identifier</td></tr>
+<tr><td>course_id</td><td>INTEGER</td><td>FK -> Courses(id), CASCADE</td><td>Course foreign key reference</td></tr>
+<tr><td>pin_code</td><td>TEXT</td><td>NOT NULL</td><td>Ephemeral 6-digit session PIN (XXX-XXX)</td></tr>
+<tr><td>start_time</td><td>TEXT</td><td>NOT NULL</td><td>ISO-8601 session initiation timestamp</td></tr>
+<tr><td>end_time</td><td>TEXT</td><td>NULL</td><td>Session termination timestamp</td></tr>
+<tr><td>is_active</td><td>INTEGER</td><td>CHECK(0, 1)</td><td>Live status flag (1: Open, 0: Closed)</td></tr>
+
+<tr><td rowspan='6'><b>Attendance</b></td><td>id</td><td>INTEGER</td><td>PK, AUTOINCREMENT</td><td>Attendance record identifier</td></tr>
+<tr><td>session_id</td><td>INTEGER</td><td>FK -> Sessions(id), CASCADE</td><td>Session foreign key reference</td></tr>
+<tr><td>student_id</td><td>INTEGER</td><td>FK -> Users(id), CASCADE</td><td>Student foreign key reference</td></tr>
+<tr><td>status</td><td>TEXT</td><td>CHECK</td><td>Status (Present, Late, Absent, Excused)</td></tr>
+<tr><td>time_logged</td><td>TEXT</td><td>NOT NULL</td><td>Check-in timestamp (UNIQUE session_id, student_id)</td></tr>
+<tr><td>updated_by</td><td>INTEGER</td><td>FK -> Users(id), SET NULL</td><td>Instructor ID performing manual override</td></tr>
+
+<tr><td rowspan='6'><b>Excuses</b></td><td>id</td><td>INTEGER</td><td>PK, AUTOINCREMENT</td><td>Excuse slip petition ID</td></tr>
+<tr><td>student_id</td><td>INTEGER</td><td>FK -> Users(id), CASCADE</td><td>Student foreign key reference</td></tr>
+<tr><td>course_id</td><td>INTEGER</td><td>FK -> Courses(id), CASCADE</td><td>Course foreign key reference</td></tr>
+<tr><td>date_absent</td><td>TEXT</td><td>NOT NULL</td><td>Date of unexcused absence</td></tr>
+<tr><td>reason</td><td>TEXT</td><td>NOT NULL</td><td>Student justification explanation</td></tr>
+<tr><td>status</td><td>TEXT</td><td>CHECK</td><td>Adjudication status (Pending, Approved, Rejected)</td></tr>
+
+<tr><td rowspan='5'><b>Counseling_Notes</b></td><td>id</td><td>INTEGER</td><td>PK, AUTOINCREMENT</td><td>Dossier record ID</td></tr>
+<tr><td>student_id</td><td>INTEGER</td><td>FK -> Users(id), CASCADE</td><td>Target student foreign key reference</td></tr>
+<tr><td>advisor_id</td><td>INTEGER</td><td>FK -> Users(id), CASCADE</td><td>Authoring advisor foreign key reference</td></tr>
+<tr><td>note_text</td><td>TEXT</td><td>NOT NULL</td><td>Intervention meeting notes and action plan</td></tr>
+<tr><td>created_at</td><td>TEXT</td><td>NOT NULL</td><td>Timestamp of counseling session</td></tr>
+
+<tr><td rowspan='5'><b>Audit_Logs</b></td><td>id</td><td>INTEGER</td><td>PK, AUTOINCREMENT</td><td>Audit event ID</td></tr>
+<tr><td>user_id</td><td>INTEGER</td><td>FK -> Users(id), SET NULL</td><td>Actor user ID initiating action</td></tr>
+<tr><td>action</td><td>TEXT</td><td>NOT NULL</td><td>Business event name (Sign-In, Override, etc.)</td></tr>
+<tr><td>timestamp</td><td>TEXT</td><td>NOT NULL</td><td>High-precision event timestamp</td></tr>
+<tr><td>details</td><td>TEXT</td><td>NULL</td><td>Technical parameters and result payload</td></tr>
+</table>
+
+<h2>SECTION 4: OBJECT-ORIENTED CLASS DESIGN (OOA/OOD)</h2>
+<h3>4.1. Inheritance Hierarchy</h3>
+<ul>
+<li><b>User (Abstract Base Class):</b> Encapsulates common attributes (<code>id</code>, <code>email</code>, <code>password_hash</code>, <code>full_name</code>, <code>role</code>) and methods (<code>authenticate()</code>, <code>get_profile()</code>).</li>
+<li><b>Student (Subclass):</b> Adds <code>check_in(token, course_id)</code>, <code>submit_excuse()</code>, and <code>get_attendance_stats()</code>.</li>
+<li><b>Instructor (Subclass):</b> Adds <code>start_attendance_session()</code>, <code>close_attendance_session()</code>, <code>manual_override_status()</code>, <code>review_excuse()</code>, and <code>export_course_report_csv()</code>.</li>
+<li><b>AcademicAdvisor (Subclass):</b> Adds <code>get_early_warning_students()</code>, <code>get_counseling_notes()</code>, and <code>save_counseling_note()</code>.</li>
+<li><b>Administrator (Subclass):</b> Adds <code>add_user()</code>, <code>update_user()</code>, <code>delete_user()</code>, <code>add_course()</code>, and <code>add_enrollment()</code>.</li>
+</ul>
+
+<h3>4.2. Business Logic Algorithms (AttendanceLogic Controller)</h3>
+<ul>
+<li><b>Timing Window Algorithm:</b>
+<ul>
+<li>&Delta;t = t_checkin - t_start</li>
+<li>If &Delta;t &le; 15 minutes: Recorded as <b>Present</b> (On-Time).</li>
+<li>If 15 minutes &lt; &Delta;t &le; 45 minutes: Recorded as <b>Late</b> (Partial Credit).</li>
+<li>If &Delta;t &gt; 45 minutes or session closed: Recorded as <b>Absent</b>.</li>
+</ul>
+</li>
+<li><b>Attendance Percentage Formula:</b><br>
+<code>Attendance Rate (%) = [Present Count + (Late Count * 0.8)] / Total Sessions * 100%</code></li>
+<li><b>Early Warning System (EWS) Heuristic:</b><br>
+A student is flagged for intervention if <code>Overall Attendance Rate &lt; 80.0%</code> OR <code>Consecutive Absences &ge; 3</code>.</li>
+</ul>
+
+<h2>SECTION 5: USER INTERFACE & EXPERIENCE DESIGN (UI/UX)</h2>
+<h3>5.1. Glacier Dark Glassmorphism Styling</h3>
+<ul>
+<li><b>Color Palette:</b> Deep Navy and Obsidian background (<code>#0a0e1a</code>, <code>#0f1524</code>, <code>#141c2e</code>); Cyan brand accent (<code>#7dd3fc</code>).</li>
+<li><b>Semantic Status Colors:</b> Emerald Green (<code>#34d399</code> - Present/Approved); Amber Gold (<code>#fbbf24</code> - Late/Warning); Rose Red (<code>#f87171</code> - Absent/Critical Risk); Royal Sapphire (<code>#c084fc</code> - Excused/Advising).</li>
+<li><b>Glassmorphic Surfaces:</b> Semi-transparent cards with <code>backdrop-filter: blur(12px)</code> and ice border styling (<code>1px solid rgba(125, 211, 252, 0.15)</code>).</li>
+</ul>
+
+<h3>5.2. Role-Based Screen Workspaces</h3>
+<ul>
+<li><b>Screen 0 (Login Gateway):</b> Email/password verification and 4 one-click demo role buttons.</li>
+<li><b>Screen 1 (Student Portal):</b> 6-digit PIN check-in card, attendance compliance KPI metrics, course-by-course breakdown table, and excuse petition submission form.</li>
+<li><b>Screen 2 (Instructor Command Center):</b> Ephemeral PIN display with live 15-minute countdown, real-time class roster with in-cell status override controls, excuse review inbox, and CSV export.</li>
+<li><b>Screen 3 (Academic Advisor EWS):</b> Filtered at-risk student table (&lt;80% attendance or &ge;3 absences), severity badges (CRITICAL/WARNING), student dossier inspector, and counseling note logger.</li>
+<li><b>Screen 4 (Administrator Console):</b> Master user provisioning form, user directory table with in-row Edit buttons, modal editing/deletion workspace, course catalog management, enrollment assignments, and read-only audit log.</li>
+</ul>
+
+<h2>SECTION 6: SECURITY & DATA INTEGRITY DESIGN</h2>
+<ul>
+<li><b>SQL Injection Prevention:</b> 100% of database queries use parameterized prepared statements (<code>?</code> placeholders). Raw string interpolation is strictly prohibited.</li>
+<li><b>Credential Protection:</b> Passwords are never stored in plaintext. All credentials are encrypted using SHA-256 with cryptographic salt.</li>
+<li><b>Session Timeout Policy:</b> Dynamic 6-digit PIN codes expire after 15 minutes to prevent out-of-classroom code sharing.</li>
+<li><b>Audit Trail Immutability:</b> <code>Audit_Logs</code> is strictly Append-Only with no update or delete operations exposed via the application.</li>
+<li><b>Referential Integrity:</b> SQLite enforces <code>PRAGMA foreign_keys = ON;</code>. Dependent records cascade delete (<code>ON DELETE CASCADE</code>) when parent entities are removed, while audit logs and override references are preserved using <code>ON DELETE SET NULL</code>.</li>
+</ul>
+</body>
+</html>

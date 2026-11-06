@@ -118,18 +118,20 @@ export const Screen1Student: React.FC<Screen1StudentProps> = ({
             <div className="flex items-center gap-3">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0e4d6e]/80 border border-[#7dd3fc]/20 px-3 py-1 text-xs font-medium text-[#c8eaff] shadow-inner">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#7dd3fc] animate-pulse"></span>
-                Spring Term 2025
+                Spring Term 2026
               </span>
               <span className="text-xs text-[#a0b4c4] font-mono uppercase tracking-wider">
                 SAS-STU-SYS // Live
               </span>
             </div>
+            <div className="text-xs font-semibold text-[#7dd3fc] tracking-wider uppercase">
+              Student Portal • Academic Year 2026
+            </div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#e0e8f0]">
-              Student Attendance & Compliance Dashboard
+              Welcome back, {currentUser.fullName}
             </h1>
             <p className="text-sm text-[#a0b4c4] max-w-2xl leading-relaxed">
-              Record live session presence, audit personal course retention metrics, and submit
-              verified academic excuse documentation.
+              Student ID: #{currentUser.studentId || currentUser.id || '24091'} • {currentUser.major || currentUser.department || 'B.S. Software Engineering (Year 3)'}
             </p>
           </div>
 
