@@ -7,6 +7,7 @@ export interface User {
   role: UserRole;
   studentId?: string;
   major?: string;
+  academicYear?: string;
   department?: string;
   status: 'Active' | 'Flagged (EWS)' | 'Suspended';
   courses: string[];

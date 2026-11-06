@@ -4,7 +4,15 @@ import { User, AuditLogItem } from '../types';
 interface Screen4AdminProps {
   users: User[];
   auditLogs: AuditLogItem[];
-  onAddUser: (email: string, role: User['role'], department?: string) => void;
+  onAddUser: (
+    email: string,
+    role: User['role'],
+    department?: string,
+    fullName?: string,
+    studentId?: string,
+    major?: string,
+    academicYear?: string
+  ) => void;
   onDeleteUser: (userId: number) => void;
   onExportSystemReport: () => void;
 }
@@ -17,7 +25,11 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
   onExportSystemReport,
 }) => {
   const [newEmail, setNewEmail] = useState('');
+  const [newFullName, setNewFullName] = useState('');
   const [newRole, setNewRole] = useState<User['role']>('Student');
+  const [newStudentId, setNewStudentId] = useState('');
+  const [newMajor, setNewMajor] = useState('B.S. Software Engineering');
+  const [newAcademicYear, setNewAcademicYear] = useState('Year 1');
   const [newDepartment, setNewDepartment] = useState('Dept. of Computer Science');
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | User['role']>('all');
@@ -31,9 +43,19 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
       return;
     }
 
-    onAddUser(newEmail.trim(), newRole, newDepartment);
-    setAddNotice(`Provisioned identity: ${newEmail.trim()} as ${newRole}.`);
+    onAddUser(
+      newEmail.trim(),
+      newRole,
+      newDepartment,
+      newFullName.trim() || undefined,
+      newStudentId.trim() || undefined,
+      newRole === 'Student' ? newMajor : undefined,
+      newRole === 'Student' ? newAcademicYear : undefined
+    );
+    setAddNotice(`Provisioned identity: ${newFullName || newEmail.trim()} as ${newRole}.`);
     setNewEmail('');
+    setNewFullName('');
+    setNewStudentId('');
     setTimeout(() => setAddNotice(null), 4000);
   };
 
@@ -135,85 +157,187 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleAddSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-          <div className="md:col-span-4 space-y-1.5">
-            <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="txt_add_email">
-              Institutional Email / Identity
-            </label>
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-[#a0b4c4]/70">
-                alternate_email
-              </span>
-              <input
-                id="txt_add_email"
-                type="email"
-                required
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                placeholder="first.last@university.edu"
-                className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 text-[#e0e8f0] placeholder:text-[#a0b4c4]/50 text-xs focus:outline-none focus:bg-[#1a2438] transition-all"
-              />
+        <form onSubmit={handleAddSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+            <div className="md:col-span-4 space-y-1.5">
+              <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="txt_add_email">
+                Institutional Email / Identity
+              </label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-[#a0b4c4]/70">
+                  alternate_email
+                </span>
+                <input
+                  id="txt_add_email"
+                  type="email"
+                  required
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  placeholder="first.last@university.edu"
+                  className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 text-[#e0e8f0] placeholder:text-[#a0b4c4]/50 text-xs focus:outline-none focus:bg-[#1a2438] transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="md:col-span-4 space-y-1.5">
+              <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="txt_add_name">
+                Full Name
+              </label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-[#a0b4c4]/70">
+                  person
+                </span>
+                <input
+                  id="txt_add_name"
+                  type="text"
+                  required
+                  value={newFullName}
+                  onChange={(e) => setNewFullName(e.target.value)}
+                  placeholder="e.g. Johnathan Doe"
+                  className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 text-[#e0e8f0] placeholder:text-[#a0b4c4]/50 text-xs focus:outline-none focus:bg-[#1a2438] transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="md:col-span-4 space-y-1.5">
+              <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="combo_add_role">
+                Assigned System Role
+              </label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-[#a0b4c4]/70">
+                  badge
+                </span>
+                <select
+                  id="combo_add_role"
+                  value={newRole}
+                  onChange={(e) => setNewRole(e.target.value as User['role'])}
+                  className="w-full pl-10 pr-8 py-2.5 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 text-[#e0e8f0] text-xs focus:outline-none focus:bg-[#1a2438] transition-all appearance-none cursor-pointer"
+                >
+                  <option value="Student">Student (End User)</option>
+                  <option value="Instructor">Instructor (Faculty)</option>
+                  <option value="Advisor">Advisor (Counseling)</option>
+                  <option value="Administrator">Administrator (Root)</option>
+                </select>
+                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#a0b4c4] pointer-events-none">
+                  expand_more
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="md:col-span-3 space-y-1.5">
-            <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="combo_add_role">
-              Assigned System Role
-            </label>
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-[#a0b4c4]/70">
-                badge
-              </span>
-              <select
-                id="combo_add_role"
-                value={newRole}
-                onChange={(e) => setNewRole(e.target.value as User['role'])}
-                className="w-full pl-10 pr-8 py-2.5 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 text-[#e0e8f0] text-xs focus:outline-none focus:bg-[#1a2438] transition-all appearance-none cursor-pointer"
-              >
-                <option value="Student">Student (End User)</option>
-                <option value="Instructor">Instructor (Faculty)</option>
-                <option value="Advisor">Advisor (Counseling)</option>
-                <option value="Administrator">Administrator (Root)</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#a0b4c4] pointer-events-none">
-                expand_more
-              </span>
-            </div>
-          </div>
+          {/* Student-specific metadata fields */}
+          {newRole === 'Student' ? (
+            <div className="p-3.5 rounded-xl bg-[#111828]/80 border border-[#7dd3fc]/20 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#7dd3fc]">
+                <span className="material-symbols-outlined text-sm">school</span>
+                <span>Student Academic Dossier</span>
+              </div>
 
-          <div className="md:col-span-3 space-y-1.5">
-            <label className="block text-xs font-medium text-[#a0b4c4]">
-              Academic / Org Department
-            </label>
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-[#a0b4c4]/70">
-                domain
-              </span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="txt_add_student_id">
+                    Student ID
+                  </label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#a0b4c4]/70">
+                      tag
+                    </span>
+                    <input
+                      id="txt_add_student_id"
+                      type="text"
+                      value={newStudentId}
+                      onChange={(e) => setNewStudentId(e.target.value)}
+                      placeholder="e.g. 24095 (leave blank for auto-ID)"
+                      className="w-full pl-8 pr-3 py-2 rounded-lg bg-[#141c2e] border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-[#7dd3fc]"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="combo_add_major">
+                    Academic Major / Field of Study
+                  </label>
+                  <input
+                    id="combo_add_major"
+                    list="major_react_suggestions"
+                    type="text"
+                    value={newMajor}
+                    onChange={(e) => setNewMajor(e.target.value)}
+                    placeholder="Enter or select major (e.g. B.S. Software Engineering)"
+                    className="w-full px-3 py-2 rounded-lg bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#7dd3fc]"
+                  />
+                  <datalist id="major_react_suggestions">
+                    <option value="B.S. Software Engineering" />
+                    <option value="B.S. Computer Science" />
+                    <option value="B.S. Information Technology" />
+                    <option value="B.S. Data Science & AI" />
+                    <option value="B.S. Information Security" />
+                    <option value="B.Eng. Computer Engineering" />
+                    <option value="B.Eng. Electrical Engineering" />
+                    <option value="B.S. Applied Mathematics" />
+                    <option value="B.S. Business Information Systems" />
+                    <option value="B.S. Cyber Operations" />
+                  </datalist>
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    <span className="text-[10px] text-[#a0b4c4]">Quick examples:</span>
+                    {['Software Engineering', 'Computer Science', 'Data Science & AI', 'Information Security'].map((ex) => (
+                      <button
+                        key={ex}
+                        type="button"
+                        onClick={() => setNewMajor(`B.S. ${ex}`)}
+                        className="text-[10px] px-1.5 py-0.5 rounded bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/20 transition-all cursor-pointer"
+                      >
+                        + {ex}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="combo_add_year">
+                    Academic Year Level
+                  </label>
+                  <select
+                    id="combo_add_year"
+                    value={newAcademicYear}
+                    onChange={(e) => setNewAcademicYear(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#7dd3fc] cursor-pointer"
+                  >
+                    <option value="Year 1">Year 1 (Freshman)</option>
+                    <option value="Year 2">Year 2 (Sophomore)</option>
+                    <option value="Year 3">Year 3 (Junior)</option>
+                    <option value="Year 4">Year 4 (Senior)</option>
+                    <option value="Graduate">Graduate (Master's / Ph.D.)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              <label className="block text-xs font-medium text-[#a0b4c4]">
+                Faculty / Department
+              </label>
               <select
                 value={newDepartment}
                 onChange={(e) => setNewDepartment(e.target.value)}
-                className="w-full pl-10 pr-8 py-2.5 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 text-[#e0e8f0] text-xs focus:outline-none focus:bg-[#1a2438] transition-all appearance-none cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#7dd3fc]"
               >
                 <option value="Faculty of Engineering">Faculty of Engineering</option>
                 <option value="Dept. of Computer Science">Dept. of Computer Science</option>
-                <option value="School of Medicine">School of Medicine</option>
-                <option value="School of Business">School of Business</option>
+                <option value="Student Support Services">Student Support Services</option>
                 <option value="Global Campus Services">Global Campus Services</option>
               </select>
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#a0b4c4] pointer-events-none">
-                expand_more
-              </span>
             </div>
-          </div>
+          )}
 
-          <div className="md:col-span-2">
+          <div className="flex justify-end pt-2">
             <button
               id="btn_add_user"
               type="submit"
-              className="w-full py-2.5 px-4 rounded-xl bg-[#0e4d6e] text-[#c8eaff] hover:brightness-110 border border-[#7dd3fc]/30 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#0e4d6e]/20 active:scale-95 cursor-pointer"
+              className="py-2.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 active:scale-95 cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">person_add</span>
-              <span>Add User</span>
+              <span>Add User Account</span>
             </button>
           </div>
         </form>
@@ -392,7 +516,14 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
             <tbody className="divide-y divide-[#7dd3fc]/5 text-[#e0e8f0]">
               {filteredUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-[#1a2438]/40 transition-colors">
-                  <td className="py-4 px-6 font-mono font-medium text-[#7dd3fc]">USR-{user.id}</td>
+                  <td className="py-4 px-6 font-mono font-medium text-[#7dd3fc]">
+                    <div>USR-{user.id}</div>
+                    {user.role === 'Student' && user.studentId && (
+                      <div className="text-[10px] text-emerald-400 font-mono font-semibold">
+                        ID: #{user.studentId}
+                      </div>
+                    )}
+                  </td>
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-[#88b4cc]/15 flex items-center justify-center font-semibold text-[#88b4cc] text-xs shrink-0">
@@ -410,8 +541,23 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
                               verified
                             </span>
                           )}
+                          {user.role === 'Student' && user.studentId && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[#7dd3fc]/15 text-[#7dd3fc] border border-[#7dd3fc]/30">
+                              #{user.studentId}
+                            </span>
+                          )}
                         </div>
                         <div className="text-[11px] text-[#a0b4c4] font-mono">{user.email}</div>
+                        {user.role === 'Student' && (user.major || user.academicYear) && (
+                          <div className="text-[10px] text-[#7dd3fc] flex items-center gap-1.5 mt-0.5">
+                            <span>{user.major || 'Software Engineering'}</span>
+                            {user.academicYear && (
+                              <span className="px-1.5 py-0.2 rounded bg-[#0e4d6e]/60 text-[#c8eaff] text-[9px] font-medium">
+                                {user.academicYear}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </td>

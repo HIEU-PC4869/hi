@@ -436,17 +436,31 @@ export default function App() {
   };
 
   // Handler: Admin Add User
-  const handleAddUser = (email: string, role: User['role'], department?: string) => {
+  const handleAddUser = (
+    email: string,
+    role: User['role'],
+    department?: string,
+    fullName?: string,
+    studentId?: string,
+    major?: string,
+    academicYear?: string
+  ) => {
     if (!hasActionPermission(currentUser.role, 'canManageUsers')) {
       showToast('Permission Denied: Administrator role required to provision new user accounts.', 'error');
       return;
     }
+    const derivedName = fullName?.trim() || email.split('@')[0].replace(/[._-]+/g, ' ').toUpperCase();
+    const effectiveDept = role === 'Student' && major ? `${major} (${academicYear || 'Year 1'})` : (department || 'Dept. of Computer Science');
+
     const newUser: User = {
       id: Math.floor(1000 + Math.random() * 9000),
       email,
-      fullName: email.split('@')[0].replace('.', ' ').toUpperCase(),
+      fullName: derivedName,
       role,
-      department: department || 'Dept. of Computer Science',
+      studentId: role === 'Student' ? (studentId || String(Math.floor(24000 + Math.random() * 999))) : undefined,
+      major: role === 'Student' ? major : undefined,
+      academicYear: role === 'Student' ? academicYear : undefined,
+      department: effectiveDept,
       status: 'Active',
       courses: role === 'Student' ? ['CS-301', 'ENG-204'] : ['CS-301'],
       lastLogin: 'Just provisioned',
@@ -460,11 +474,13 @@ export default function App() {
         userName: currentUser.fullName,
         action: 'User Provisioned',
         timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        details: `Admin provisioned ${email} as ${role}.`,
+        details: role === 'Student' 
+          ? `Admin provisioned Student: ${derivedName} (ID: #${newUser.studentId}, ${major}, ${academicYear}).`
+          : `Admin provisioned ${email} as ${role}.`,
       },
       ...prev,
     ]);
-    showToast(`User ${email} (${role}) provisioned successfully.`, 'success');
+    showToast(`User ${derivedName} (${role}${newUser.studentId ? ' #' + newUser.studentId : ''}) provisioned successfully.`, 'success');
   };
 
   // Handler: Admin Delete User
