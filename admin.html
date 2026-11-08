@@ -258,6 +258,47 @@
             </div>
           </div>
 
+          <!-- Instructor Profile Metadata: Assigned Teaching Courses -->
+          <div id="group_instructor_add_fields" class="space-y-3 p-3.5 rounded-xl bg-[#111828] border border-[#7dd3fc]/20 shadow-inner hidden">
+            <div class="flex items-center justify-between text-[11px] font-semibold text-[#7dd3fc] uppercase tracking-wider">
+              <span class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">menu_book</span>
+                <span>Instructor Teaching Dossier</span>
+              </span>
+              <span class="text-[10px] text-[#a0b4c4] font-mono">Assigned Courses</span>
+            </div>
+
+            <!-- Preset Catalog Chips -->
+            <div class="space-y-1.5">
+              <label class="text-xs text-[#a0b4c4]">Select from University Course Catalog:</label>
+              <div class="flex flex-wrap gap-1.5" id="instructor_preset_courses_chips">
+                <!-- Dynamically populated or static chips -->
+              </div>
+            </div>
+
+            <!-- Custom Course Code and Name input -->
+            <div class="space-y-1.5 pt-1 border-t border-white/5">
+              <label class="text-[11px] text-[#a0b4c4]">Or Add Custom Course Code & Title</label>
+              <div class="flex items-center gap-2">
+                <input id="txt_instructor_custom_course" type="text" placeholder="e.g. CS-505 or SWE-420"
+                  class="flex-1 h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white font-mono uppercase focus:outline-none focus:border-emerald-400" />
+                <button type="button" onclick="handleAddCustomInstructorCourse()"
+                  class="h-9 px-3 rounded-xl bg-[#0e4d6e] hover:bg-[#1a3a4e] text-[#c8eaff] text-xs font-semibold flex items-center gap-1 cursor-pointer">
+                  <span class="material-symbols-outlined text-sm">add</span>
+                  <span>Add</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Currently Assigned Courses Badges -->
+            <div class="space-y-1">
+              <div class="text-[11px] text-[#a0b4c4]">Assigned Courses for this Instructor:</div>
+              <div id="instructor_assigned_badges_container" class="flex flex-wrap gap-1.5 min-h-[30px] p-2 rounded-lg bg-[#141c2e] border border-white/5">
+                <!-- Will render badges -->
+              </div>
+            </div>
+          </div>
+
           <!-- Staff Department field (shown when not Student) -->
           <div id="group_staff_add_fields" class="space-y-1 hidden">
             <label class="text-xs text-[#a0b4c4]">Faculty / Department</label>
@@ -549,6 +590,21 @@
               <option value="Graduate">Graduate (Master's / Ph.D.)</option>
             </select>
           </div>
+        <!-- Instructor Profile Metadata Edit Fields -->
+        <div id="group_edit_instructor_fields" class="space-y-3 p-3.5 rounded-xl bg-[#111828] border border-[#7dd3fc]/20 shadow-inner hidden">
+          <div class="flex items-center justify-between text-[11px] font-semibold text-[#7dd3fc] uppercase tracking-wider">
+            <span class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">menu_book</span>
+              <span>Teaching Courses Allocation</span>
+            </span>
+            <span class="text-[10px] text-[#a0b4c4] font-mono">Courses</span>
+          </div>
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4] font-medium">Assigned Courses (comma-separated codes)</label>
+            <input id="edit_user_courses" type="text" placeholder="e.g. CS-301, CS-402, SWE-420"
+              class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white font-mono uppercase focus:outline-none focus:border-[#7dd3fc]" />
+            <div class="text-[10px] text-[#a0b4c4]">Enter course codes separated by commas (e.g. CS-301, CS-402).</div>
+          </div>
         </div>
 
         <div class="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
@@ -592,18 +648,110 @@
       renderAuditLogs();
     }
 
+    let assignedInstructorCourses = ['CS-301', 'CS-402'];
+
+    function renderInstructorPresetChips() {
+      const container = document.getElementById('instructor_preset_courses_chips');
+      if (!container) return;
+      const catalog = [
+        { code: 'CS-301', title: 'Advanced Data Structures' },
+        { code: 'CS-402', title: 'Cloud Architecture & DevOps' },
+        { code: 'ENG-204', title: 'Technical Communication' },
+        { code: 'MATH-310', title: 'Linear Algebra' },
+        { code: 'PHY-102', title: 'Engineering Physics II' },
+        { code: 'SWE-420', title: 'Software Architecture' },
+        { code: 'AI-315', title: 'Machine Learning Fundamentals' }
+      ];
+
+      container.innerHTML = catalog.map(c => {
+        const isSelected = assignedInstructorCourses.includes(c.code);
+        return `
+          <button type="button" onclick="toggleInstructorCourseSelection('${c.code}')"
+            class="text-[10px] px-2 py-1 rounded-lg border transition-all cursor-pointer flex items-center gap-1 ${
+              isSelected 
+                ? 'bg-emerald-950/70 border-emerald-500/50 text-emerald-300 font-semibold' 
+                : 'bg-[#141c2e] border-white/10 text-[#a0b4c4] hover:text-white hover:border-[#7dd3fc]/40'
+            }">
+            <span>${isSelected ? '✓' : '+'}</span>
+            <span>${c.code}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function toggleInstructorCourseSelection(courseCode) {
+      const idx = assignedInstructorCourses.indexOf(courseCode);
+      if (idx > -1) {
+        assignedInstructorCourses.splice(idx, 1);
+      } else {
+        assignedInstructorCourses.push(courseCode);
+      }
+      renderInstructorPresetChips();
+      renderInstructorAssignedBadges();
+    }
+
+    function handleAddCustomInstructorCourse() {
+      const input = document.getElementById('txt_instructor_custom_course');
+      if (!input) return;
+      const raw = input.value.trim().toUpperCase();
+      if (!raw) {
+        showToast('Please enter a course code (e.g. CS-505).', 'warning');
+        return;
+      }
+      if (!assignedInstructorCourses.includes(raw)) {
+        assignedInstructorCourses.push(raw);
+        input.value = '';
+        renderInstructorPresetChips();
+        renderInstructorAssignedBadges();
+        showToast(`Added course ${raw} to instructor allocation.`);
+      } else {
+        showToast(`Course ${raw} is already assigned.`, 'warning');
+      }
+    }
+
+    function removeAssignedInstructorCourse(courseCode) {
+      assignedInstructorCourses = assignedInstructorCourses.filter(c => c !== courseCode);
+      renderInstructorPresetChips();
+      renderInstructorAssignedBadges();
+    }
+
+    function renderInstructorAssignedBadges() {
+      const container = document.getElementById('instructor_assigned_badges_container');
+      if (!container) return;
+      if (assignedInstructorCourses.length === 0) {
+        container.innerHTML = `<span class="text-[11px] text-[#a0b4c4]/60 italic">No courses selected yet. Click from catalog above or type custom.</span>`;
+        return;
+      }
+      container.innerHTML = assignedInstructorCourses.map(c => `
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#0e4d6e]/70 border border-[#7dd3fc]/30 text-[#c8eaff] text-[11px] font-mono">
+          <span>${c}</span>
+          <button type="button" onclick="removeAssignedInstructorCourse('${c}')" class="text-rose-400 hover:text-rose-300 ml-1 text-[12px] font-bold cursor-pointer" title="Remove course">×</button>
+        </span>
+      `).join('');
+    }
+
     function toggleStudentFieldsVisibility() {
       const roleElem = document.getElementById('combo_add_role');
       if (!roleElem) return;
       const role = roleElem.value;
       const studentFields = document.getElementById('group_student_add_fields');
       const staffFields = document.getElementById('group_staff_add_fields');
+      const instructorFields = document.getElementById('group_instructor_add_fields');
+
       if (role === 'Student') {
         if (studentFields) studentFields.classList.remove('hidden');
         if (staffFields) staffFields.classList.add('hidden');
+        if (instructorFields) instructorFields.classList.add('hidden');
+      } else if (role === 'Instructor') {
+        if (studentFields) studentFields.classList.add('hidden');
+        if (staffFields) staffFields.classList.remove('hidden');
+        if (instructorFields) instructorFields.classList.remove('hidden');
+        renderInstructorPresetChips();
+        renderInstructorAssignedBadges();
       } else {
         if (studentFields) studentFields.classList.add('hidden');
         if (staffFields) staffFields.classList.remove('hidden');
+        if (instructorFields) instructorFields.classList.add('hidden');
       }
     }
 
@@ -612,11 +760,19 @@
       if (!roleElem) return;
       const role = roleElem.value;
       const studentFields = document.getElementById('group_edit_student_fields');
+      const instructorFields = document.getElementById('group_edit_instructor_fields');
       if (studentFields) {
         if (role === 'Student') {
           studentFields.classList.remove('hidden');
         } else {
           studentFields.classList.add('hidden');
+        }
+      }
+      if (instructorFields) {
+        if (role === 'Instructor') {
+          instructorFields.classList.remove('hidden');
+        } else {
+          instructorFields.classList.add('hidden');
         }
       }
     }
@@ -685,6 +841,7 @@
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
         const isStudent = u.role === 'Student';
+        const isInstructor = u.role === 'Instructor';
         const studentInfoHtml = isStudent ? `
           <div class="mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
             ${u.studentId ? `<span class="px-1.5 py-0.5 rounded bg-[#1a2438] text-[#7dd3fc] font-mono font-semibold border border-[#7dd3fc]/20">#${u.studentId}</span>` : ''}
@@ -693,11 +850,19 @@
           </div>
         ` : (u.department ? `<div class="mt-0.5 text-[11px] text-[#a0b4c4] truncate max-w-[200px]">${u.department}</div>` : '');
 
+        const instructorCoursesHtml = isInstructor && u.courses && u.courses.length > 0 ? `
+          <div class="mt-1 flex flex-wrap items-center gap-1 text-[10px]">
+            <span class="text-[#a0b4c4]">Teaching:</span>
+            ${u.courses.map(c => `<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e]/60 text-[#7dd3fc] font-mono border border-[#7dd3fc]/30 font-semibold">${c.split(':')[0]}</span>`).join('')}
+          </div>
+        ` : '';
+
         tr.innerHTML = `
           <td class="p-3.5 font-mono text-[#a0b4c4]">#${u.id}</td>
           <td class="p-3.5">
             <div class="font-bold text-white">${u.name || u.fullName || 'User'}</div>
             ${studentInfoHtml}
+            ${instructorCoursesHtml}
           </td>
           <td class="p-3.5">
             <div class="font-mono text-[#7dd3fc]">${u.email}</div>
@@ -740,6 +905,7 @@
       let major = '';
       let year = '';
       let department = '';
+      let assignedCourses = [];
 
       if (role === 'Student') {
         const studentIdInput = document.getElementById('txt_add_student_id');
@@ -752,9 +918,15 @@
         const yearSelect = document.getElementById('combo_add_year');
         year = yearSelect ? yearSelect.value : 'Year 1';
         department = `${major} (${year})`;
+        assignedCourses = ['CS-301', 'ENG-204'];
+      } else if (role === 'Instructor') {
+        const deptSelect = document.getElementById('combo_add_dept');
+        department = deptSelect ? deptSelect.value : 'Faculty of Engineering';
+        assignedCourses = assignedInstructorCourses.length > 0 ? [...assignedInstructorCourses] : ['CS-301', 'CS-402'];
       } else {
         const deptSelect = document.getElementById('combo_add_dept');
         department = deptSelect ? deptSelect.value : 'Faculty of Engineering';
+        assignedCourses = ['System Master Node'];
       }
 
       const newUser = {
@@ -764,6 +936,7 @@
         name: name,
         fullName: name,
         role: role,
+        courses: assignedCourses,
         studentId: studentId || undefined,
         major: major || undefined,
         year: year || undefined,
@@ -777,7 +950,7 @@
         time: new Date().toISOString().replace('T', ' ').slice(0, 19),
         user: (appData.currentUser && (appData.currentUser.name || appData.currentUser.fullName)) || 'Root Systems Admin',
         action: 'Create User Account',
-        details: `${email} (${role}${studentId ? ` • ID #${studentId}` : ''}) • Password configured`
+        details: `${email} (${role}${studentId ? ` • ID #${studentId}` : ''}${role === 'Instructor' ? ` • Teaching: ${assignedCourses.join(', ')}` : ''}) • Password configured`
       });
 
       saveAppData(appData);
@@ -788,10 +961,12 @@
       if (studentIdInput) studentIdInput.value = '';
       const majorField = document.getElementById('txt_add_major');
       if (majorField) majorField.value = 'B.S. Software Engineering';
+      assignedInstructorCourses = ['CS-301', 'CS-402'];
+      renderInstructorAssignedBadges();
       renderAdminUsers();
       renderAuditLogs();
       renderAdminEnrollments();
-      showToast(`User ${name} (${role}${studentId ? ` #${studentId}` : ''}) provisioned with password.`);
+      showToast(`User ${name} (${role}${studentId ? ` #${studentId}` : ''}) provisioned successfully.`);
     }
 
     function openEditUserModal(userId) {
@@ -811,6 +986,11 @@
       if (editMajor && user.major) editMajor.value = user.major;
       const editYear = document.getElementById('edit_user_year');
       if (editYear && (user.year || user.academicYear)) editYear.value = user.year || user.academicYear;
+
+      const editCourses = document.getElementById('edit_user_courses');
+      if (editCourses) {
+        editCourses.value = (user.courses || ['CS-301', 'CS-402']).join(', ');
+      }
 
       toggleEditStudentFieldsVisibility();
       document.getElementById('modal_edit_user').classList.remove('hidden');
@@ -848,6 +1028,12 @@
           }
           if (user.major && user.year) {
             user.department = `${user.major} (${user.year})`;
+          }
+        } else if (user.role === 'Instructor') {
+          const editCourses = document.getElementById('edit_user_courses');
+          if (editCourses) {
+            const raw = editCourses.value.trim();
+            user.courses = raw ? raw.split(',').map(s => s.trim().toUpperCase()).filter(Boolean) : ['CS-301'];
           }
         }
 

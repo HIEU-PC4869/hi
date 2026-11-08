@@ -52,12 +52,12 @@ const DEFAULT_DATA = {
     ]
   },
   users: [
-    { id: 1001, email: 'a.rivera@university.edu', password: 'password123', name: 'Alex Rivera', role: 'Student', studentId: '24091', major: 'B.S. Software Engineering', year: 'Year 3', academicYear: 'Year 3', department: 'B.S. Software Engineering (Year 3)', status: 'Active' },
-    { id: 1002, email: 'dr.vance@university.edu', password: 'password123', name: 'Dr. Evelyn Vance', role: 'Instructor', department: 'Faculty of Engineering', status: 'Active' },
-    { id: 1003, email: 'm.brody@university.edu', password: 'password123', name: 'Marcus Brody', role: 'Advisor', department: 'Student Support Services', status: 'Active' },
-    { id: 1004, email: 'sysadmin@university.edu', password: 'password123', name: 'Root Systems Admin', role: 'Administrator', department: 'Global Campus Administration', status: 'Active' },
-    { id: 1005, email: 'sarah.jenkins@student.univ.edu', password: 'password123', name: 'Sarah Jenkins', role: 'Student', studentId: '24094', major: 'B.S. Computer Science', year: 'Year 2', academicYear: 'Year 2', department: 'B.S. Computer Science (Year 2)', status: 'Flagged (EWS)' },
-    { id: 1006, email: 'david.kim@student.univ.edu', password: 'password123', name: 'David Kim', role: 'Student', studentId: '24108', major: 'B.S. Computer Engineering', year: 'Year 2', academicYear: 'Year 2', department: 'B.Eng. Computer Engineering (Year 2)', status: 'Flagged (EWS)' }
+    { id: 1001, email: 'a.rivera@university.edu', password: 'password123', name: 'Alex Rivera', role: 'Student', studentId: '24091', major: 'B.S. Software Engineering', year: 'Year 3', academicYear: 'Year 3', department: 'B.S. Software Engineering (Year 3)', status: 'Active', courses: ['CS-301', 'ENG-204', 'MATH-310', 'PHY-102'] },
+    { id: 1002, email: 'dr.vance@university.edu', password: 'password123', name: 'Dr. Evelyn Vance', role: 'Instructor', department: 'Faculty of Engineering', status: 'Active', courses: ['CS-301', 'CS-402'] },
+    { id: 1003, email: 'm.brody@university.edu', password: 'password123', name: 'Marcus Brody', role: 'Advisor', department: 'Student Support Services', status: 'Active', courses: ['All CS Undergrads'] },
+    { id: 1004, email: 'sysadmin@university.edu', password: 'password123', name: 'Root Systems Admin', role: 'Administrator', department: 'Global Campus Administration', status: 'Active', courses: ['System Master Node'] },
+    { id: 1005, email: 'sarah.jenkins@student.univ.edu', password: 'password123', name: 'Sarah Jenkins', role: 'Student', studentId: '24094', major: 'B.S. Computer Science', year: 'Year 2', academicYear: 'Year 2', department: 'B.S. Computer Science (Year 2)', status: 'Flagged (EWS)', courses: ['CS-301', 'ENG-204'] },
+    { id: 1006, email: 'david.kim@student.univ.edu', password: 'password123', name: 'David Kim', role: 'Student', studentId: '24108', major: 'B.S. Computer Engineering', year: 'Year 2', academicYear: 'Year 2', department: 'B.Eng. Computer Engineering (Year 2)', status: 'Flagged (EWS)', courses: ['CS-301', 'MATH-310'] }
   ],
   enrollments: [
     { id: 1, userId: 1001, studentName: 'Alex Rivera', course: 'CS-301: Advanced Data Structures', term: 'Fall 2026' },
@@ -98,12 +98,48 @@ function getAppData() {
     if (!data.auditLogs) data.auditLogs = DEFAULT_DATA.auditLogs;
     data.users.forEach(u => {
       if (!u.password) u.password = 'password123';
+      if (!u.courses) {
+        if (u.role === 'Instructor') u.courses = ['CS-301', 'CS-402'];
+        else if (u.role === 'Student') u.courses = ['CS-301', 'ENG-204'];
+        else u.courses = ['System Node'];
+      }
     });
     return data;
   } catch (err) {
     console.error('Failed to parse appData from localStorage:', err);
     return JSON.parse(JSON.stringify(DEFAULT_DATA));
   }
+}
+
+// Helper: Add Course to Catalog and assign to Instructor
+function addCourseForInstructor(instructorId, courseCode, courseTitle) {
+  const data = getAppData();
+  const cleanCode = (courseCode || '').trim().toUpperCase();
+  const cleanTitle = (courseTitle || '').trim();
+  const fullLabel = cleanTitle ? `${cleanCode}: ${cleanTitle}` : cleanCode;
+  
+  if (!data.courses) data.courses = [];
+  if (!data.courses.some(c => c.startsWith(cleanCode))) {
+    data.courses.push(fullLabel);
+  }
+
+  const inst = data.users.find(u => u.id === instructorId || String(u.id) === String(instructorId));
+  if (inst) {
+    if (!inst.courses) inst.courses = [];
+    if (!inst.courses.includes(cleanCode)) {
+      inst.courses.push(cleanCode);
+    }
+  }
+
+  if (data.currentUser && (data.currentUser.id === instructorId || String(data.currentUser.id) === String(instructorId))) {
+    if (!data.currentUser.courses) data.currentUser.courses = [];
+    if (!data.currentUser.courses.includes(cleanCode)) {
+      data.currentUser.courses.push(cleanCode);
+    }
+  }
+
+  saveAppData(data);
+  return data;
 }
 
 function saveAppData(data) {

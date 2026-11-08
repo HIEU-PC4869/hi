@@ -108,6 +108,49 @@ export const Screen1Student: React.FC<Screen1StudentProps> = ({
 
   return (
     <div className="w-full space-y-8">
+      {/* Real-time Active Attendance Broadcast Banner */}
+      {activeSession && activeSession.isActive && (
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-rose-950/70 via-[#141c2e] to-rose-950/70 border-2 border-rose-500/50 p-4 md:p-5 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/40 shrink-0">
+              <span className="material-symbols-outlined text-2xl animate-pulse">sensors</span>
+              <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse">
+                  ● Live Attendance Open
+                </span>
+                <span className="text-xs font-mono font-bold text-amber-300 bg-black/40 px-2 py-0.5 rounded">
+                  PIN: {activeSession.sessionCode}
+                </span>
+              </div>
+              <div className="text-sm md:text-base font-bold text-white mt-1">
+                Active Course: <span className="text-[#7dd3fc]">{activeSession.courseName || activeSession.courseCode}</span>
+              </div>
+              <div className="text-xs text-[#a0b4c4]">
+                Instructor has opened the attendance window. Click below to auto-select this course and check in.
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCourse(activeSession.courseCode);
+              const el = document.getElementById('txt_student_pin');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.focus();
+              }
+            }}
+            className="shrink-0 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-900/40 flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-base">bolt</span>
+            <span>Check In to {activeSession.courseCode}</span>
+          </button>
+        </div>
+      )}
+
       {/* Banner Card */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#141c2e] via-[#1a2438]/70 to-[#141c2e] p-6 shadow-xl border border-[#7dd3fc]/10 backdrop-blur-xl">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#7dd3fc]/10 blur-3xl pointer-events-none"></div>

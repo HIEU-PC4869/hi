@@ -12,7 +12,8 @@ interface Screen4AdminProps {
     studentId?: string,
     major?: string,
     academicYear?: string,
-    password?: string
+    password?: string,
+    courses?: string[]
   ) => void;
   onDeleteUser: (userId: number) => void;
   onExportSystemReport: () => void;
@@ -34,6 +35,8 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
   const [newMajor, setNewMajor] = useState('B.S. Software Engineering');
   const [newAcademicYear, setNewAcademicYear] = useState('Year 1');
   const [newDepartment, setNewDepartment] = useState('Dept. of Computer Science');
+  const [instructorCourses, setInstructorCourses] = useState<string[]>(['CS-301', 'CS-402']);
+  const [customCourseInput, setCustomCourseInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | User['role']>('all');
   const [showAuditModal, setShowAuditModal] = useState(false);
@@ -55,6 +58,10 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
       return;
     }
 
+    const assigned = newRole === 'Instructor' 
+      ? (instructorCourses.length > 0 ? instructorCourses : ['CS-301', 'CS-402'])
+      : (newRole === 'Student' ? ['CS-301', 'ENG-204'] : ['System Node']);
+
     onAddUser(
       newEmail.trim(),
       newRole,
@@ -63,13 +70,15 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
       newStudentId.trim() || undefined,
       newRole === 'Student' ? newMajor : undefined,
       newRole === 'Student' ? newAcademicYear : undefined,
-      newPassword.trim() || 'password123'
+      newPassword.trim() || 'password123',
+      assigned
     );
-    setAddNotice(`Provisioned identity: ${newFullName || newEmail.trim()} as ${newRole} (Password: ${newPassword.trim() || 'password123'}).`);
+    setAddNotice(`Provisioned identity: ${newFullName || newEmail.trim()} as ${newRole} (Password: ${newPassword.trim() || 'password123'}${newRole === 'Instructor' ? `, Courses: ${assigned.join(', ')}` : ''}).`);
     setNewEmail('');
     setNewFullName('');
     setNewStudentId('');
     setNewPassword('password123');
+    setInstructorCourses(['CS-301', 'CS-402']);
     setTimeout(() => setAddNotice(null), 4000);
   };
 
@@ -363,6 +372,110 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
                     <option value="Year 4">Year 4 (Senior)</option>
                     <option value="Graduate">Graduate (Master's / Ph.D.)</option>
                   </select>
+                </div>
+              </div>
+            </div>
+          ) : newRole === 'Instructor' ? (
+            <div className="p-3.5 rounded-xl bg-[#111828]/80 border border-[#7dd3fc]/20 space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold text-[#7dd3fc]">
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-sm">menu_book</span>
+                  <span>Instructor Teaching Dossier & Course Allocation</span>
+                </div>
+                <span className="text-[10px] text-[#a0b4c4] font-mono">Assigned: {instructorCourses.length}</span>
+              </div>
+
+              {/* Course Catalog Chips */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-[#a0b4c4]">
+                  Select from University Catalog:
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { code: 'CS-301', title: 'Data Structures' },
+                    { code: 'CS-402', title: 'Cloud DevOps' },
+                    { code: 'ENG-204', title: 'Technical Comm' },
+                    { code: 'MATH-310', title: 'Linear Algebra' },
+                    { code: 'PHY-102', title: 'Physics II' },
+                    { code: 'SWE-420', title: 'Architecture' },
+                    { code: 'AI-315', title: 'Machine Learning' }
+                  ].map((c) => {
+                    const isSelected = instructorCourses.includes(c.code);
+                    return (
+                      <button
+                        key={c.code}
+                        type="button"
+                        onClick={() => {
+                          if (isSelected) {
+                            setInstructorCourses(instructorCourses.filter((code) => code !== c.code));
+                          } else {
+                            setInstructorCourses([...instructorCourses, c.code]);
+                          }
+                        }}
+                        className={`text-[10px] px-2 py-1 rounded-lg border transition-all cursor-pointer flex items-center gap-1 ${
+                          isSelected
+                            ? 'bg-emerald-950/70 border-emerald-500/50 text-emerald-300 font-semibold'
+                            : 'bg-[#141c2e] border-white/10 text-[#a0b4c4] hover:text-white hover:border-[#7dd3fc]/40'
+                        }`}
+                      >
+                        <span>{isSelected ? '✓' : '+'}</span>
+                        <span>{c.code}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Custom Course Add */}
+              <div className="space-y-1.5 pt-1 border-t border-white/5">
+                <label className="block text-xs font-medium text-[#a0b4c4]">
+                  Or Add Custom Course Code:
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={customCourseInput}
+                    onChange={(e) => setCustomCourseInput(e.target.value)}
+                    placeholder="e.g. CS-505 or SWE-420"
+                    className="flex-1 h-8 px-3 rounded-lg bg-[#141c2e] border border-white/10 text-xs text-white font-mono uppercase focus:outline-none focus:border-emerald-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const clean = customCourseInput.trim().toUpperCase();
+                      if (!clean) return;
+                      if (!instructorCourses.includes(clean)) {
+                        setInstructorCourses([...instructorCourses, clean]);
+                        setCustomCourseInput('');
+                      }
+                    }}
+                    className="h-8 px-3 rounded-lg bg-[#0e4d6e] hover:bg-[#1a3a4e] text-[#c8eaff] text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm">add</span>
+                    <span>Add</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Badges preview */}
+              <div className="space-y-1">
+                <div className="text-[10px] text-[#a0b4c4]">Allocated Teaching Courses:</div>
+                <div className="flex flex-wrap gap-1.5 min-h-[28px] p-2 rounded-lg bg-[#141c2e] border border-white/5">
+                  {instructorCourses.map((c) => (
+                    <span
+                      key={c}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#0e4d6e]/70 border border-[#7dd3fc]/30 text-[#c8eaff] text-[11px] font-mono"
+                    >
+                      <span>{c}</span>
+                      <button
+                        type="button"
+                        onClick={() => setInstructorCourses(instructorCourses.filter((code) => code !== c))}
+                        className="text-rose-400 hover:text-rose-300 ml-1 text-xs cursor-pointer font-bold"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>

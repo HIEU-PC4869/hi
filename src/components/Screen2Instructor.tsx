@@ -11,6 +11,7 @@ interface Screen2InstructorProps {
   onOverrideStatus: (attendanceId: number, newStatus: RosterStudent['status']) => void;
   onReviewExcuse: (excuseId: number, decision: 'Approved' | 'Rejected') => void;
   onExportReport: (courseCode: string) => void;
+  onAddCourse?: (newCourse: Course) => void;
 }
 
 export const Screen2Instructor: React.FC<Screen2InstructorProps> = ({
@@ -23,8 +24,13 @@ export const Screen2Instructor: React.FC<Screen2InstructorProps> = ({
   onOverrideStatus,
   onReviewExcuse,
   onExportReport,
+  onAddCourse,
 }) => {
   const [selectedCourse, setSelectedCourse] = useState(courses[0]?.code || 'CS-301');
+  const [showAddCourseModal, setShowAddCourseModal] = useState(false);
+  const [newCode, setNewCode] = useState('');
+  const [newName, setNewName] = useState('');
+  const [newRoom, setNewRoom] = useState('Hall B-12');
   const [filterTab, setFilterTab] = useState<'all' | 'present' | 'late' | 'absent'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedExcuseId, setSelectedExcuseId] = useState<number>(excuses[0]?.id || 1);
@@ -112,6 +118,15 @@ export const Screen2Instructor: React.FC<Screen2InstructorProps> = ({
               expand_more
             </span>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setShowAddCourseModal(true)}
+            className="flex items-center gap-1.5 px-3.5 py-3 rounded-xl bg-[#0e4d6e]/80 hover:bg-[#0e4d6e] border border-[#7dd3fc]/30 text-[#c8eaff] text-xs font-semibold shadow-md backdrop-blur-xl transition-all cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-base">add_circle</span>
+            <span>+ Add Course</span>
+          </button>
 
           <button
             id="btn_export_course_report"
@@ -623,6 +638,99 @@ export const Screen2Instructor: React.FC<Screen2InstructorProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Add Course Modal */}
+      {showAddCourseModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl bg-[#141c2e] border border-[#7dd3fc]/30 p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2 text-[#7dd3fc]">
+                <span className="material-symbols-outlined text-lg">library_add</span>
+                <h3 className="text-base font-bold text-white">Add Teaching Course</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddCourseModal(false)}
+                className="text-[#a0b4c4] hover:text-white cursor-pointer"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newCode.trim() || !newName.trim()) return;
+                const courseObj: Course = {
+                  id: Math.floor(100 + Math.random() * 900),
+                  code: newCode.trim().toUpperCase(),
+                  name: newName.trim(),
+                  location: newRoom.trim() || 'Hall B-12',
+                  schedule: 'Mon/Wed 10:00 AM',
+                };
+                if (onAddCourse) onAddCourse(courseObj);
+                setSelectedCourse(courseObj.code);
+                setShowAddCourseModal(false);
+                setNewCode('');
+                setNewName('');
+              }}
+              className="space-y-3.5 text-xs"
+            >
+              <div className="space-y-1">
+                <label className="text-[#a0b4c4] font-medium">Course Code</label>
+                <input
+                  type="text"
+                  required
+                  value={newCode}
+                  onChange={(e) => setNewCode(e.target.value)}
+                  placeholder="e.g. CS-505 or SWE-420"
+                  className="w-full h-10 px-3 rounded-xl bg-[#111828] border border-white/10 text-white font-mono uppercase focus:outline-none focus:border-[#7dd3fc]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[#a0b4c4] font-medium">Course Title</label>
+                <input
+                  type="text"
+                  required
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="e.g. Distributed Systems & Cloud Infrastructure"
+                  className="w-full h-10 px-3 rounded-xl bg-[#111828] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[#a0b4c4] font-medium">Room / Hall</label>
+                <input
+                  type="text"
+                  value={newRoom}
+                  onChange={(e) => setNewRoom(e.target.value)}
+                  placeholder="e.g. Hall B-12"
+                  className="w-full h-10 px-3 rounded-xl bg-[#111828] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]"
+                />
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowAddCourseModal(false)}
+                  className="px-4 py-2 rounded-xl bg-[#1a2438] text-[#a0b4c4] hover:text-white cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-sm">add_task</span>
+                  <span>Add Course</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

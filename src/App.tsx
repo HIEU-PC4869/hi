@@ -26,6 +26,7 @@ import {
 
 import {
   User,
+  Course,
   StudentCourseStat,
   ActiveSession,
   RosterStudent,
@@ -40,7 +41,7 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<number>(1);
   const [users, setUsers] = useState<User[]>(INITIAL_USERS);
   const [currentUser, setCurrentUser] = useState<User>(INITIAL_USERS[0]); // Alex Rivera
-  const [courses] = useState(INITIAL_COURSES);
+  const [courses, setCourses] = useState<Course[]>(INITIAL_COURSES);
   const [stats, setStats] = useState<StudentCourseStat[]>(INITIAL_STUDENT_STATS);
   const [roster, setRoster] = useState<RosterStudent[]>(INITIAL_ROSTER);
   const [excuses, setExcuses] = useState<ExcuseRequest[]>(INITIAL_EXCUSES);
@@ -444,7 +445,8 @@ export default function App() {
     studentId?: string,
     major?: string,
     academicYear?: string,
-    password?: string
+    password?: string,
+    courses?: string[]
   ) => {
     if (!hasActionPermission(currentUser.role, 'canManageUsers')) {
       showToast('Permission Denied: Administrator role required to provision new user accounts.', 'error');
@@ -452,6 +454,10 @@ export default function App() {
     }
     const derivedName = fullName?.trim() || email.split('@')[0].replace(/[._-]+/g, ' ').toUpperCase();
     const effectiveDept = role === 'Student' && major ? `${major} (${academicYear || 'Year 1'})` : (department || 'Dept. of Computer Science');
+
+    const assignedCourses = courses && courses.length > 0 
+      ? courses 
+      : (role === 'Student' ? ['CS-301', 'ENG-204'] : (role === 'Instructor' ? ['CS-301', 'CS-402'] : ['System Node']));
 
     const newUser: User = {
       id: Math.floor(1000 + Math.random() * 9000),
@@ -464,7 +470,7 @@ export default function App() {
       academicYear: role === 'Student' ? academicYear : undefined,
       department: effectiveDept,
       status: 'Active',
-      courses: role === 'Student' ? ['CS-301', 'ENG-204'] : ['CS-301'],
+      courses: assignedCourses,
       lastLogin: 'Just provisioned',
     };
     setUsers((prev) => [newUser, ...prev]);
@@ -556,6 +562,10 @@ export default function App() {
                   onOverrideStatus={handleOverrideStatus}
                   onReviewExcuse={handleReviewExcuse}
                   onExportReport={handleExportCourseReport}
+                  onAddCourse={(newCourse) => {
+                    setCourses((prev) => prev.some((c) => c.code === newCourse.code) ? prev : [...prev, newCourse]);
+                    showToast(`Course ${newCourse.code} added to catalog.`, 'success');
+                  }}
                 />
               )}
 
