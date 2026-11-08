@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAS Enterprise - Academic Advisor Hub</title>
+  <meta name="description" content="Academic Advising and Early Warning System (EWS) for at-risk student monitoring and intervention." />
+  
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload" />
+  <script>
+    (function enforceHttps() {
+      if (typeof window !== 'undefined' && window.location) {
+        if (window.location.protocol === 'http:' && !['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)) {
+          window.location.replace(window.location.href.replace(/^http:/, 'https:'));
+        }
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#0a0e1a",
+            surface: "#0f1524",
+            "surface-container": "#141c2e",
+            "surface-container-high": "#1a2438",
+            primary: "#7dd3fc",
+            "primary-container": "#0e4d6e",
+            secondary: "#88b4cc",
+            tertiary: "#c8a0f0",
+            error: "#ff6b6b"
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0a0e1a;
+      color: #e0e8f0;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+    .glass-card-glow {
+      background: rgba(20, 28, 46, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(125, 211, 252, 0.15);
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(125, 211, 252, 0.08);
+    }
+    .glass-card {
+      background: rgba(20, 28, 46, 0.65);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- TOP HEADER -->
+  <header class="border-b border-white/10 bg-[#0f1524]/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="h-16 px-4 md:px-8 max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand & Advisor Badge -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1a2438] border border-[#c8a0f0]/30 shadow-lg text-[#c8a0f0]">
+          <span class="material-symbols-outlined text-2xl">warning</span>
+        </div>
+        <div>
+          <div class="text-sm md:text-base font-bold tracking-tight text-[#e0e8f0] flex items-center gap-2">
+            SAS Enterprise
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#3d2060] text-[#c8a0f0] border border-[#c8a0f0]/30">Advisor Hub</span>
+          </div>
+          <div class="text-[11px] text-[#a0b4c4] hidden sm:block">
+            Early Warning System (EWS) & Retention Counseling
+          </div>
+        </div>
+      </div>
+
+      <!-- User Dossier & Sign Out -->
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-medium shadow-sm">
+          <span class="material-symbols-outlined text-xs">lock</span>
+          <span>HTTPS Strict</span>
+        </div>
+
+        <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#141c2e] border border-white/10">
+          <div class="w-8 h-8 rounded-full bg-[#3d2060] text-[#c8a0f0] font-bold text-xs flex items-center justify-center" id="header_advisor_avatar">
+            MB
+          </div>
+          <div class="flex flex-col text-left">
+            <span class="text-xs font-bold text-white" id="header_advisor_name">Marcus Brody</span>
+            <span class="text-[10px] text-[#c8a0f0]" id="header_advisor_dept">Student Support Services</span>
+          </div>
+        </div>
+
+        <button
+          id="btn_logout"
+          type="button"
+          onclick="handleLogout()"
+          title="Sign out of the system"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3d1414]/80 hover:bg-[#ff6b6b] text-[#ff8080] hover:text-[#0a0e1a] border border-[#ff6b6b]/40 text-xs font-semibold shadow-md transition-all active:scale-95 cursor-pointer"
+        >
+          <span class="material-symbols-outlined text-sm">logout</span>
+          <span class="hidden sm:inline">Sign Out</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN ADVISOR VIEWPORT -->
+  <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full space-y-6">
+
+    <!-- Header Banner -->
+    <div class="glass-card-glow rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="text-xs font-semibold text-[#c8a0f0] tracking-wider uppercase">Academic Advising • Counseling Services</div>
+        <h1 class="text-2xl font-bold text-white mt-1">Early Warning System (EWS)</h1>
+        <p class="text-xs text-[#a0b4c4]" id="advisor_welcome_subtext">Advisor: Marcus Brody • Student Support Services</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="px-3.5 py-1.5 rounded-full bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-semibold flex items-center gap-2 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+          <span>2 High-Risk Students Flagged</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Advisor Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- FUNCTION 1: EARLY WARNING FILTER TABLE (table_advisor_warnings) -->
+      <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-rose-400">warning</span>
+            At-Risk Student Intervention List (table_advisor_warnings)
+          </h2>
+          <p class="text-xs text-[#a0b4c4]">
+            Automatically filters students with &lt; 80% attendance or 3 consecutive absences. Click any row to open their intervention dossier.
+          </p>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-white/10">
+          <table class="w-full text-left text-xs" id="table_advisor_warnings">
+            <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
+              <tr>
+                <th class="p-3.5">Student</th>
+                <th class="p-3.5">Course</th>
+                <th class="p-3.5 text-center">Attendance %</th>
+                <th class="p-3.5 text-center">Consecutive Absences</th>
+                <th class="p-3.5 text-right">Risk Level</th>
+              </tr>
+            </thead>
+            <tbody id="table_advisor_warnings_body" class="divide-y divide-white/5 cursor-pointer">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FUNCTION 2: INTERVENTION & COUNSELING NOTES (txt_counseling_notes, btn_save_notes) -->
+      <div class="glass-card-glow rounded-2xl p-6 space-y-4">
+        <div class="flex items-center gap-2 text-[#c8a0f0]">
+          <span class="material-symbols-outlined text-xl">edit_note</span>
+          <h2 class="text-base font-bold text-white">Intervention Dossier</h2>
+        </div>
+        
+        <div class="p-3.5 rounded-xl bg-[#141c2e] border border-white/10 text-xs space-y-1">
+          <div class="text-[#a0b4c4]">Selected Student:</div>
+          <div class="font-bold text-[#7dd3fc] text-sm" id="counseling_selected_student">Sarah Jenkins (#24094)</div>
+          <div class="text-[11px] text-[#a0b4c4]">Course: CS-301 • Attendance: 71.4%</div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs text-[#a0b4c4]">Counseling Notes (txt_counseling_notes)</label>
+          <textarea id="txt_counseling_notes" rows="4"
+            placeholder="e.g. Conducted phone counseling on 10/22. Student reported illness; scheduled academic tutoring session..."
+            class="w-full p-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#c8a0f0]"></textarea>
+        </div>
+
+        <button id="btn_save_notes" onclick="handleSaveCounselingNotes()"
+          class="w-full h-11 rounded-xl bg-gradient-to-r from-[#3d2060] to-[#c8a0f0] text-[#1a002e] font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-sm">save</span>
+          <span>Save Counseling Notes</span>
+        </button>
+
+        <!-- Previous Notes History -->
+        <div class="pt-3 border-t border-white/10 space-y-2">
+          <div class="text-[11px] font-semibold text-[#a0b4c4]">Previous Intervention History:</div>
+          <div id="counseling_history_list" class="space-y-2 text-[11px] text-[#a0b4c4] max-h-48 overflow-y-auto pr-1">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script>
+    let appData = getAppData();
+    let selectedStudentIdForCounseling = '24094';
+
+    function initAdvisorPage() {
+      if (!enforceRoleGuard('Advisor', 'Advisor Hub')) return;
+
+      const user = appData.currentUser;
+      const userName = user.name || user.fullName || 'Marcus Brody';
+      const dept = user.department || 'Student Support Services';
+
+      document.getElementById('header_advisor_name').innerText = userName;
+      document.getElementById('header_advisor_dept').innerText = dept;
+      document.getElementById('header_advisor_avatar').innerText = userName.split(' ').map(n => n[0]).join('').slice(0, 2);
+      document.getElementById('advisor_welcome_subtext').innerText = `Advisor: ${userName} • ${dept}`;
+
+      renderAdvisorWarnings();
+      renderCounselingHistory();
+    }
+
+    function renderAdvisorWarnings() {
+      const tbody = document.getElementById('table_advisor_warnings_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      appData.warnings.forEach(w => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/10 transition-colors';
+        tr.onclick = () => selectStudentForCounseling(w.studentId, w.name, w.course, w.pct);
+        tr.innerHTML = `
+          <td class="p-3.5">
+            <div class="font-bold text-white">${w.name}</div>
+            <div class="text-[10px] text-[#a0b4c4] font-mono">#${w.studentId}</div>
+          </td>
+          <td class="p-3.5 font-bold text-[#7dd3fc]">${w.course}</td>
+          <td class="p-3.5 text-center font-mono font-bold text-rose-400">${w.pct}%</td>
+          <td class="p-3.5 text-center font-mono font-bold text-amber-400">${w.consecutiveAbsences} consecutive</td>
+          <td class="p-3.5 text-right">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
+              w.risk === 'Critical' ? 'bg-rose-950 text-rose-300 border border-rose-500/50' : 'bg-amber-950 text-amber-300 border border-amber-500/50'
+            }">● ${w.risk}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function selectStudentForCounseling(studentId, name, course, pct) {
+      selectedStudentIdForCounseling = studentId;
+      document.getElementById('counseling_selected_student').innerText = `${name} (#${studentId})`;
+      renderCounselingHistory();
+    }
+
+    function renderCounselingHistory() {
+      const container = document.getElementById('counseling_history_list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const notes = appData.counselingNotes[selectedStudentIdForCounseling] || [];
+      if (notes.length === 0) {
+        container.innerHTML = '<div class="text-[#a0b4c4] italic p-2">No intervention history recorded for this student.</div>';
+        return;
+      }
+
+      notes.forEach(n => {
+        const div = document.createElement('div');
+        div.className = 'p-2.5 rounded-lg bg-[#141c2e] border border-white/5 space-y-1';
+        div.innerHTML = `
+          <div class="flex items-center justify-between text-[10px] text-[#7dd3fc]">
+            <span>${n.advisor}</span>
+            <span class="font-mono text-[#a0b4c4]">${n.date}</span>
+          </div>
+          <div class="text-white text-xs leading-relaxed">${n.text}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function handleSaveCounselingNotes() {
+      const text = document.getElementById('txt_counseling_notes').value.trim();
+      if (!text) {
+        showToast('Please enter counseling notes before saving.', 'warning');
+        return;
+      }
+
+      if (!appData.counselingNotes[selectedStudentIdForCounseling]) {
+        appData.counselingNotes[selectedStudentIdForCounseling] = [];
+      }
+
+      const user = appData.currentUser;
+      const advisorName = user ? (user.name || user.fullName) : 'Marcus Brody';
+
+      const now = new Date().toISOString().replace('T', ' ').slice(0, 16);
+      appData.counselingNotes[selectedStudentIdForCounseling].unshift({
+        date: now,
+        advisor: advisorName,
+        text: text
+      });
+
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: `${advisorName} (Advisor)`,
+        action: 'Save Intervention Note',
+        details: `Student #${selectedStudentIdForCounseling}: ${text.slice(0, 45)}...`
+      });
+
+      saveAppData(appData);
+      document.getElementById('txt_counseling_notes').value = '';
+      renderCounselingHistory();
+      showToast('Counseling notes saved to student dossier.');
+    }
+
+    window.addEventListener('DOMContentLoaded', initAdvisorPage);
+  </script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAS Enterprise - Student Portal</title>
+  <meta name="description" content="Student self-service attendance portal: direct PIN check-in, statistics, and absence excuses." />
+  
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload" />
+  <script>
+    (function enforceHttps() {
+      if (typeof window !== 'undefined' && window.location) {
+        if (window.location.protocol === 'http:' && !['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)) {
+          window.location.replace(window.location.href.replace(/^http:/, 'https:'));
+        }
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#0a0e1a",
+            surface: "#0f1524",
+            "surface-container": "#141c2e",
+            "surface-container-high": "#1a2438",
+            primary: "#7dd3fc",
+            "primary-container": "#0e4d6e",
+            secondary: "#88b4cc",
+            tertiary: "#c8a0f0",
+            error: "#ff6b6b"
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0a0e1a;
+      color: #e0e8f0;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+    .glass-card-glow {
+      background: rgba(20, 28, 46, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(125, 211, 252, 0.15);
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(125, 211, 252, 0.08);
+    }
+    .glass-card {
+      background: rgba(20, 28, 46, 0.65);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- TOP HEADER -->
+  <header class="border-b border-white/10 bg-[#0f1524]/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="h-16 px-4 md:px-8 max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand & Student Badge -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/30 shadow-lg text-[#7dd3fc]">
+          <span class="material-symbols-outlined text-2xl">school</span>
+        </div>
+        <div>
+          <div class="text-sm md:text-base font-bold tracking-tight text-[#e0e8f0] flex items-center gap-2">
+            SAS Enterprise
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30">Student Portal</span>
+          </div>
+          <div class="text-[11px] text-[#a0b4c4] hidden sm:block">
+            Self-Service Attendance & Course Compliance
+          </div>
+        </div>
+      </div>
+
+      <!-- User Dossier & Sign Out -->
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-medium shadow-sm">
+          <span class="material-symbols-outlined text-xs">lock</span>
+          <span>HTTPS Strict</span>
+        </div>
+
+        <!-- Student Profile Pill -->
+        <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#141c2e] border border-white/10">
+          <div class="w-8 h-8 rounded-full bg-[#0e4d6e] text-[#c8eaff] font-bold text-xs flex items-center justify-center" id="header_student_avatar">
+            AR
+          </div>
+          <div class="flex flex-col text-left">
+            <span class="text-xs font-bold text-white" id="header_student_name">Alex Rivera</span>
+            <div class="flex items-center gap-1.5 text-[10px]">
+              <span class="text-[#7dd3fc] font-mono" id="header_student_id">#24091</span>
+              <span class="text-[#a0b4c4] hidden sm:inline" id="header_student_major">• B.S. Software Eng</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sign Out Button -->
+        <button
+          id="btn_logout"
+          type="button"
+          onclick="handleLogout()"
+          title="Sign out of the system"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3d1414]/80 hover:bg-[#ff6b6b] text-[#ff8080] hover:text-[#0a0e1a] border border-[#ff6b6b]/40 text-xs font-semibold shadow-md transition-all active:scale-95 cursor-pointer"
+        >
+          <span class="material-symbols-outlined text-sm">logout</span>
+          <span class="hidden sm:inline">Sign Out</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN STUDENT VIEWPORT -->
+  <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full space-y-6">
+
+    <!-- Welcome Banner with Academic Dossier -->
+    <div class="glass-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="text-xs font-semibold text-[#7dd3fc] tracking-wider uppercase">Student Portal • Academic Year 2026</div>
+        <h1 class="text-2xl font-extrabold text-white mt-1" id="student_welcome_name">Welcome back, Alex Rivera</h1>
+        <p class="text-xs text-[#a0b4c4] mt-0.5" id="student_welcome_subtext">Student ID: #24091 • B.S. Software Engineering (Year 3)</p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="px-4 py-2 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/20 text-center">
+          <div class="text-[10px] text-[#a0b4c4]">Overall Attendance</div>
+          <div class="text-lg font-bold text-emerald-400" id="overall_attendance_stat">92.8%</div>
+        </div>
+        <div class="px-4 py-2 rounded-xl bg-[#1a2438] border border-[#7dd3fc]/20 text-center">
+          <div class="text-[10px] text-[#a0b4c4]">Academic Standing</div>
+          <div class="text-xs font-bold text-[#7dd3fc] mt-1">Good Standing</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Functions Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- FUNCTION 1: DIRECT PIN CHECK-IN -->
+      <div class="glass-card-glow rounded-2xl p-6 space-y-4">
+        <div class="flex items-center gap-2 text-[#7dd3fc]">
+          <span class="material-symbols-outlined text-xl">qr_code_scanner</span>
+          <h2 class="text-base font-bold text-white">Direct Attendance Check-In</h2>
+        </div>
+        <p class="text-xs text-[#a0b4c4]">
+          Enter the active 6-digit session PIN displayed on the classroom projection screen:
+        </p>
+
+        <form onsubmit="handleStudentCheckIn(event)" class="space-y-3.5">
+          <div class="space-y-1">
+            <label class="text-xs text-[#a0b4c4]">Enrolled Course (combo_student_courses)</label>
+            <select id="combo_student_courses" class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/20 text-xs text-white focus:outline-none focus:border-[#7dd3fc] cursor-pointer">
+              <option value="CS-301">CS-301: Advanced Data Structures</option>
+              <option value="ENG-204">ENG-204: Technical Communication</option>
+              <option value="MATH-310">MATH-310: Linear Algebra</option>
+              <option value="PHY-102">PHY-102: Engineering Physics II</option>
+            </select>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs text-[#a0b4c4] flex items-center justify-between">
+              <span>PIN / QR Code (txt_qr_code)</span>
+              <span class="text-[10px] text-[#7dd3fc] font-mono">6 digits</span>
+            </label>
+            <input id="txt_qr_code" type="text" placeholder="e.g. 849-210" required
+              class="w-full h-11 px-4 rounded-xl bg-[#141c2e] border border-[#7dd3fc]/30 text-lg font-mono font-bold tracking-widest text-[#7dd3fc] placeholder-[#a0b4c4]/30 focus:outline-none focus:border-[#7dd3fc]" />
+            <div class="text-[10px] text-[#a0b4c4] flex items-center gap-1 pt-1">
+              <span class="material-symbols-outlined text-[13px] text-amber-400">info</span>
+              <span>Active PIN from Instructor: <b class="text-[#7dd3fc] font-mono" id="student_hint_pin">849-210</b></span>
+            </div>
+          </div>
+
+          <button id="btn_submit_attendance" type="submit"
+            class="w-full h-11 rounded-xl bg-gradient-to-r from-[#0e4d6e] to-[#7dd3fc] text-[#001f2e] font-bold text-xs shadow-md hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">how_to_reg</span>
+            <span>Submit Attendance</span>
+          </button>
+        </form>
+
+        <!-- Status Feedback Container (lbl_checkin_status) -->
+        <div id="lbl_checkin_status" class="hidden p-3 rounded-xl text-xs flex items-center gap-2 transition-all"></div>
+      </div>
+
+      <!-- FUNCTION 3: SUBMIT EXCUSE REQUEST -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex items-center gap-2 text-[#c8a0f0]">
+          <span class="material-symbols-outlined text-xl">event_busy</span>
+          <h2 class="text-base font-bold text-white">Submit Excuse Request</h2>
+        </div>
+        <p class="text-xs text-[#a0b4c4]">
+          Submit legitimate absence documentation for instructor verification and approval:
+        </p>
+
+        <form onsubmit="handleStudentExcuseSubmit(event)" class="space-y-3">
+          <div class="space-y-1">
+            <label class="text-xs text-[#a0b4c4]">Course (combo_excuse_course)</label>
+            <select id="combo_excuse_course" class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#c8a0f0] cursor-pointer">
+              <option value="CS-301">CS-301: Advanced Data Structures</option>
+              <option value="ENG-204">ENG-204: Technical Communication</option>
+              <option value="MATH-310">MATH-310: Linear Algebra</option>
+              <option value="PHY-102">PHY-102: Engineering Physics II</option>
+            </select>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs text-[#a0b4c4]">Absence Date (date_excuse)</label>
+            <input id="date_excuse" type="date" required
+              class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#c8a0f0]" />
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs text-[#a0b4c4]">Reason (txt_excuse_reason)</label>
+            <textarea id="txt_excuse_reason" rows="2" placeholder="e.g. Attending ACM-ICPC regional robotics contest..." required
+              class="w-full p-2.5 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#c8a0f0]"></textarea>
+          </div>
+
+          <button id="btn_submit_excuse" type="submit"
+            class="w-full h-10 rounded-xl bg-[#3d2060] hover:bg-[#4d2a73] text-[#c8a0f0] border border-[#c8a0f0]/30 font-semibold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">send</span>
+            <span>Submit Excuse (Pending)</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- EXCUSE TRACKER -->
+      <div class="glass-card rounded-2xl p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm text-[#7dd3fc]">history</span>
+            Submitted Excuse Requests
+          </h2>
+          <span class="text-[10px] text-[#a0b4c4]">Live Status</span>
+        </div>
+        <div id="student_excuse_list" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FUNCTION 2: PERSONAL ATTENDANCE STATISTICS TABLE -->
+    <div class="glass-card rounded-2xl p-6 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#7dd3fc]">table_chart</span>
+            Personal Attendance Statistics (table_student_stats)
+          </h2>
+          <p class="text-xs text-[#a0b4c4]">Formula: (Present + Late * 0.8) / Total Sessions</p>
+        </div>
+        <div class="text-xs text-emerald-400 flex items-center gap-1 font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          Compliant (&gt;= 80% Attendance Threshold)
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-white/10">
+        <table class="w-full text-left text-xs" id="table_student_stats">
+          <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10">
+            <tr>
+              <th class="p-3.5">Course Code</th>
+              <th class="p-3.5">Course Title</th>
+              <th class="p-3.5 text-center">Total Sessions</th>
+              <th class="p-3.5 text-center text-emerald-400">Present</th>
+              <th class="p-3.5 text-center text-amber-400">Late</th>
+              <th class="p-3.5 text-center text-rose-400">Absent</th>
+              <th class="p-3.5 text-center text-[#c8a0f0]">Excused</th>
+              <th class="p-3.5 text-center">Attendance (%)</th>
+              <th class="p-3.5 text-right">Standing</th>
+            </tr>
+          </thead>
+          <tbody id="table_student_stats_body" class="divide-y divide-white/5 font-mono">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script>
+    let appData = getAppData();
+
+    function initStudentPage() {
+      // Guard: Ensure user is Student
+      if (!enforceRoleGuard('Student', 'Student Portal')) return;
+
+      const user = appData.currentUser;
+      const userName = user.name || user.fullName || 'Student';
+      const studentId = user.studentId || '24091';
+      const major = user.major || 'B.S. Software Engineering';
+      const year = user.year || user.academicYear || 'Year 3';
+
+      // Header info
+      document.getElementById('header_student_name').innerText = userName;
+      document.getElementById('header_student_id').innerText = `#${studentId}`;
+      document.getElementById('header_student_major').innerText = `• ${major} (${year})`;
+      document.getElementById('header_student_avatar').innerText = userName.split(' ').map(n => n[0]).join('').slice(0, 2);
+
+      // Banner info
+      document.getElementById('student_welcome_name').innerText = `Welcome back, ${userName}`;
+      document.getElementById('student_welcome_subtext').innerText = `Student ID: #${studentId} • ${major} (${year})`;
+
+      // Date default
+      const dateInput = document.getElementById('date_excuse');
+      if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+
+      renderStudentStats();
+      renderStudentExcuses();
+    }
+
+    function renderStudentStats() {
+      const tbody = document.getElementById('table_student_stats_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      let totalPresent = 0;
+      let totalSessions = 0;
+
+      appData.stats.forEach(s => {
+        totalPresent += s.present;
+        totalSessions += s.total;
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3.5 font-bold text-[#7dd3fc]">${s.code}</td>
+          <td class="p-3.5 text-white font-sans">${s.name}</td>
+          <td class="p-3.5 text-center text-[#a0b4c4]">${s.total}</td>
+          <td class="p-3.5 text-center font-bold text-emerald-400">${s.present}</td>
+          <td class="p-3.5 text-center font-bold text-amber-400">${s.late}</td>
+          <td class="p-3.5 text-center font-bold text-rose-400">${s.absent}</td>
+          <td class="p-3.5 text-center font-bold text-[#c8a0f0]">${s.excused}</td>
+          <td class="p-3.5 text-center font-bold text-white">${s.pct}%</td>
+          <td class="p-3.5 text-right font-sans">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold ${
+              s.pct >= 90 ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30' : 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
+            }">${s.status}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const overall = totalSessions > 0 ? Math.round((totalPresent / totalSessions) * 1000) / 10 : 100;
+      const statElem = document.getElementById('overall_attendance_stat');
+      if (statElem) statElem.innerText = `${overall}%`;
+
+      const hintPin = document.getElementById('student_hint_pin');
+      if (hintPin) hintPin.innerText = appData.session.active ? appData.session.code : 'Session Closed';
+    }
+
+    function renderStudentExcuses() {
+      const container = document.getElementById('student_excuse_list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const user = appData.currentUser || { id: '24091', name: 'Alex Rivera' };
+      const currId = String(user.id || user.studentId || '24091');
+      const currName = (user.name || user.fullName || '').toLowerCase();
+      
+      const myExcuses = (appData.excuses || []).filter(e => 
+        String(e.studentId) === currId || (e.studentName && e.studentName.toLowerCase() === currName)
+      );
+
+      if (myExcuses.length === 0) {
+        container.innerHTML = '<div class="text-xs text-[#a0b4c4] p-3 text-center">No excuse requests on file.</div>';
+        return;
+      }
+
+      myExcuses.forEach(e => {
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-xl bg-[#141c2e] border border-white/5 space-y-1';
+        div.innerHTML = `
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-[#7dd3fc]">${e.course}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
+              e.status === 'Approved' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30' :
+              e.status === 'Rejected' ? 'bg-rose-950 text-rose-300 border border-rose-500/30' :
+              'bg-amber-950 text-amber-300 border border-amber-500/30'
+            }">${e.status}</span>
+          </div>
+          <div class="text-[11px] text-white font-medium truncate">${e.reason}</div>
+          <div class="text-[10px] text-[#a0b4c4] font-mono">Date: ${e.date}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function handleStudentCheckIn(e) {
+      e.preventDefault();
+      const pin = document.getElementById('txt_qr_code').value.trim();
+      const course = document.getElementById('combo_student_courses').value;
+      const feedback = document.getElementById('lbl_checkin_status');
+
+      feedback.classList.remove('hidden', 'bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500/40', 'bg-amber-950/80', 'text-amber-300', 'border-amber-500/40', 'bg-red-950/80', 'text-red-300', 'border-red-500/40', 'border');
+      feedback.classList.add('border');
+
+      if (!appData.session.active) {
+        feedback.classList.add('bg-red-950/80', 'text-red-300', 'border-red-500/40');
+        feedback.innerHTML = '<span class="material-symbols-outlined text-sm">cancel</span><span>No active attendance session found. Please wait for instructor.</span>';
+        showToast('Check-in failed: Session is inactive.', 'error');
+        return;
+      }
+
+      const cleanInput = pin.replace(/[^0-9]/g, '');
+      const cleanSession = appData.session.code.replace(/[^0-9]/g, '');
+
+      if (cleanInput === cleanSession) {
+        const user = appData.currentUser;
+        const studentId = user.studentId || '24091';
+        const studentName = user.name || user.fullName || 'Alex Rivera';
+
+        const existing = appData.roster.find(r => r.id === studentId);
+        if (existing) {
+          existing.status = 'Present';
+          existing.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          existing.method = 'PIN Input';
+          existing.updatedBy = 'Self (PIN)';
+        } else {
+          appData.roster.unshift({
+            id: studentId,
+            name: studentName,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            method: 'PIN Input',
+            status: 'Present',
+            updatedBy: 'Self (PIN)'
+          });
+        }
+
+        const statCourse = appData.stats.find(s => s.code === course);
+        if (statCourse) {
+          statCourse.present += 1;
+          statCourse.pct = Math.round((statCourse.present / statCourse.total) * 1000) / 10;
+        }
+
+        appData.auditLogs.unshift({
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          user: studentName,
+          action: 'Direct PIN Check-in',
+          details: `Course ${course}: Status Present via verified PIN [${pin}]`
+        });
+
+        saveAppData(appData);
+        renderStudentStats();
+
+        feedback.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500/40');
+        feedback.innerHTML = '<span class="material-symbols-outlined text-sm">verified</span><span>Attendance verified and recorded: 🟢 Present!</span>';
+        showToast('Attendance recorded: Present for ' + course);
+      } else {
+        feedback.classList.add('bg-red-950/80', 'text-red-300', 'border-red-500/40');
+        feedback.innerHTML = '<span class="material-symbols-outlined text-sm">error</span><span>Invalid PIN code. Please check projection screen.</span>';
+        showToast('Invalid PIN code.', 'error');
+      }
+    }
+
+    function handleStudentExcuseSubmit(e) {
+      e.preventDefault();
+      const course = document.getElementById('combo_excuse_course').value;
+      const date = document.getElementById('date_excuse').value;
+      const reason = document.getElementById('txt_excuse_reason').value.trim();
+
+      const user = appData.currentUser;
+      const studentId = user.studentId || '24091';
+      const studentName = user.name || user.fullName || 'Alex Rivera';
+
+      const newExcuse = {
+        id: appData.excuses.length + 1,
+        studentId: studentId,
+        studentName: studentName,
+        course: course,
+        date: date,
+        reason: reason,
+        status: 'Pending'
+      };
+
+      appData.excuses.unshift(newExcuse);
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: studentName,
+        action: 'Submit Absence Excuse',
+        details: `Course ${course} (${date}): ${reason.slice(0, 30)}...`
+      });
+
+      saveAppData(appData);
+      document.getElementById('txt_excuse_reason').value = '';
+      renderStudentExcuses();
+      showToast('Excuse request submitted for instructor review.');
+    }
+
+    window.addEventListener('DOMContentLoaded', initStudentPage);
+  </script>
+</body>
+</html>

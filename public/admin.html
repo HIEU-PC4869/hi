@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAS Enterprise - Administrator Console</title>
+  <meta name="description" content="Institutional Administrator Console for user identity provisioning, RBAC, curriculum management, and security audit logs." />
+  
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload" />
+  <script>
+    (function enforceHttps() {
+      if (typeof window !== 'undefined' && window.location) {
+        if (window.location.protocol === 'http:' && !['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)) {
+          window.location.replace(window.location.href.replace(/^http:/, 'https:'));
+        }
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#0a0e1a",
+            surface: "#0f1524",
+            "surface-container": "#141c2e",
+            "surface-container-high": "#1a2438",
+            primary: "#7dd3fc",
+            "primary-container": "#0e4d6e",
+            secondary: "#88b4cc",
+            tertiary: "#c8a0f0",
+            error: "#ff6b6b"
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0a0e1a;
+      color: #e0e8f0;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+    .glass-card-glow {
+      background: rgba(20, 28, 46, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(125, 211, 252, 0.15);
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(125, 211, 252, 0.08);
+    }
+    .glass-card {
+      background: rgba(20, 28, 46, 0.65);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- TOP HEADER -->
+  <header class="border-b border-white/10 bg-[#0f1524]/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="h-16 px-4 md:px-8 max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand & Admin Badge -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1a2438] border border-emerald-500/30 shadow-lg text-emerald-400">
+          <span class="material-symbols-outlined text-2xl">admin_panel_settings</span>
+        </div>
+        <div>
+          <div class="text-sm md:text-base font-bold tracking-tight text-[#e0e8f0] flex items-center gap-2">
+            SAS Enterprise
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-950 text-emerald-300 border border-emerald-500/30">Administrator Console</span>
+          </div>
+          <div class="text-[11px] text-[#a0b4c4] hidden sm:block">
+            Identity Provisioning, Role Governance & Curriculum Master
+          </div>
+        </div>
+      </div>
+
+      <!-- User Dossier & Sign Out -->
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-medium shadow-sm">
+          <span class="material-symbols-outlined text-xs">lock</span>
+          <span>HTTPS Strict</span>
+        </div>
+
+        <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#141c2e] border border-white/10">
+          <div class="w-8 h-8 rounded-full bg-emerald-950 text-emerald-300 font-bold text-xs flex items-center justify-center" id="header_admin_avatar">
+            SA
+          </div>
+          <div class="flex flex-col text-left">
+            <span class="text-xs font-bold text-white" id="header_admin_name">Root Systems Admin</span>
+            <span class="text-[10px] text-emerald-400">System Administrator</span>
+          </div>
+        </div>
+
+        <button
+          id="btn_logout"
+          type="button"
+          onclick="handleLogout()"
+          title="Sign out of the system"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3d1414]/80 hover:bg-[#ff6b6b] text-[#ff8080] hover:text-[#0a0e1a] border border-[#ff6b6b]/40 text-xs font-semibold shadow-md transition-all active:scale-95 cursor-pointer"
+        >
+          <span class="material-symbols-outlined text-sm">logout</span>
+          <span class="hidden sm:inline">Sign Out</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN ADMIN VIEWPORT -->
+  <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full space-y-6">
+
+    <!-- Header Banner -->
+    <div class="glass-card-glow rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="text-xs font-semibold text-emerald-400 tracking-wider uppercase">System Administration • Root Master Node</div>
+        <h1 class="text-2xl font-bold text-white mt-1">Institutional Administration & Data Hub</h1>
+        <p class="text-xs text-[#a0b4c4]" id="admin_welcome_subtext">Administrator: Root Systems Admin • Global Privileges</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="btn_export_system_report" onclick="exportSystemReportCSV()"
+          class="px-4 py-2.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center gap-2 transition-all shadow-md cursor-pointer">
+          <span class="material-symbols-outlined text-sm">database</span>
+          <span>Export System Report (CSV)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- FUNCTION 1: MASTER CRUD USER FORM & TABLE -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Add User Form -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex items-center gap-2 text-emerald-400">
+          <span class="material-symbols-outlined text-xl">person_add</span>
+          <h2 class="text-base font-bold text-white">Provision User Account</h2>
+        </div>
+        <p class="text-xs text-[#a0b4c4]">Create new Student, Instructor, or Advisor accounts</p>
+
+        <form onsubmit="handleAdminAddUser(event)" class="space-y-3.5">
+          <div class="space-y-1">
+            <label class="text-xs text-[#a0b4c4]">Account Email (txt_add_email)</label>
+            <input id="txt_add_email" type="email" placeholder="new.user@university.edu" required
+              class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400" />
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs text-[#a0b4c4]">Full Name</label>
+            <input id="txt_add_name" type="text" placeholder="Johnathan Doe" required
+              class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400" />
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs text-[#a0b4c4]">Assigned Role (combo_add_role)</label>
+            <select id="combo_add_role" onchange="toggleStudentFieldsVisibility()" class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer">
+              <option value="Student">Student</option>
+              <option value="Instructor">Instructor</option>
+              <option value="Advisor">Advisor</option>
+              <option value="Administrator">Administrator</option>
+            </select>
+          </div>
+
+          <!-- Student Profile Metadata: Student ID, Major, Academic Year -->
+          <div id="group_student_add_fields" class="space-y-3 p-3.5 rounded-xl bg-[#111828] border border-[#7dd3fc]/20 shadow-inner">
+            <div class="flex items-center gap-1.5 text-[11px] font-semibold text-[#7dd3fc] uppercase tracking-wider">
+              <span class="material-symbols-outlined text-sm">school</span>
+              <span>Student Academic Dossier</span>
+            </div>
+
+            <!-- Student ID -->
+            <div class="space-y-1">
+              <label class="text-xs text-[#a0b4c4] flex items-center justify-between">
+                <span>Student ID</span>
+                <span class="text-[10px] text-[#7dd3fc] font-mono">txt_add_student_id</span>
+              </label>
+              <input id="txt_add_student_id" type="text" placeholder="e.g. 24095 (leave blank for auto-ID)"
+                class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-emerald-400" />
+            </div>
+
+            <!-- Major (Free text with datalist suggestions and quick example chips) -->
+            <div class="space-y-1.5">
+              <label class="text-xs text-[#a0b4c4] flex items-center justify-between">
+                <span>Academic Major / Field of Study</span>
+                <span class="text-[10px] text-[#7dd3fc] font-mono">txt_add_major</span>
+              </label>
+              <input id="txt_add_major" list="major_preset_suggestions" type="text" value="B.S. Software Engineering" placeholder="Enter or select major (e.g. B.S. Software Engineering)"
+                class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400" />
+              <datalist id="major_preset_suggestions">
+                <option value="B.S. Software Engineering"></option>
+                <option value="B.S. Computer Science"></option>
+                <option value="B.S. Information Technology"></option>
+                <option value="B.S. Data Science & AI"></option>
+                <option value="B.S. Information Security"></option>
+                <option value="B.Eng. Computer Engineering"></option>
+                <option value="B.Eng. Electrical Engineering"></option>
+                <option value="B.S. Applied Mathematics"></option>
+                <option value="B.S. Business Information Systems"></option>
+                <option value="B.S. Cyber Operations"></option>
+              </datalist>
+              <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
+                <span class="text-[10px] text-[#a0b4c4]">Quick examples:</span>
+                <button type="button" onclick="document.getElementById('txt_add_major').value='B.S. Software Engineering'" class="text-[10px] px-1.5 py-0.5 rounded bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/20 transition-all cursor-pointer">+ Software Eng</button>
+                <button type="button" onclick="document.getElementById('txt_add_major').value='B.S. Computer Science'" class="text-[10px] px-1.5 py-0.5 rounded bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/20 transition-all cursor-pointer">+ Comp Science</button>
+                <button type="button" onclick="document.getElementById('txt_add_major').value='B.S. Data Science & AI'" class="text-[10px] px-1.5 py-0.5 rounded bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/20 transition-all cursor-pointer">+ Data Science & AI</button>
+                <button type="button" onclick="document.getElementById('txt_add_major').value='B.S. Information Security'" class="text-[10px] px-1.5 py-0.5 rounded bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/20 transition-all cursor-pointer">+ Cyber Sec</button>
+              </div>
+            </div>
+
+            <!-- Academic Year -->
+            <div class="space-y-1">
+              <label class="text-xs text-[#a0b4c4] flex items-center justify-between">
+                <span>Academic Year Level</span>
+                <span class="text-[10px] text-[#7dd3fc] font-mono">combo_add_year</span>
+              </label>
+              <select id="combo_add_year" class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer">
+                <option value="Year 1">Year 1 (Freshman)</option>
+                <option value="Year 2">Year 2 (Sophomore)</option>
+                <option value="Year 3" selected>Year 3 (Junior)</option>
+                <option value="Year 4">Year 4 (Senior)</option>
+                <option value="Graduate">Graduate (Master's / Ph.D.)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Staff Department field (shown when not Student) -->
+          <div id="group_staff_add_fields" class="space-y-1 hidden">
+            <label class="text-xs text-[#a0b4c4]">Faculty / Department</label>
+            <select id="combo_add_dept" class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer">
+              <option value="Faculty of Engineering">Faculty of Engineering</option>
+              <option value="Dept. of Computer Science">Dept. of Computer Science</option>
+              <option value="Student Support Services">Student Support Services</option>
+              <option value="Global Campus Administration">Global Campus Administration</option>
+            </select>
+          </div>
+
+          <button id="btn_add_user" type="submit"
+            class="w-full h-10 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer">
+            <span class="material-symbols-outlined text-sm">add_circle</span>
+            <span>Add User Account</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- User Table (table_admin_users) -->
+      <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#7dd3fc]">manage_accounts</span>
+            Active System Users (table_admin_users)
+          </h2>
+          <span class="text-xs text-[#a0b4c4]" id="admin_users_count">Total: 6 accounts</span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-white/10 max-h-80 overflow-y-auto">
+          <table class="w-full text-left text-xs" id="table_admin_users">
+            <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+              <tr>
+                <th class="p-3.5">ID</th>
+                <th class="p-3.5">Full Name & Academic Info</th>
+                <th class="p-3.5">Email</th>
+                <th class="p-3.5">Role</th>
+                <th class="p-3.5">Status</th>
+                <th class="p-3.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="table_admin_users_body" class="divide-y divide-white/5">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FUNCTION 2: ACADEMIC CURRICULUM & ENROLLMENTS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Course Catalog Management (Courses Entity) -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-[#7dd3fc]">
+            <span class="material-symbols-outlined text-xl">auto_stories</span>
+            <h2 class="text-base font-bold text-white">Course Catalog (Courses Entity)</h2>
+          </div>
+          <span class="text-xs text-[#a0b4c4]" id="admin_courses_count">4 offerings</span>
+        </div>
+        <p class="text-xs text-[#a0b4c4]">Define institutional courses with primary keys and unique identifiers.</p>
+
+        <form onsubmit="handleAdminAddCourse(event)" class="space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input id="txt_add_course_code" type="text" placeholder="e.g. CS-405" required
+              class="h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#7dd3fc]" />
+            <input id="txt_add_course_name" type="text" placeholder="e.g. Cloud Architecture" required
+              class="sm:col-span-2 h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-[#7dd3fc]" />
+          </div>
+          <button type="submit"
+            class="w-full h-9 rounded-xl bg-[#0e4d6e] hover:bg-[#15628c] text-[#c8eaff] font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+            <span class="material-symbols-outlined text-sm">add</span>
+            <span>Register Course</span>
+          </button>
+        </form>
+
+        <div class="overflow-x-auto rounded-xl border border-white/10 max-h-56 overflow-y-auto">
+          <table class="w-full text-left text-xs" id="table_admin_courses">
+            <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+              <tr>
+                <th class="p-2.5">ID (PK)</th>
+                <th class="p-2.5">Course Name</th>
+                <th class="p-2.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="table_admin_courses_body" class="divide-y divide-white/5">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Student Enrollment Management (Enrollments Entity) -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-purple-400">
+            <span class="material-symbols-outlined text-xl">assignment_ind</span>
+            <h2 class="text-base font-bold text-white">Student Course Enrollments</h2>
+          </div>
+          <span class="text-xs text-[#a0b4c4]" id="admin_enrollments_count">7 enrollments</span>
+        </div>
+        <p class="text-xs text-[#a0b4c4]">Link students to courses with relational integrity enforcement.</p>
+
+        <form onsubmit="handleAdminEnrollStudent(event)" class="space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <select id="combo_enroll_student" required
+              class="h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-purple-400 cursor-pointer">
+              <!-- Populated dynamically -->
+            </select>
+            <select id="combo_enroll_course" required
+              class="h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-purple-400 cursor-pointer">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <button type="submit"
+            class="w-full h-9 rounded-xl bg-[#3d2060] hover:bg-[#522b82] text-purple-200 font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+            <span class="material-symbols-outlined text-sm">link</span>
+            <span>Enroll Student into Course</span>
+          </button>
+        </form>
+
+        <div class="overflow-x-auto rounded-xl border border-white/10 max-h-56 overflow-y-auto">
+          <table class="w-full text-left text-xs" id="table_admin_enrollments">
+            <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+              <tr>
+                <th class="p-2.5">Student</th>
+                <th class="p-2.5">Course Code</th>
+                <th class="p-2.5">Term</th>
+                <th class="p-2.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="table_admin_enrollments_body" class="divide-y divide-white/5">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FUNCTION 3: INSTITUTIONAL SECURITY AUDIT TRAIL -->
+    <div class="glass-card rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-400">policy</span>
+            Institutional Security Audit Trail (auditLogs Entity)
+          </h2>
+          <p class="text-xs text-[#a0b4c4]">Immutable security record of logins, overrides, credential modifications, and enrollments.</p>
+        </div>
+        <span class="text-xs font-mono text-emerald-400">● Live Logging Active</span>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-white/10 max-h-60 overflow-y-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+            <tr>
+              <th class="p-3">Timestamp (UTC)</th>
+              <th class="p-3">Principal User</th>
+              <th class="p-3">Event / Operation</th>
+              <th class="p-3">Payload / Detail</th>
+            </tr>
+          </thead>
+          <tbody id="admin_audit_logs_body" class="divide-y divide-white/5 text-[11px]">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- EDIT USER MODAL -->
+  <div id="modal_edit_user" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
+    <div class="glass-card-glow rounded-2xl p-6 max-w-lg w-full space-y-4 border border-[#7dd3fc]/30">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2 text-[#7dd3fc]">
+          <span class="material-symbols-outlined text-lg">manage_accounts</span>
+          <h3 class="text-base font-bold text-white">Edit User Record</h3>
+        </div>
+        <button type="button" onclick="closeEditUserModal()" class="text-[#a0b4c4] hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveEditUser(event)" class="space-y-3.5 text-xs">
+        <input type="hidden" id="edit_user_id" />
+        
+        <div class="space-y-1">
+          <label class="text-[#a0b4c4] font-medium">Full Name</label>
+          <input id="edit_user_name" type="text" required class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[#a0b4c4] font-medium">Email Address</label>
+          <input id="edit_user_email" type="email" required class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4] font-medium">Role</label>
+            <select id="edit_user_role" onchange="toggleEditStudentFieldsVisibility()" class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]">
+              <option value="Student">Student</option>
+              <option value="Instructor">Instructor</option>
+              <option value="Advisor">Advisor</option>
+              <option value="Administrator">Administrator</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4] font-medium">Status</label>
+            <select id="edit_user_status" class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]">
+              <option value="Active">Active</option>
+              <option value="Flagged (EWS)">Flagged (EWS)</option>
+              <option value="Suspended">Suspended</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Student Profile Metadata Edit Fields -->
+        <div id="group_edit_student_fields" class="space-y-3 p-3.5 rounded-xl bg-[#111828] border border-[#7dd3fc]/20 shadow-inner">
+          <div class="flex items-center gap-1.5 text-[11px] font-semibold text-[#7dd3fc] uppercase tracking-wider">
+            <span class="material-symbols-outlined text-sm">school</span>
+            <span>Student Academic Dossier</span>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4] font-medium flex items-center justify-between">
+              <span>Student ID</span>
+              <span class="text-[10px] text-[#7dd3fc] font-mono">edit_user_student_id</span>
+            </label>
+            <input id="edit_user_student_id" type="text" placeholder="e.g. 24091"
+              class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white font-mono focus:outline-none focus:border-[#7dd3fc]" />
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-[#a0b4c4] font-medium flex items-center justify-between">
+              <span>Academic Major / Field of Study</span>
+              <span class="text-[10px] text-[#7dd3fc] font-mono">edit_user_major</span>
+            </label>
+            <input id="edit_user_major" list="edit_major_preset_suggestions" type="text" placeholder="Enter or select major (e.g. B.S. Software Engineering)"
+              class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]" />
+            <datalist id="edit_major_preset_suggestions">
+              <option value="B.S. Software Engineering"></option>
+              <option value="B.S. Computer Science"></option>
+              <option value="B.S. Information Technology"></option>
+              <option value="B.S. Data Science & AI"></option>
+              <option value="B.S. Information Security"></option>
+              <option value="B.Eng. Computer Engineering"></option>
+              <option value="B.Eng. Electrical Engineering"></option>
+              <option value="B.S. Applied Mathematics"></option>
+              <option value="B.S. Business Information Systems"></option>
+              <option value="B.S. Cyber Operations"></option>
+            </datalist>
+            <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
+              <span class="text-[10px] text-[#a0b4c4]">Quick examples:</span>
+              <button type="button" onclick="document.getElementById('edit_user_major').value='B.S. Software Engineering'" class="text-[10px] px-1.5 py-0.5 rounded bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/20 transition-all cursor-pointer">+ Software Eng</button>
+              <button type="button" onclick="document.getElementById('edit_user_major').value='B.S. Computer Science'" class="text-[10px] px-1.5 py-0.5 rounded bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/20 transition-all cursor-pointer">+ Comp Science</button>
+              <button type="button" onclick="document.getElementById('edit_user_major').value='B.S. Data Science & AI'" class="text-[10px] px-1.5 py-0.5 rounded bg-[#1a2438] hover:bg-[#202c42] text-[#7dd3fc] border border-[#7dd3fc]/20 transition-all cursor-pointer">+ Data Science & AI</button>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4] font-medium">Academic Year Level</label>
+            <select id="edit_user_year" class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]">
+              <option value="Year 1">Year 1 (Freshman)</option>
+              <option value="Year 2">Year 2 (Sophomore)</option>
+              <option value="Year 3">Year 3 (Junior)</option>
+              <option value="Year 4">Year 4 (Senior)</option>
+              <option value="Graduate">Graduate (Master's / Ph.D.)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+          <button type="button" onclick="handleDeleteUserFromModal()" class="px-3 py-2 rounded-xl bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 font-semibold transition-all flex items-center gap-1 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">delete</span>
+            <span>Delete User</span>
+          </button>
+          
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="closeEditUserModal()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-[#a0b4c4] font-medium transition-colors cursor-pointer">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#0e4d6e] to-[#7dd3fc] text-[#001f2e] font-bold shadow-md hover:opacity-95 transition-all cursor-pointer">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    let appData = getAppData();
+    let currentEditingUserId = null;
+
+    function initAdminPage() {
+      if (!enforceRoleGuard('Administrator', 'Administrator Console')) return;
+
+      const user = appData.currentUser;
+      const userName = user.name || user.fullName || 'Root Systems Admin';
+      const dept = user.department || 'Global Campus Administration';
+
+      document.getElementById('header_admin_name').innerText = userName;
+      document.getElementById('header_admin_avatar').innerText = userName.split(' ').map(n => n[0]).join('').slice(0, 2);
+      document.getElementById('admin_welcome_subtext').innerText = `Administrator: ${userName} • ${dept}`;
+
+      renderAdminUsers();
+      renderAdminCourses();
+      renderAdminEnrollments();
+      renderAuditLogs();
+    }
+
+    function toggleStudentFieldsVisibility() {
+      const roleElem = document.getElementById('combo_add_role');
+      if (!roleElem) return;
+      const role = roleElem.value;
+      const studentFields = document.getElementById('group_student_add_fields');
+      const staffFields = document.getElementById('group_staff_add_fields');
+      if (role === 'Student') {
+        if (studentFields) studentFields.classList.remove('hidden');
+        if (staffFields) staffFields.classList.add('hidden');
+      } else {
+        if (studentFields) studentFields.classList.add('hidden');
+        if (staffFields) staffFields.classList.remove('hidden');
+      }
+    }
+
+    function toggleEditStudentFieldsVisibility() {
+      const roleElem = document.getElementById('edit_user_role');
+      if (!roleElem) return;
+      const role = roleElem.value;
+      const studentFields = document.getElementById('group_edit_student_fields');
+      if (studentFields) {
+        if (role === 'Student') {
+          studentFields.classList.remove('hidden');
+        } else {
+          studentFields.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderAdminUsers() {
+      const tbody = document.getElementById('table_admin_users_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const usersList = appData.users || [];
+      usersList.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        const isStudent = u.role === 'Student';
+        const studentInfoHtml = isStudent ? `
+          <div class="mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
+            ${u.studentId ? `<span class="px-1.5 py-0.5 rounded bg-[#1a2438] text-[#7dd3fc] font-mono font-semibold border border-[#7dd3fc]/20">#${u.studentId}</span>` : ''}
+            ${u.major ? `<span class="text-[#a0b4c4] truncate max-w-[200px]">${u.major}</span>` : ''}
+            ${(u.year || u.academicYear) ? `<span class="px-1.5 py-0.5 rounded bg-[#0e4d6e]/50 text-[#c8eaff] font-medium border border-[#7dd3fc]/20">${u.year || u.academicYear}</span>` : ''}
+          </div>
+        ` : (u.department ? `<div class="mt-0.5 text-[11px] text-[#a0b4c4] truncate max-w-[200px]">${u.department}</div>` : '');
+
+        tr.innerHTML = `
+          <td class="p-3.5 font-mono text-[#a0b4c4]">#${u.id}</td>
+          <td class="p-3.5">
+            <div class="font-bold text-white">${u.name || u.fullName || 'User'}</div>
+            ${studentInfoHtml}
+          </td>
+          <td class="p-3.5 font-mono text-[#7dd3fc]">${u.email}</td>
+          <td class="p-3.5">
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
+              u.role === 'Student' ? 'bg-[#0e4d6e] text-[#c8eaff]' :
+              u.role === 'Instructor' ? 'bg-[#1a3a4e] text-[#7dd3fc]' :
+              u.role === 'Advisor' ? 'bg-[#3d2060] text-[#c8a0f0]' :
+              'bg-emerald-950 text-emerald-300'
+            }">${u.role}</span>
+          </td>
+          <td class="p-3.5 text-xs text-emerald-400">● ${u.status || 'Active'}</td>
+          <td class="p-3.5 text-right">
+            <button onclick="openEditUserModal(${u.id})" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0e4d6e]/40 hover:bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-semibold transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-[12px]">edit</span>
+              <span>Edit</span>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const countElem = document.getElementById('admin_users_count');
+      if (countElem) countElem.innerText = `Total: ${usersList.length} accounts`;
+    }
+
+    function handleAdminAddUser(e) {
+      e.preventDefault();
+      const email = document.getElementById('txt_add_email').value.trim();
+      const name = document.getElementById('txt_add_name').value.trim();
+      const role = document.getElementById('combo_add_role').value;
+
+      let studentId = '';
+      let major = '';
+      let year = '';
+      let department = '';
+
+      if (role === 'Student') {
+        const studentIdInput = document.getElementById('txt_add_student_id');
+        studentId = studentIdInput ? studentIdInput.value.trim() : '';
+        if (!studentId) {
+          studentId = String(24000 + Math.floor(Math.random() * 900) + 100);
+        }
+        const majorInput = document.getElementById('txt_add_major');
+        major = (majorInput ? majorInput.value.trim() : '') || 'B.S. Software Engineering';
+        const yearSelect = document.getElementById('combo_add_year');
+        year = yearSelect ? yearSelect.value : 'Year 1';
+        department = `${major} (${year})`;
+      } else {
+        const deptSelect = document.getElementById('combo_add_dept');
+        department = deptSelect ? deptSelect.value : 'Faculty of Engineering';
+      }
+
+      const newUser = {
+        id: 1000 + appData.users.length + 1,
+        email: email,
+        name: name,
+        fullName: name,
+        role: role,
+        studentId: studentId || undefined,
+        major: major || undefined,
+        year: year || undefined,
+        academicYear: year || undefined,
+        department: department,
+        status: 'Active'
+      };
+
+      appData.users.push(newUser);
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: (appData.currentUser && (appData.currentUser.name || appData.currentUser.fullName)) || 'Root Systems Admin',
+        action: 'Create User Account',
+        details: `${email} (${role}${studentId ? ` • ID #${studentId}` : ''})`
+      });
+
+      saveAppData(appData);
+      document.getElementById('txt_add_email').value = '';
+      document.getElementById('txt_add_name').value = '';
+      const studentIdInput = document.getElementById('txt_add_student_id');
+      if (studentIdInput) studentIdInput.value = '';
+      const majorField = document.getElementById('txt_add_major');
+      if (majorField) majorField.value = 'B.S. Software Engineering';
+      renderAdminUsers();
+      renderAuditLogs();
+      renderAdminEnrollments();
+      showToast(`User ${name} (${role}${studentId ? ` #${studentId}` : ''}) provisioned successfully.`);
+    }
+
+    function openEditUserModal(userId) {
+      const user = appData.users.find(u => u.id === userId);
+      if (!user) return;
+      currentEditingUserId = userId;
+      document.getElementById('edit_user_id').value = user.id;
+      document.getElementById('edit_user_name').value = user.name || user.fullName || '';
+      document.getElementById('edit_user_email').value = user.email;
+      document.getElementById('edit_user_role').value = user.role;
+      document.getElementById('edit_user_status').value = user.status;
+
+      const editStudentId = document.getElementById('edit_user_student_id');
+      if (editStudentId) editStudentId.value = user.studentId || '';
+      const editMajor = document.getElementById('edit_user_major');
+      if (editMajor && user.major) editMajor.value = user.major;
+      const editYear = document.getElementById('edit_user_year');
+      if (editYear && (user.year || user.academicYear)) editYear.value = user.year || user.academicYear;
+
+      toggleEditStudentFieldsVisibility();
+      document.getElementById('modal_edit_user').classList.remove('hidden');
+    }
+
+    function closeEditUserModal() {
+      document.getElementById('modal_edit_user').classList.add('hidden');
+      currentEditingUserId = null;
+    }
+
+    function handleSaveEditUser(e) {
+      e.preventDefault();
+      if (!currentEditingUserId) return;
+      const user = appData.users.find(u => u.id === currentEditingUserId);
+      if (user) {
+        user.name = document.getElementById('edit_user_name').value.trim();
+        user.fullName = user.name;
+        user.email = document.getElementById('edit_user_email').value.trim();
+        user.role = document.getElementById('edit_user_role').value;
+        user.status = document.getElementById('edit_user_status').value;
+
+        if (user.role === 'Student') {
+          const editStudentId = document.getElementById('edit_user_student_id');
+          if (editStudentId) user.studentId = editStudentId.value.trim() || user.studentId;
+          const editMajor = document.getElementById('edit_user_major');
+          if (editMajor) user.major = editMajor.value.trim() || user.major;
+          const editYear = document.getElementById('edit_user_year');
+          if (editYear) {
+            user.year = editYear.value;
+            user.academicYear = editYear.value;
+          }
+          if (user.major && user.year) {
+            user.department = `${user.major} (${user.year})`;
+          }
+        }
+
+        appData.auditLogs.unshift({
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          user: appData.currentUser ? (appData.currentUser.name || appData.currentUser.fullName) : 'Root Systems Admin',
+          action: 'Modify User Record',
+          details: `Updated account #${user.id} (${user.name}, ${user.role})`
+        });
+
+        saveAppData(appData);
+        closeEditUserModal();
+        renderAdminUsers();
+        renderAuditLogs();
+        showToast(`User record for ${user.name} updated successfully.`);
+      }
+    }
+
+    function handleDeleteUserFromModal() {
+      if (!currentEditingUserId) return;
+      const user = appData.users.find(u => u.id === currentEditingUserId);
+      if (!user) return;
+      
+      const removedId = currentEditingUserId;
+      const removedName = user.name || user.fullName;
+      appData.users = appData.users.filter(u => u.id !== removedId);
+      
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: appData.currentUser ? (appData.currentUser.name || appData.currentUser.fullName) : 'Root Systems Admin',
+        action: 'Deprovision User',
+        details: `Deleted account #${removedId} (${removedName})`
+      });
+
+      saveAppData(appData);
+      closeEditUserModal();
+      renderAdminUsers();
+      renderAuditLogs();
+      renderAdminEnrollments();
+      showToast(`Account #${removedId} removed from system.`, 'warning');
+    }
+
+    function renderAdminCourses() {
+      const tbody = document.getElementById('table_admin_courses_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      appData.courses.forEach((c, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-2.5 font-mono text-[#7dd3fc]">CRS-0${idx + 1}</td>
+          <td class="p-2.5 text-white font-medium">${c}</td>
+          <td class="p-2.5 text-right">
+            <button onclick="handleAdminDeleteCourse(${idx})" class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition-all cursor-pointer">
+              Delete
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const countElem = document.getElementById('admin_courses_count');
+      if (countElem) countElem.innerText = `${appData.courses.length} offerings`;
+    }
+
+    function handleAdminAddCourse(e) {
+      e.preventDefault();
+      const code = document.getElementById('txt_add_course_code').value.trim();
+      const name = document.getElementById('txt_add_course_name').value.trim();
+      const fullName = `${code}: ${name}`;
+
+      if (appData.courses.includes(fullName)) {
+        showToast('This course offering already exists in catalog.', 'warning');
+        return;
+      }
+
+      appData.courses.push(fullName);
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: 'Root Systems Admin',
+        action: 'Register Course Offering',
+        details: fullName
+      });
+
+      saveAppData(appData);
+      document.getElementById('txt_add_course_code').value = '';
+      document.getElementById('txt_add_course_name').value = '';
+      renderAdminCourses();
+      renderAdminEnrollments();
+      renderAuditLogs();
+      showToast(`Course offering [${code}] added to catalog.`);
+    }
+
+    function handleAdminDeleteCourse(index) {
+      const removed = appData.courses[index];
+      appData.courses.splice(index, 1);
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: 'Root Systems Admin',
+        action: 'Remove Course Offering',
+        details: removed
+      });
+      saveAppData(appData);
+      renderAdminCourses();
+      renderAdminEnrollments();
+      renderAuditLogs();
+      showToast(`Removed course: ${removed}`, 'warning');
+    }
+
+    function renderAdminEnrollments() {
+      const studentSelect = document.getElementById('combo_enroll_student');
+      const courseSelect = document.getElementById('combo_enroll_course');
+      const tbody = document.getElementById('table_admin_enrollments_body');
+      const countElem = document.getElementById('admin_enrollments_count');
+
+      if (studentSelect) {
+        studentSelect.innerHTML = '<option value="">Select Student...</option>';
+        const students = (appData.users || []).filter(u => u.role === 'Student');
+        students.forEach(s => {
+          studentSelect.innerHTML += `<option value="${s.id}">${s.name || s.fullName} (#${s.studentId || s.id})</option>`;
+        });
+      }
+
+      if (courseSelect) {
+        courseSelect.innerHTML = '<option value="">Select Course...</option>';
+        appData.courses.forEach(c => {
+          courseSelect.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+      }
+
+      if (tbody) {
+        tbody.innerHTML = '';
+        (appData.enrollments || []).forEach(en => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/5 transition-colors';
+          tr.innerHTML = `
+            <td class="p-2.5 text-white font-medium">#${en.userId} (${en.studentName})</td>
+            <td class="p-2.5 text-[#7dd3fc] font-semibold">${en.course.split(':')[0]}</td>
+            <td class="p-2.5 text-purple-300 font-mono text-[11px]">${en.term || 'Fall 2026'}</td>
+            <td class="p-2.5 text-right">
+              <button onclick="handleAdminUnenrollStudent(${en.id})" class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition-all cursor-pointer">
+                Drop
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      if (countElem) {
+        countElem.innerText = `${(appData.enrollments || []).length} enrollments`;
+      }
+    }
+
+    function handleAdminEnrollStudent(e) {
+      e.preventDefault();
+      const studentId = parseInt(document.getElementById('combo_enroll_student').value);
+      const course = document.getElementById('combo_enroll_course').value;
+
+      if (!studentId || !course) {
+        showToast('Please select both a student and a course.', 'warning');
+        return;
+      }
+
+      const student = (appData.users || []).find(u => u.id === studentId);
+      if (!student) return;
+
+      const exists = (appData.enrollments || []).some(en => en.userId === studentId && en.course === course);
+      if (exists) {
+        showToast(`Student #${studentId} is already enrolled in this course.`, 'warning');
+        return;
+      }
+
+      const newEnrollment = {
+        id: (appData.enrollments || []).length + 1,
+        userId: studentId,
+        studentName: student.name || student.fullName,
+        course: course,
+        term: 'Fall 2026'
+      };
+
+      if (!appData.enrollments) appData.enrollments = [];
+      appData.enrollments.push(newEnrollment);
+
+      appData.auditLogs.unshift({
+        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        user: 'Root Systems Admin',
+        action: 'Enroll Student in Course',
+        details: `Enrolled ${student.name || student.fullName} (#${studentId}) in ${course.split(':')[0]}`
+      });
+
+      saveAppData(appData);
+      renderAdminEnrollments();
+      renderAuditLogs();
+      showToast(`Enrolled ${student.name || student.fullName} in ${course.split(':')[0]}`);
+    }
+
+    function handleAdminUnenrollStudent(enrollmentId) {
+      const idx = (appData.enrollments || []).findIndex(en => en.id === enrollmentId);
+      if (idx !== -1) {
+        const removed = appData.enrollments[idx];
+        appData.enrollments.splice(idx, 1);
+
+        appData.auditLogs.unshift({
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          user: 'Root Systems Admin',
+          action: 'Drop Student Enrollment',
+          details: `Dropped ${removed.studentName} from ${removed.course.split(':')[0]}`
+        });
+
+        saveAppData(appData);
+        renderAdminEnrollments();
+        renderAuditLogs();
+        showToast(`Dropped enrollment for ${removed.studentName}.`, 'warning');
+      }
+    }
+
+    function renderAuditLogs() {
+      const tbody = document.getElementById('admin_audit_logs_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      appData.auditLogs.slice(0, 15).forEach(l => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3 text-[#a0b4c4] whitespace-nowrap">${l.time}</td>
+          <td class="p-3 text-white font-medium whitespace-nowrap">${l.user}</td>
+          <td class="p-3 text-[#7dd3fc] whitespace-nowrap">${l.action}</td>
+          <td class="p-3 text-[#e0e8f0] truncate max-w-xs">${l.details}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function exportSystemReportCSV() {
+      let csv = 'Timestamp,Principal,Action,Details\n';
+      appData.auditLogs.forEach(l => {
+        csv += `"${l.time}","${l.user}","${l.action}","${l.details}"\n`;
+      });
+      downloadCSV(csv, 'SAS_System_Attendance_Audit_Report.csv');
+      showToast('System audit report exported as CSV.');
+    }
+
+    window.addEventListener('DOMContentLoaded', initAdminPage);
+  </script>
+</body>
+</html>
