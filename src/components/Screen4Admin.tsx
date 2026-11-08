@@ -11,7 +11,8 @@ interface Screen4AdminProps {
     fullName?: string,
     studentId?: string,
     major?: string,
-    academicYear?: string
+    academicYear?: string,
+    password?: string
   ) => void;
   onDeleteUser: (userId: number) => void;
   onExportSystemReport: () => void;
@@ -26,6 +27,8 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
 }) => {
   const [newEmail, setNewEmail] = useState('');
   const [newFullName, setNewFullName] = useState('');
+  const [newPassword, setNewPassword] = useState('password123');
+  const [showPassword, setShowPassword] = useState(false);
   const [newRole, setNewRole] = useState<User['role']>('Student');
   const [newStudentId, setNewStudentId] = useState('');
   const [newMajor, setNewMajor] = useState('B.S. Software Engineering');
@@ -35,6 +38,15 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
   const [roleFilter, setRoleFilter] = useState<'all' | User['role']>('all');
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [addNotice, setAddNotice] = useState<string | null>(null);
+
+  const generateRandomPassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+    let res = '';
+    for (let i = 0; i < 10; i++) {
+      res += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setNewPassword(res);
+  };
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,12 +62,14 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
       newFullName.trim() || undefined,
       newStudentId.trim() || undefined,
       newRole === 'Student' ? newMajor : undefined,
-      newRole === 'Student' ? newAcademicYear : undefined
+      newRole === 'Student' ? newAcademicYear : undefined,
+      newPassword.trim() || 'password123'
     );
-    setAddNotice(`Provisioned identity: ${newFullName || newEmail.trim()} as ${newRole}.`);
+    setAddNotice(`Provisioned identity: ${newFullName || newEmail.trim()} as ${newRole} (Password: ${newPassword.trim() || 'password123'}).`);
     setNewEmail('');
     setNewFullName('');
     setNewStudentId('');
+    setNewPassword('password123');
     setTimeout(() => setAddNotice(null), 4000);
   };
 
@@ -159,7 +173,7 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
 
         <form onSubmit={handleAddSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-            <div className="md:col-span-4 space-y-1.5">
+            <div className="md:col-span-3 space-y-1.5">
               <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="txt_add_email">
                 Institutional Email / Identity
               </label>
@@ -179,7 +193,7 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
               </div>
             </div>
 
-            <div className="md:col-span-4 space-y-1.5">
+            <div className="md:col-span-3 space-y-1.5">
               <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="txt_add_name">
                 Full Name
               </label>
@@ -199,7 +213,7 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
               </div>
             </div>
 
-            <div className="md:col-span-4 space-y-1.5">
+            <div className="md:col-span-3 space-y-1.5">
               <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="combo_add_role">
                 Assigned System Role
               </label>
@@ -221,6 +235,46 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
                 <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#a0b4c4] pointer-events-none">
                   expand_more
                 </span>
+              </div>
+            </div>
+
+            <div className="md:col-span-3 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-medium text-[#a0b4c4]" htmlFor="txt_add_password">
+                  Initial Password
+                </label>
+                <button
+                  type="button"
+                  onClick={generateRandomPassword}
+                  className="text-[10px] text-[#7dd3fc] hover:underline flex items-center gap-0.5 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[12px]">auto_fix_high</span>
+                  <span>Generate</span>
+                </button>
+              </div>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#a0b4c4]/70">
+                  key
+                </span>
+                <input
+                  id="txt_add_password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Set password (e.g. password123)"
+                  className="w-full pl-9 pr-9 py-2.5 rounded-xl bg-[#111828]/90 border border-[#7dd3fc]/15 text-[#e0e8f0] font-mono text-xs focus:outline-none focus:bg-[#1a2438] transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#a0b4c4] hover:text-white p-1 cursor-pointer"
+                  title="Toggle Password Visibility"
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -547,7 +601,13 @@ export const Screen4Admin: React.FC<Screen4AdminProps> = ({
                             </span>
                           )}
                         </div>
-                        <div className="text-[11px] text-[#a0b4c4] font-mono">{user.email}</div>
+                        <div className="text-[11px] text-[#a0b4c4] font-mono flex items-center gap-2">
+                          <span>{user.email}</span>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#1a2438] text-amber-300 border border-amber-400/20" title="Account Password">
+                            <span className="material-symbols-outlined text-[11px]">key</span>
+                            <span>{user.password || 'password123'}</span>
+                          </span>
+                        </div>
                         {user.role === 'Student' && (user.major || user.academicYear) && (
                           <div className="text-[10px] text-[#7dd3fc] flex items-center gap-1.5 mt-0.5">
                             <span>{user.major || 'Software Engineering'}</span>

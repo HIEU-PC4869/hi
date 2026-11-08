@@ -165,6 +165,28 @@
           </div>
 
           <div class="space-y-1">
+            <div class="flex items-center justify-between">
+              <label class="text-xs text-[#a0b4c4]" for="txt_add_password">Initial Password (txt_add_password)</label>
+              <button type="button" onclick="generateRandomPassword()" class="text-[10px] text-[#7dd3fc] hover:underline flex items-center gap-0.5 cursor-pointer">
+                <span class="material-symbols-outlined text-[12px]">auto_fix_high</span>
+                <span>Auto-generate</span>
+              </button>
+            </div>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3 text-[#a0b4c4] text-sm">key</span>
+              <input id="txt_add_password" type="password" placeholder="e.g. Pass@2026! or password123" value="password123" required
+                class="w-full h-10 pl-9 pr-9 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400 font-mono" />
+              <button type="button" onclick="toggleAddPasswordVisibility()" class="absolute right-3 text-[#a0b4c4] hover:text-white p-1 cursor-pointer">
+                <span id="pw_add_toggle_icon" class="material-symbols-outlined text-sm">visibility</span>
+              </button>
+            </div>
+            <div class="text-[10px] text-[#a0b4c4] flex items-center justify-between pt-0.5">
+              <span>Required for user sign-in</span>
+              <span class="text-emerald-400/80 font-mono">Default: password123</span>
+            </div>
+          </div>
+
+          <div class="space-y-1">
             <label class="text-xs text-[#a0b4c4]">Assigned Role (combo_add_role)</label>
             <select id="combo_add_role" onchange="toggleStudentFieldsVisibility()" class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer">
               <option value="Student">Student</option>
@@ -436,6 +458,24 @@
           <input id="edit_user_email" type="email" required class="w-full h-10 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc]" />
         </div>
 
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="text-[#a0b4c4] font-medium" for="edit_user_password">Password (txt_edit_password)</label>
+            <button type="button" onclick="generateEditPassword()" class="text-[10px] text-[#7dd3fc] hover:underline flex items-center gap-0.5 cursor-pointer">
+              <span class="material-symbols-outlined text-[12px]">auto_fix_high</span>
+              <span>Generate New</span>
+            </button>
+          </div>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-[#a0b4c4] text-sm">key</span>
+            <input id="edit_user_password" type="password" placeholder="Enter new password to update"
+              class="w-full h-10 pl-9 pr-9 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc] font-mono text-xs" />
+            <button type="button" onclick="toggleEditPasswordVisibility()" class="absolute right-3 text-[#a0b4c4] hover:text-white p-1 cursor-pointer">
+              <span id="pw_edit_toggle_icon" class="material-symbols-outlined text-sm">visibility</span>
+            </button>
+          </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
             <label class="text-[#a0b4c4] font-medium">Role</label>
@@ -587,6 +627,60 @@
       tbody.innerHTML = '';
 
       const usersList = appData.users || [];
+    function toggleAddPasswordVisibility() {
+      const input = document.getElementById('txt_add_password');
+      const icon = document.getElementById('pw_add_toggle_icon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerText = 'visibility_off';
+      } else {
+        input.type = 'password';
+        icon.innerText = 'visibility';
+      }
+    }
+
+    function generateRandomPassword() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
+      let pass = '';
+      for (let i = 0; i < 10; i++) {
+        pass += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('txt_add_password').value = pass;
+      document.getElementById('txt_add_password').type = 'text';
+      document.getElementById('pw_add_toggle_icon').innerText = 'visibility_off';
+      showToast('Generated strong password: ' + pass);
+    }
+
+    function toggleEditPasswordVisibility() {
+      const input = document.getElementById('edit_user_password');
+      const icon = document.getElementById('pw_edit_toggle_icon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerText = 'visibility_off';
+      } else {
+        input.type = 'password';
+        icon.innerText = 'visibility';
+      }
+    }
+
+    function generateEditPassword() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
+      let pass = '';
+      for (let i = 0; i < 10; i++) {
+        pass += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('edit_user_password').value = pass;
+      document.getElementById('edit_user_password').type = 'text';
+      document.getElementById('pw_edit_toggle_icon').innerText = 'visibility_off';
+      showToast('Generated new password: ' + pass);
+    }
+
+    function renderAdminUsers() {
+      const tbody = document.getElementById('table_admin_users_body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const usersList = appData.users || [];
       usersList.forEach(u => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
@@ -605,7 +699,13 @@
             <div class="font-bold text-white">${u.name || u.fullName || 'User'}</div>
             ${studentInfoHtml}
           </td>
-          <td class="p-3.5 font-mono text-[#7dd3fc]">${u.email}</td>
+          <td class="p-3.5">
+            <div class="font-mono text-[#7dd3fc]">${u.email}</div>
+            <div class="text-[10px] text-[#a0b4c4] font-mono mt-0.5 flex items-center gap-1">
+              <span class="material-symbols-outlined text-[11px] text-[#7dd3fc]">key</span>
+              <span>Pass: ${u.password || 'password123'}</span>
+            </div>
+          </td>
           <td class="p-3.5">
             <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
               u.role === 'Student' ? 'bg-[#0e4d6e] text-[#c8eaff]' :
@@ -633,6 +733,7 @@
       e.preventDefault();
       const email = document.getElementById('txt_add_email').value.trim();
       const name = document.getElementById('txt_add_name').value.trim();
+      const password = document.getElementById('txt_add_password').value.trim() || 'password123';
       const role = document.getElementById('combo_add_role').value;
 
       let studentId = '';
@@ -659,6 +760,7 @@
       const newUser = {
         id: 1000 + appData.users.length + 1,
         email: email,
+        password: password,
         name: name,
         fullName: name,
         role: role,
@@ -675,12 +777,13 @@
         time: new Date().toISOString().replace('T', ' ').slice(0, 19),
         user: (appData.currentUser && (appData.currentUser.name || appData.currentUser.fullName)) || 'Root Systems Admin',
         action: 'Create User Account',
-        details: `${email} (${role}${studentId ? ` • ID #${studentId}` : ''})`
+        details: `${email} (${role}${studentId ? ` • ID #${studentId}` : ''}) • Password configured`
       });
 
       saveAppData(appData);
       document.getElementById('txt_add_email').value = '';
       document.getElementById('txt_add_name').value = '';
+      document.getElementById('txt_add_password').value = 'password123';
       const studentIdInput = document.getElementById('txt_add_student_id');
       if (studentIdInput) studentIdInput.value = '';
       const majorField = document.getElementById('txt_add_major');
@@ -688,7 +791,7 @@
       renderAdminUsers();
       renderAuditLogs();
       renderAdminEnrollments();
-      showToast(`User ${name} (${role}${studentId ? ` #${studentId}` : ''}) provisioned successfully.`);
+      showToast(`User ${name} (${role}${studentId ? ` #${studentId}` : ''}) provisioned with password.`);
     }
 
     function openEditUserModal(userId) {
@@ -698,6 +801,7 @@
       document.getElementById('edit_user_id').value = user.id;
       document.getElementById('edit_user_name').value = user.name || user.fullName || '';
       document.getElementById('edit_user_email').value = user.email;
+      document.getElementById('edit_user_password').value = user.password || 'password123';
       document.getElementById('edit_user_role').value = user.role;
       document.getElementById('edit_user_status').value = user.status;
 
@@ -725,6 +829,10 @@
         user.name = document.getElementById('edit_user_name').value.trim();
         user.fullName = user.name;
         user.email = document.getElementById('edit_user_email').value.trim();
+        const updatedPw = document.getElementById('edit_user_password').value.trim();
+        if (updatedPw) {
+          user.password = updatedPw;
+        }
         user.role = document.getElementById('edit_user_role').value;
         user.status = document.getElementById('edit_user_status').value;
 

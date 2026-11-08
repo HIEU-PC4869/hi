@@ -296,6 +296,7 @@
         user = {
           id: Math.floor(1000 + Math.random() * 9000),
           email: email,
+          password: document.getElementById('txt_password').value || 'password123',
           name: cleanName,
           fullName: cleanName,
           role: detectedRole,
@@ -310,6 +311,15 @@
       }
 
       if (user) {
+        const inputPassword = document.getElementById('txt_password').value;
+        const expectedPassword = user.password || 'password123';
+        if (inputPassword !== expectedPassword) {
+          document.getElementById('lbl_login_error').classList.remove('hidden');
+          document.getElementById('lbl_login_error_text').innerText = 'Incorrect password for this account. Please verify your credentials.';
+          showToast('Authentication failed: Invalid password.', 'error');
+          return;
+        }
+
         document.getElementById('lbl_login_error').classList.add('hidden');
         appData.currentUser = user;
 

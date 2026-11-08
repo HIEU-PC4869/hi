@@ -52,12 +52,12 @@ const DEFAULT_DATA = {
     ]
   },
   users: [
-    { id: 1001, email: 'a.rivera@university.edu', name: 'Alex Rivera', role: 'Student', studentId: '24091', major: 'B.S. Software Engineering', year: 'Year 3', academicYear: 'Year 3', department: 'B.S. Software Engineering (Year 3)', status: 'Active' },
-    { id: 1002, email: 'dr.vance@university.edu', name: 'Dr. Evelyn Vance', role: 'Instructor', department: 'Faculty of Engineering', status: 'Active' },
-    { id: 1003, email: 'm.brody@university.edu', name: 'Marcus Brody', role: 'Advisor', department: 'Student Support Services', status: 'Active' },
-    { id: 1004, email: 'sysadmin@university.edu', name: 'Root Systems Admin', role: 'Administrator', department: 'Global Campus Administration', status: 'Active' },
-    { id: 1005, email: 'sarah.jenkins@student.univ.edu', name: 'Sarah Jenkins', role: 'Student', studentId: '24094', major: 'B.S. Computer Science', year: 'Year 2', academicYear: 'Year 2', department: 'B.S. Computer Science (Year 2)', status: 'Flagged (EWS)' },
-    { id: 1006, email: 'david.kim@student.univ.edu', name: 'David Kim', role: 'Student', studentId: '24108', major: 'B.S. Computer Engineering', year: 'Year 2', academicYear: 'Year 2', department: 'B.Eng. Computer Engineering (Year 2)', status: 'Flagged (EWS)' }
+    { id: 1001, email: 'a.rivera@university.edu', password: 'password123', name: 'Alex Rivera', role: 'Student', studentId: '24091', major: 'B.S. Software Engineering', year: 'Year 3', academicYear: 'Year 3', department: 'B.S. Software Engineering (Year 3)', status: 'Active' },
+    { id: 1002, email: 'dr.vance@university.edu', password: 'password123', name: 'Dr. Evelyn Vance', role: 'Instructor', department: 'Faculty of Engineering', status: 'Active' },
+    { id: 1003, email: 'm.brody@university.edu', password: 'password123', name: 'Marcus Brody', role: 'Advisor', department: 'Student Support Services', status: 'Active' },
+    { id: 1004, email: 'sysadmin@university.edu', password: 'password123', name: 'Root Systems Admin', role: 'Administrator', department: 'Global Campus Administration', status: 'Active' },
+    { id: 1005, email: 'sarah.jenkins@student.univ.edu', password: 'password123', name: 'Sarah Jenkins', role: 'Student', studentId: '24094', major: 'B.S. Computer Science', year: 'Year 2', academicYear: 'Year 2', department: 'B.S. Computer Science (Year 2)', status: 'Flagged (EWS)' },
+    { id: 1006, email: 'david.kim@student.univ.edu', password: 'password123', name: 'David Kim', role: 'Student', studentId: '24108', major: 'B.S. Computer Engineering', year: 'Year 2', academicYear: 'Year 2', department: 'B.Eng. Computer Engineering (Year 2)', status: 'Flagged (EWS)' }
   ],
   enrollments: [
     { id: 1, userId: 1001, studentName: 'Alex Rivera', course: 'CS-301: Advanced Data Structures', term: 'Fall 2026' },
@@ -96,6 +96,9 @@ function getAppData() {
     if (!data.counselingNotes) data.counselingNotes = DEFAULT_DATA.counselingNotes;
     if (!data.enrollments) data.enrollments = DEFAULT_DATA.enrollments;
     if (!data.auditLogs) data.auditLogs = DEFAULT_DATA.auditLogs;
+    data.users.forEach(u => {
+      if (!u.password) u.password = 'password123';
+    });
     return data;
   } catch (err) {
     console.error('Failed to parse appData from localStorage:', err);

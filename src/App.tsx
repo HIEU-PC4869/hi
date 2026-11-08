@@ -443,7 +443,8 @@ export default function App() {
     fullName?: string,
     studentId?: string,
     major?: string,
-    academicYear?: string
+    academicYear?: string,
+    password?: string
   ) => {
     if (!hasActionPermission(currentUser.role, 'canManageUsers')) {
       showToast('Permission Denied: Administrator role required to provision new user accounts.', 'error');
@@ -456,6 +457,7 @@ export default function App() {
       id: Math.floor(1000 + Math.random() * 9000),
       email,
       fullName: derivedName,
+      password: password || 'password123',
       role,
       studentId: role === 'Student' ? (studentId || String(Math.floor(24000 + Math.random() * 999))) : undefined,
       major: role === 'Student' ? major : undefined,
