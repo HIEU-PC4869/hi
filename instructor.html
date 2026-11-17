@@ -92,8 +92,8 @@
       <!-- User Dossier & Sign Out -->
       <div class="flex items-center gap-3">
         <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-medium shadow-sm">
-          <span class="material-symbols-outlined text-xs">lock</span>
-          <span>HTTPS Strict</span>
+          <span class="material-symbols-outlined text-xs">schedule</span>
+          <span id="live_utc_clock">Live Sync</span>
         </div>
 
         <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#141c2e] border border-white/10">
@@ -207,7 +207,7 @@
           </p>
         </div>
         <div class="text-xs text-[#a0b4c4]">
-          Total Enrolled: <b class="text-white">6</b> • Logged: <b class="text-emerald-400" id="roster_present_count">4</b>
+          Total Enrolled: <b class="text-white" id="roster_total_count">0</b> • Logged: <b class="text-emerald-400" id="roster_present_count">0</b>
         </div>
       </div>
 
@@ -322,12 +322,15 @@
     let appData = getAppData();
     let timerInterval = null;
 
-    function initInstructorPage() {
+    async function initInstructorPage() {
       if (!enforceRoleGuard('Instructor', 'Instructor Workspace')) return;
 
       const user = appData.currentUser;
-      const userName = user.name || user.fullName || 'Dr. Evelyn Vance';
-      const dept = user.department || 'Faculty of Engineering';
+      appData = await syncAppDataFromServer(user.id);
+      const syncedUser = appData.currentUser || user;
+
+      const userName = syncedUser.name || syncedUser.fullName || 'Dr. Evelyn Vance';
+      const dept = syncedUser.department || 'Faculty of Engineering';
 
       document.getElementById('header_instructor_name').innerText = userName;
       document.getElementById('header_instructor_dept').innerText = dept;
@@ -339,37 +342,48 @@
       renderInstructorRoster();
       renderInstructorExcuses();
       startCountdownTimer();
+      startRealtimeClockUpdater('live_utc_clock');
+
+      // Real-time background polling every 3s for student check-ins & excuse updates
+      setInterval(async () => {
+        const uid = (appData.currentUser && appData.currentUser.id) || null;
+        if (!uid) return;
+        appData = await syncAppDataFromServer(uid);
+        renderInstructorSession();
+        renderInstructorRoster();
+        renderInstructorExcuses();
+      }, 3000);
+    }
+
+    function getSyncedRemainingSeconds() {
+      const sess = appData.session;
+      if (!sess || !sess.active) return 0;
+      const offset = typeof serverTimeOffsetMs === 'number' ? serverTimeOffsetMs : 0;
+      const elapsedSec = Math.floor(((Date.now() + offset) - (sess.startTime || Date.now())) / 1000);
+      return Math.max(0, (15 * 60) - Math.max(0, elapsedSec));
     }
 
     function renderInstructorSession() {
       const qrElem = document.getElementById('lbl_dynamic_qr');
       const timerElem = document.getElementById('countdown_timer_text');
-      if (qrElem) qrElem.innerText = appData.session.active ? appData.session.code : '--- CLOSED ---';
+      const sess = appData.session || {};
+      if (qrElem) qrElem.innerText = sess.active ? sess.code : '--- CLOSED ---';
       if (timerElem) {
-        timerElem.innerText = appData.session.active 
-          ? `${Math.floor(appData.session.remainingSeconds / 60)}:${(appData.session.remainingSeconds % 60).toString().padStart(2, '0')} Remaining`
-          : '00:00 Closed';
+        const rem = getSyncedRemainingSeconds();
+        if (sess.active) {
+          timerElem.innerText = rem > 0
+            ? `${Math.floor(rem / 60)}:${(rem % 60).toString().padStart(2, '0')} Remaining`
+            : 'Late Check-In Window';
+        } else {
+          timerElem.innerText = '00:00 Closed';
+        }
       }
     }
 
     function startCountdownTimer() {
       if (timerInterval) clearInterval(timerInterval);
       timerInterval = setInterval(() => {
-        if (appData.session.active && appData.session.remainingSeconds > 0) {
-          appData.session.remainingSeconds--;
-          const timerText = document.getElementById('countdown_timer_text');
-          if (timerText) {
-            const m = Math.floor(appData.session.remainingSeconds / 60);
-            const s = (appData.session.remainingSeconds % 60).toString().padStart(2, '0');
-            timerText.innerText = `${m}:${s} Remaining`;
-          }
-          if (appData.session.remainingSeconds === 0) {
-            appData.session.active = false;
-            saveAppData(appData);
-            renderInstructorSession();
-            showToast('Attendance window closed automatically.', 'warning');
-          }
-        }
+        renderInstructorSession();
       }, 1000);
     }
 
@@ -378,14 +392,12 @@
       if (!select) return;
 
       const user = appData.currentUser;
-      const userCourses = (user && user.courses && user.courses.length > 0) 
-        ? user.courses 
+      const userCourses = (user && user.courses && user.courses.length > 0)
+        ? user.courses
         : ['CS-301', 'CS-402'];
 
-      const catalog = appData.courses || [
-        'CS-301: Advanced Data Structures (Hall B-12)',
-        'CS-402: Cloud Architecture & DevOps (Lab 201)'
-      ];
+      const catalog = appData.courses || [];
+      const prevValue = select.value;
 
       select.innerHTML = '';
       userCourses.forEach(cCode => {
@@ -393,7 +405,7 @@
         const opt = document.createElement('option');
         opt.value = cCode;
         opt.innerText = fullCourse;
-        if (appData.session && appData.session.course === cCode) {
+        if (prevValue === cCode || (!prevValue && appData.session && appData.session.course === cCode)) {
           opt.selected = true;
         }
         select.appendChild(opt);
@@ -418,80 +430,72 @@
       document.getElementById('txt_modal_course_room').value = room;
     }
 
-    function handleInstructorSaveCourse(e) {
+    async function handleInstructorSaveCourse(e) {
       e.preventDefault();
       const code = document.getElementById('txt_modal_course_code').value.trim().toUpperCase();
       const title = document.getElementById('txt_modal_course_title').value.trim();
-      const room = document.getElementById('txt_modal_course_room').value.trim();
+      const room = document.getElementById('txt_modal_course_room').value.trim() || 'Hall B-12';
 
       if (!code || !title) {
         showToast('Please enter both course code and title.', 'warning');
         return;
       }
 
-      const fullLabel = room ? `${code}: ${title} (${room})` : `${code}: ${title}`;
-      
       const user = appData.currentUser;
-      const instructorId = user ? user.id : 1002;
-      
-      appData = addCourseForInstructor(instructorId, code, fullLabel);
-      
-      renderInstructorCourses();
-      
-      const select = document.getElementById('combo_instructor_courses');
-      if (select) select.value = code;
+      const instructorId = user ? user.id : 2;
 
-      closeAddCourseModal();
-      showToast(`Course ${code} added and assigned to your workspace.`);
+      try {
+        appData = await addCourseForInstructor(instructorId, code, title, room);
+        renderInstructorCourses();
+
+        const select = document.getElementById('combo_instructor_courses');
+        if (select) select.value = code;
+
+        closeAddCourseModal();
+        showToast(`Course ${code} added and assigned to your workspace.`);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
     }
 
-    function handleStartSession() {
-      const code = `${Math.floor(100 + Math.random() * 900)}-${Math.floor(100 + Math.random() * 900)}`;
+    async function handleStartSession() {
       const courseSelect = document.getElementById('combo_instructor_courses');
       const selectedCourse = courseSelect ? courseSelect.value : 'CS-301';
-      const selectedCourseText = courseSelect && courseSelect.options[courseSelect.selectedIndex] 
-        ? courseSelect.options[courseSelect.selectedIndex].text 
-        : `${selectedCourse}: Lecture Session`;
-
-      appData.session.active = true;
-      appData.session.code = code;
-      appData.session.course = selectedCourse;
-      appData.session.courseName = selectedCourseText;
-      appData.session.remainingSeconds = 15 * 60;
-      appData.session.startTime = Date.now();
-
       const user = appData.currentUser;
-      const userName = user ? (user.name || user.fullName) : 'Dr. Evelyn Vance';
 
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: userName,
-        action: 'Start Attendance Session',
-        details: `Generated new dynamic PIN: ${code} for ${selectedCourse} (${selectedCourseText.split('(')[0].trim()})`
-      });
-
-      saveAppData(appData);
-      renderInstructorSession();
-      showToast(`Live session started for ${selectedCourse}. PIN: ${code}`);
+      try {
+        const res = await apiRequest('/api/sessions/start', {
+          method: 'POST',
+          body: {
+            course: selectedCourse,
+            instructorId: user ? user.id : 2
+          }
+        });
+        appData = getAppData();
+        renderInstructorSession();
+        renderInstructorRoster();
+        showToast(`Live session started for ${selectedCourse}. PIN: ${res.session.code}`);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
     }
 
-    function handleEndSession() {
-      appData.session.active = false;
-      appData.session.remainingSeconds = 0;
-
+    async function handleEndSession() {
       const user = appData.currentUser;
-      const userName = user ? (user.name || user.fullName) : 'Dr. Evelyn Vance';
-
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: userName,
-        action: 'End Attendance Session',
-        details: 'Attendance roster finalized and locked'
-      });
-
-      saveAppData(appData);
-      renderInstructorSession();
-      showToast('Attendance session ended and finalized.', 'warning');
+      try {
+        await apiRequest('/api/sessions/end', {
+          method: 'POST',
+          body: {
+            sessionId: appData.session ? appData.session.session_id : null,
+            instructorId: user ? user.id : 2
+          }
+        });
+        appData = getAppData();
+        renderInstructorSession();
+        showToast('Attendance session ended and finalized.', 'warning');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
     }
 
     function renderInstructorRoster() {
@@ -500,9 +504,10 @@
       tbody.innerHTML = '';
 
       let presentCount = 0;
+      const rosterList = appData.roster || [];
 
-      appData.roster.forEach(r => {
-        if (r.status === 'Present') presentCount++;
+      rosterList.forEach(r => {
+        if (r.status === 'Present' || r.status === 'Late') presentCount++;
 
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
@@ -513,7 +518,7 @@
           <td class="p-3.5 text-[#a0b4c4]">${r.method}</td>
           <td class="p-3.5 text-xs text-[#a0b4c4]">${r.updatedBy}</td>
           <td class="p-3.5 text-right">
-            <select onchange="handleOverrideStatus('${r.id}', this.value)" 
+            <select onchange="handleOverrideStatus(${r.attendance_id}, '${r.name.replace(/'/g, "\\'")}', this.value)"
               class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border focus:outline-none cursor-pointer ${
                 r.status === 'Present' ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40' :
                 r.status === 'Late' ? 'bg-amber-950/80 text-amber-300 border-amber-500/40' :
@@ -530,27 +535,28 @@
         tbody.appendChild(tr);
       });
 
+      const totalElem = document.getElementById('roster_total_count');
+      if (totalElem) totalElem.innerText = rosterList.length;
       const countElem = document.getElementById('roster_present_count');
       if (countElem) countElem.innerText = presentCount;
     }
 
-    function handleOverrideStatus(studentId, newStatus) {
-      const student = appData.roster.find(r => r.id === studentId);
-      if (student) {
-        student.status = newStatus;
-        student.updatedBy = 'Dr. Vance (Override)';
-        student.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        appData.auditLogs.unshift({
-          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          user: 'Dr. Evelyn Vance',
-          action: 'Manual Attendance Override',
-          details: `Student #${studentId} (${student.name}) marked ${newStatus}`
+    async function handleOverrideStatus(attendanceId, studentName, newStatus) {
+      const user = appData.currentUser;
+      try {
+        await apiRequest('/api/attendance/override', {
+          method: 'POST',
+          body: {
+            attendanceId,
+            status: newStatus,
+            instructorId: user ? user.id : 2
+          }
         });
-
-        saveAppData(appData);
+        appData = getAppData();
         renderInstructorRoster();
-        showToast(`Attendance updated: ${student.name} marked as ${newStatus}.`);
+        showToast(`Attendance updated: ${studentName} marked as ${newStatus}.`);
+      } catch (err) {
+        showToast(err.message, 'error');
       }
     }
 
@@ -559,7 +565,8 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      appData.excuses.forEach(e => {
+      (appData.excuses || []).forEach(e => {
+        const excId = e.excuse_id || e.id;
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
         tr.innerHTML = `
@@ -579,10 +586,10 @@
           </td>
           <td class="p-3.5 text-right space-x-1.5 whitespace-nowrap">
             ${e.status === 'Pending' ? `
-              <button onclick="handleApproveExcuse(${e.id})" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-all cursor-pointer">
+              <button onclick="handleApproveExcuse(${excId}, '${e.studentName.replace(/'/g, "\\'")}')" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-all cursor-pointer">
                 Approve
               </button>
-              <button onclick="handleRejectExcuse(${e.id})" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition-all cursor-pointer">
+              <button onclick="handleRejectExcuse(${excId}, '${e.studentName.replace(/'/g, "\\'")}')" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition-all cursor-pointer">
                 Reject
               </button>
             ` : `<span class="text-[11px] text-[#a0b4c4] italic">Processed</span>`}
@@ -592,54 +599,50 @@
       });
     }
 
-    function handleApproveExcuse(excuseId) {
-      const excuse = appData.excuses.find(e => e.id === excuseId);
-      if (excuse) {
-        excuse.status = 'Approved';
-        const inRoster = appData.roster.find(r => r.id === excuse.studentId);
-        if (inRoster) {
-          inRoster.status = 'Excused';
-          inRoster.updatedBy = 'Excuse Verified';
-        }
-
-        appData.auditLogs.unshift({
-          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          user: 'Dr. Evelyn Vance',
-          action: 'Approve Excuse Request',
-          details: `Approved excuse for ${excuse.studentName} (#${excuse.studentId}) on ${excuse.course}`
+    async function handleApproveExcuse(excuseId, studentName) {
+      const user = appData.currentUser;
+      try {
+        await apiRequest(`/api/excuses/${excuseId}/review`, {
+          method: 'POST',
+          body: { decision: 'Approved', instructorId: user ? user.id : 2 }
         });
-
-        saveAppData(appData);
+        appData = getAppData();
         renderInstructorExcuses();
         renderInstructorRoster();
-        showToast(`Excuse for ${excuse.studentName} has been approved.`);
+        showToast(`Excuse for ${studentName} has been approved.`);
+      } catch (err) {
+        showToast(err.message, 'error');
       }
     }
 
-    function handleRejectExcuse(excuseId) {
-      const excuse = appData.excuses.find(e => e.id === excuseId);
-      if (excuse) {
-        excuse.status = 'Rejected';
-
-        appData.auditLogs.unshift({
-          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          user: 'Dr. Evelyn Vance',
-          action: 'Reject Excuse Request',
-          details: `Rejected excuse for ${excuse.studentName} (#${excuse.studentId})`
+    async function handleRejectExcuse(excuseId, studentName) {
+      const user = appData.currentUser;
+      try {
+        await apiRequest(`/api/excuses/${excuseId}/review`, {
+          method: 'POST',
+          body: { decision: 'Rejected', instructorId: user ? user.id : 2 }
         });
-
-        saveAppData(appData);
+        appData = getAppData();
         renderInstructorExcuses();
-        showToast(`Excuse for ${excuse.studentName} was rejected.`, 'warning');
+        showToast(`Excuse for ${studentName} was rejected.`, 'warning');
+      } catch (err) {
+        showToast(err.message, 'error');
       }
     }
 
     function exportCourseReportCSV() {
+      const courseSelect = document.getElementById('combo_instructor_courses');
+      const selectedCourse = courseSelect ? courseSelect.value : 'CS-301';
+      if (isHttpMode()) {
+        window.location.href = `/api/reports/course?course=${encodeURIComponent(selectedCourse)}`;
+        showToast(`Exporting ${selectedCourse} attendance report...`);
+        return;
+      }
       let csv = 'Student ID,Student Name,Logged Time,Method,Status,Verified By\n';
-      appData.roster.forEach(r => {
+      (appData.roster || []).forEach(r => {
         csv += `"${r.id}","${r.name}","${r.time}","${r.method}","${r.status}","${r.updatedBy}"\n`;
       });
-      downloadCSV(csv, 'CS301_Attendance_Roster_Export.csv');
+      downloadCSV(csv, `${selectedCourse}_Attendance_Roster_Export.csv`);
       showToast('Course attendance report exported as CSV.');
     }
 

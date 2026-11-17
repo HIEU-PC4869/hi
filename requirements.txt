@@ -1,3 +1,4 @@
-# Python Requirements for SAS Enterprise (Standard Library + Data Processing)
+# Python Requirements for SAS Enterprise
+pytest>=8.0.0
 pandas>=2.0.0
 openpyxl>=3.1.0

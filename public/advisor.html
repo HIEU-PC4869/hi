@@ -92,8 +92,8 @@
       <!-- User Dossier & Sign Out -->
       <div class="flex items-center gap-3">
         <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-medium shadow-sm">
-          <span class="material-symbols-outlined text-xs">lock</span>
-          <span>HTTPS Strict</span>
+          <span class="material-symbols-outlined text-xs">schedule</span>
+          <span id="live_utc_clock">Live Sync</span>
         </div>
 
         <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#141c2e] border border-white/10">
@@ -134,7 +134,7 @@
       <div class="flex items-center gap-2">
         <span class="px-3.5 py-1.5 rounded-full bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-semibold flex items-center gap-2 shadow-sm">
           <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-          <span>2 High-Risk Students Flagged</span>
+          <span id="advisor_flagged_badge">0 High-Risk Students Flagged</span>
         </span>
       </div>
     </div>
@@ -181,8 +181,8 @@
         
         <div class="p-3.5 rounded-xl bg-[#141c2e] border border-white/10 text-xs space-y-1">
           <div class="text-[#a0b4c4]">Selected Student:</div>
-          <div class="font-bold text-[#7dd3fc] text-sm" id="counseling_selected_student">Sarah Jenkins (#24094)</div>
-          <div class="text-[11px] text-[#a0b4c4]">Course: CS-301 • Attendance: 71.4%</div>
+          <div class="font-bold text-[#7dd3fc] text-sm" id="counseling_selected_student">Select a student from EWS table</div>
+          <div class="text-[11px] text-[#a0b4c4]" id="counseling_selected_meta">--</div>
         </div>
 
         <div class="space-y-1.5">
@@ -214,33 +214,57 @@
   <script src="shared.js"></script>
   <script>
     let appData = getAppData();
-    let selectedStudentIdForCounseling = '24094';
+    let selectedStudentIdForCounseling = null;
 
-    function initAdvisorPage() {
+    async function initAdvisorPage() {
       if (!enforceRoleGuard('Advisor', 'Advisor Hub')) return;
 
       const user = appData.currentUser;
-      const userName = user.name || user.fullName || 'Marcus Brody';
-      const dept = user.department || 'Student Support Services';
+      appData = await syncAppDataFromServer(user.id);
+      const syncedUser = appData.currentUser || user;
+
+      const userName = syncedUser.name || syncedUser.fullName || 'Marcus Brody';
+      const dept = syncedUser.department || 'Student Support Services';
 
       document.getElementById('header_advisor_name').innerText = userName;
       document.getElementById('header_advisor_dept').innerText = dept;
       document.getElementById('header_advisor_avatar').innerText = userName.split(' ').map(n => n[0]).join('').slice(0, 2);
       document.getElementById('advisor_welcome_subtext').innerText = `Advisor: ${userName} • ${dept}`;
 
+      if (!selectedStudentIdForCounseling && (appData.warnings || []).length > 0) {
+        const w0 = appData.warnings[0];
+        selectedStudentIdForCounseling = String(w0.studentId || w0.student_id);
+        document.getElementById('counseling_selected_student').innerText = `${w0.name} (#${w0.studentId})`;
+        const meta = document.getElementById('counseling_selected_meta');
+        if (meta) meta.innerText = `Course: ${w0.course} • Attendance: ${w0.pct}%`;
+      }
+
       renderAdvisorWarnings();
       renderCounselingHistory();
+      startRealtimeClockUpdater('live_utc_clock');
+
+      setInterval(async () => {
+        const uid = (appData.currentUser && appData.currentUser.id) || null;
+        if (!uid) return;
+        appData = await syncAppDataFromServer(uid);
+        renderAdvisorWarnings();
+        renderCounselingHistory();
+      }, 4000);
     }
 
     function renderAdvisorWarnings() {
       const tbody = document.getElementById('table_advisor_warnings_body');
+      const badge = document.getElementById('advisor_flagged_badge');
+      const warningsList = appData.warnings || [];
+      if (badge) badge.innerText = `${warningsList.length} High-Risk Student${warningsList.length === 1 ? '' : 's'} Flagged`;
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      appData.warnings.forEach(w => {
+      warningsList.forEach(w => {
+        const stuId = String(w.studentId || w.student_id);
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/10 transition-colors';
-        tr.onclick = () => selectStudentForCounseling(w.studentId, w.name, w.course, w.pct);
+        tr.onclick = () => selectStudentForCounseling(stuId, w.name, w.course, w.pct);
         tr.innerHTML = `
           <td class="p-3.5">
             <div class="font-bold text-white">${w.name}</div>
@@ -260,8 +284,10 @@
     }
 
     function selectStudentForCounseling(studentId, name, course, pct) {
-      selectedStudentIdForCounseling = studentId;
+      selectedStudentIdForCounseling = String(studentId);
       document.getElementById('counseling_selected_student').innerText = `${name} (#${studentId})`;
+      const meta = document.getElementById('counseling_selected_meta');
+      if (meta) meta.innerText = `Course: ${course} • Attendance: ${pct}%`;
       renderCounselingHistory();
     }
 
@@ -270,7 +296,8 @@
       if (!container) return;
       container.innerHTML = '';
 
-      const notes = appData.counselingNotes[selectedStudentIdForCounseling] || [];
+      const notesMap = appData.counselingNotes || {};
+      const notes = selectedStudentIdForCounseling ? (notesMap[selectedStudentIdForCounseling] || []) : [];
       if (notes.length === 0) {
         container.innerHTML = '<div class="text-[#a0b4c4] italic p-2">No intervention history recorded for this student.</div>';
         return;
@@ -281,47 +308,43 @@
         div.className = 'p-2.5 rounded-lg bg-[#141c2e] border border-white/5 space-y-1';
         div.innerHTML = `
           <div class="flex items-center justify-between text-[10px] text-[#7dd3fc]">
-            <span>${n.advisor}</span>
+            <span>${n.advisor || n.advisor_name}</span>
             <span class="font-mono text-[#a0b4c4]">${n.date}</span>
           </div>
-          <div class="text-white text-xs leading-relaxed">${n.text}</div>
+          <div class="text-white text-xs leading-relaxed">${n.text || n.note_text}</div>
         `;
         container.appendChild(div);
       });
     }
 
-    function handleSaveCounselingNotes() {
+    async function handleSaveCounselingNotes() {
       const text = document.getElementById('txt_counseling_notes').value.trim();
       if (!text) {
         showToast('Please enter counseling notes before saving.', 'warning');
         return;
       }
-
-      if (!appData.counselingNotes[selectedStudentIdForCounseling]) {
-        appData.counselingNotes[selectedStudentIdForCounseling] = [];
+      if (!selectedStudentIdForCounseling) {
+        showToast('Please select an at-risk student first.', 'warning');
+        return;
       }
 
       const user = appData.currentUser;
-      const advisorName = user ? (user.name || user.fullName) : 'Marcus Brody';
-
-      const now = new Date().toISOString().replace('T', ' ').slice(0, 16);
-      appData.counselingNotes[selectedStudentIdForCounseling].unshift({
-        date: now,
-        advisor: advisorName,
-        text: text
-      });
-
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: `${advisorName} (Advisor)`,
-        action: 'Save Intervention Note',
-        details: `Student #${selectedStudentIdForCounseling}: ${text.slice(0, 45)}...`
-      });
-
-      saveAppData(appData);
-      document.getElementById('txt_counseling_notes').value = '';
-      renderCounselingHistory();
-      showToast('Counseling notes saved to student dossier.');
+      try {
+        await apiRequest('/api/warnings/notes', {
+          method: 'POST',
+          body: {
+            studentId: selectedStudentIdForCounseling,
+            advisorId: user ? user.id : 3,
+            noteText: text
+          }
+        });
+        appData = getAppData();
+        document.getElementById('txt_counseling_notes').value = '';
+        renderCounselingHistory();
+        showToast('Counseling notes saved to SQLite student dossier.');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
     }
 
     window.addEventListener('DOMContentLoaded', initAdvisorPage);

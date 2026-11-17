@@ -92,8 +92,8 @@
       <!-- User Dossier & Sign Out -->
       <div class="flex items-center gap-3">
         <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-medium shadow-sm">
-          <span class="material-symbols-outlined text-xs">lock</span>
-          <span>HTTPS Strict</span>
+          <span class="material-symbols-outlined text-xs">schedule</span>
+          <span id="live_utc_clock">Live Sync</span>
         </div>
 
         <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#141c2e] border border-white/10">
@@ -471,6 +471,131 @@
       </div>
     </div>
 
+    <!-- FUNCTION 4: JIRA BUG TRACKING & QA DEFECT WORKFLOW -->
+    <div class="glass-card rounded-2xl p-6 space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-sky-400">bug_report</span>
+            Jira Bug Tracking & QA Defect Workflow (Project: SAS)
+          </h2>
+          <p class="text-xs text-[#a0b4c4]">Log failed test cases into Jira workflow (To Do → In Progress → In Review → Done) and export Jira CSV imports.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="jira_connection_badge" class="px-2.5 py-1 rounded-lg bg-sky-950/60 border border-sky-500/30 text-sky-300 text-[11px] font-mono">
+            Jira Workflow Ready
+          </span>
+          <button type="button" onclick="handleTestJiraConnection()"
+            class="px-3 py-2 rounded-xl bg-[#141c2e] hover:bg-[#1a2438] text-emerald-300 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+            <span class="material-symbols-outlined text-sm">cloud_done</span>
+            <span>Test Jira Connection</span>
+          </button>
+          <button type="button" onclick="exportJiraCSV()"
+            class="px-3.5 py-2 rounded-xl bg-sky-950/70 hover:bg-sky-900/80 text-sky-200 border border-sky-500/30 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer">
+            <span class="material-symbols-outlined text-sm">download</span>
+            <span>Export Jira CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Log Jira Bug Form -->
+        <form onsubmit="handleAdminLogJiraBug(event)" class="p-4 rounded-xl bg-[#111828] border border-white/10 space-y-3 text-xs">
+          <div class="font-semibold text-sky-300 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">add_task</span>
+            <span>Create Jira Bug Issue</span>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4]" for="txt_bug_summary">Issue Summary</label>
+            <input id="txt_bug_summary" type="text" required placeholder="e.g. Check-in rejects expired PIN cleanly"
+              class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-sky-400" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div class="space-y-1">
+              <label class="text-[#a0b4c4]" for="txt_bug_testcase">Test Case ID</label>
+              <input id="txt_bug_testcase" type="text" value="TC11" placeholder="TC01..TC40"
+                class="w-full h-9 px-3 rounded-xl bg-[#141c2e] border border-white/10 text-white font-mono uppercase focus:outline-none focus:border-sky-400" />
+            </div>
+            <div class="space-y-1">
+              <label class="text-[#a0b4c4]" for="combo_bug_module">Component</label>
+              <select id="combo_bug_module" class="w-full h-9 px-2.5 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-sky-400 cursor-pointer">
+                <option value="Auth">Auth</option>
+                <option value="Student Portal" selected>Student Portal</option>
+                <option value="Instructor Portal">Instructor Portal</option>
+                <option value="Advisor EWS">Advisor EWS</option>
+                <option value="Admin Console">Admin Console</option>
+                <option value="Database / API">Database / API</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div class="space-y-1">
+              <label class="text-[#a0b4c4]" for="combo_bug_priority">Jira Priority</label>
+              <select id="combo_bug_priority" class="w-full h-9 px-2.5 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-sky-400 cursor-pointer">
+                <option value="Highest">Highest</option>
+                <option value="High" selected>High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+                <option value="Lowest">Lowest</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[#a0b4c4]" for="combo_bug_severity">Severity</label>
+              <select id="combo_bug_severity" class="w-full h-9 px-2.5 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-sky-400 cursor-pointer">
+                <option value="Blocker">Blocker</option>
+                <option value="Critical">Critical</option>
+                <option value="Major" selected>Major</option>
+                <option value="Minor">Minor</option>
+                <option value="Trivial">Trivial</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4]" for="combo_bug_assignee">Assignee</label>
+            <select id="combo_bug_assignee" class="w-full h-9 px-2.5 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-sky-400 cursor-pointer">
+              <option value="Backend MVC Team">Backend MVC Team</option>
+              <option value="Frontend View Team">Frontend View Team</option>
+              <option value="Database & QA Lead">Database & QA Lead</option>
+            </select>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[#a0b4c4]" for="txt_bug_description">Steps to Reproduce / Expected vs Actual</label>
+            <textarea id="txt_bug_description" rows="3" required placeholder="1. Steps...&#10;Expected: ...&#10;Actual: ..."
+              class="w-full p-2.5 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-sky-400"></textarea>
+          </div>
+
+          <button type="submit"
+            class="w-full h-9 rounded-xl bg-gradient-to-r from-[#0e4d6e] to-[#38bdf8] text-[#001f2e] font-bold text-xs shadow-md hover:opacity-95 transition-all cursor-pointer flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">send</span>
+            <span>Log Bug to Jira Queue</span>
+          </button>
+        </form>
+
+        <!-- Jira Issue Board Table -->
+        <div class="lg:col-span-2 overflow-x-auto rounded-xl border border-white/10 max-h-96 overflow-y-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#141c2e] text-[#a0b4c4] uppercase text-[10px] tracking-wider border-b border-white/10 sticky top-0">
+              <tr>
+                <th class="p-3">Jira Key</th>
+                <th class="p-3">Summary & Test Case</th>
+                <th class="p-3">Priority / Sev</th>
+                <th class="p-3">Workflow Status</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin_jira_bugs_body" class="divide-y divide-white/5">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- EDIT USER MODAL -->
@@ -509,7 +634,7 @@
           </div>
           <div class="relative flex items-center">
             <span class="material-symbols-outlined absolute left-3 text-[#a0b4c4] text-sm">key</span>
-            <input id="edit_user_password" type="password" placeholder="Enter new password to update"
+            <input id="edit_user_password" type="password" placeholder="Leave blank to keep current password"
               class="w-full h-10 pl-9 pr-9 rounded-xl bg-[#141c2e] border border-white/10 text-white focus:outline-none focus:border-[#7dd3fc] font-mono text-xs" />
             <button type="button" onclick="toggleEditPasswordVisibility()" class="absolute right-3 text-[#a0b4c4] hover:text-white p-1 cursor-pointer">
               <span id="pw_edit_toggle_icon" class="material-symbols-outlined text-sm">visibility</span>
@@ -590,6 +715,7 @@
               <option value="Graduate">Graduate (Master's / Ph.D.)</option>
             </select>
           </div>
+        </div>
         <!-- Instructor Profile Metadata Edit Fields -->
         <div id="group_edit_instructor_fields" class="space-y-3 p-3.5 rounded-xl bg-[#111828] border border-[#7dd3fc]/20 shadow-inner hidden">
           <div class="flex items-center justify-between text-[11px] font-semibold text-[#7dd3fc] uppercase tracking-wider">
@@ -631,12 +757,15 @@
     let appData = getAppData();
     let currentEditingUserId = null;
 
-    function initAdminPage() {
+    async function initAdminPage() {
       if (!enforceRoleGuard('Administrator', 'Administrator Console')) return;
 
       const user = appData.currentUser;
-      const userName = user.name || user.fullName || 'Root Systems Admin';
-      const dept = user.department || 'Global Campus Administration';
+      appData = await syncAppDataFromServer(user.id);
+      const syncedUser = appData.currentUser || user;
+
+      const userName = syncedUser.name || syncedUser.fullName || 'Root Systems Admin';
+      const dept = syncedUser.department || 'Global Campus Administration';
 
       document.getElementById('header_admin_name').innerText = userName;
       document.getElementById('header_admin_avatar').innerText = userName.split(' ').map(n => n[0]).join('').slice(0, 2);
@@ -646,6 +775,20 @@
       renderAdminCourses();
       renderAdminEnrollments();
       renderAuditLogs();
+      renderJiraBugs();
+      toggleStudentFieldsVisibility();
+      startRealtimeClockUpdater('live_utc_clock');
+
+      // Live real-time refresh for audit logs, bugs, and system users every 3s
+      setInterval(async () => {
+        const uid = (appData.currentUser && appData.currentUser.id) || null;
+        if (!uid) return;
+        appData = await syncAppDataFromServer(uid);
+        renderAdminUsers();
+        renderAdminCourses();
+        renderAuditLogs();
+        renderJiraBugs();
+      }, 3000);
     }
 
     let assignedInstructorCourses = ['CS-301', 'CS-402'];
@@ -653,7 +796,8 @@
     function renderInstructorPresetChips() {
       const container = document.getElementById('instructor_preset_courses_chips');
       if (!container) return;
-      const catalog = [
+      const serverCatalog = (appData.courseCatalog || []).map(c => ({ code: c.code, title: c.title }));
+      const defaultCatalog = [
         { code: 'CS-301', title: 'Advanced Data Structures' },
         { code: 'CS-402', title: 'Cloud Architecture & DevOps' },
         { code: 'ENG-204', title: 'Technical Communication' },
@@ -662,14 +806,19 @@
         { code: 'SWE-420', title: 'Software Architecture' },
         { code: 'AI-315', title: 'Machine Learning Fundamentals' }
       ];
+      const mergedMap = new Map();
+      [...serverCatalog, ...defaultCatalog].forEach(c => {
+        if (c.code && !mergedMap.has(c.code)) mergedMap.set(c.code, c);
+      });
+      const catalog = Array.from(mergedMap.values());
 
       container.innerHTML = catalog.map(c => {
         const isSelected = assignedInstructorCourses.includes(c.code);
         return `
           <button type="button" onclick="toggleInstructorCourseSelection('${c.code}')"
             class="text-[10px] px-2 py-1 rounded-lg border transition-all cursor-pointer flex items-center gap-1 ${
-              isSelected 
-                ? 'bg-emerald-950/70 border-emerald-500/50 text-emerald-300 font-semibold' 
+              isSelected
+                ? 'bg-emerald-950/70 border-emerald-500/50 text-emerald-300 font-semibold'
                 : 'bg-[#141c2e] border-white/10 text-[#a0b4c4] hover:text-white hover:border-[#7dd3fc]/40'
             }">
             <span>${isSelected ? '✓' : '+'}</span>
@@ -762,27 +911,15 @@
       const studentFields = document.getElementById('group_edit_student_fields');
       const instructorFields = document.getElementById('group_edit_instructor_fields');
       if (studentFields) {
-        if (role === 'Student') {
-          studentFields.classList.remove('hidden');
-        } else {
-          studentFields.classList.add('hidden');
-        }
+        if (role === 'Student') studentFields.classList.remove('hidden');
+        else studentFields.classList.add('hidden');
       }
       if (instructorFields) {
-        if (role === 'Instructor') {
-          instructorFields.classList.remove('hidden');
-        } else {
-          instructorFields.classList.add('hidden');
-        }
+        if (role === 'Instructor') instructorFields.classList.remove('hidden');
+        else instructorFields.classList.add('hidden');
       }
     }
 
-    function renderAdminUsers() {
-      const tbody = document.getElementById('table_admin_users_body');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-
-      const usersList = appData.users || [];
     function toggleAddPasswordVisibility() {
       const input = document.getElementById('txt_add_password');
       const icon = document.getElementById('pw_add_toggle_icon');
@@ -857,6 +994,8 @@
           </div>
         ` : '';
 
+        const statusColor = u.status === 'Suspended' ? 'text-rose-400' : u.status === 'Flagged (EWS)' ? 'text-amber-400' : 'text-emerald-400';
+
         tr.innerHTML = `
           <td class="p-3.5 font-mono text-[#a0b4c4]">#${u.id}</td>
           <td class="p-3.5">
@@ -867,8 +1006,8 @@
           <td class="p-3.5">
             <div class="font-mono text-[#7dd3fc]">${u.email}</div>
             <div class="text-[10px] text-[#a0b4c4] font-mono mt-0.5 flex items-center gap-1">
-              <span class="material-symbols-outlined text-[11px] text-[#7dd3fc]">key</span>
-              <span>Pass: ${u.password || 'password123'}</span>
+              <span class="material-symbols-outlined text-[11px] text-emerald-400">verified_user</span>
+              <span>SHA-256 Protected</span>
             </div>
           </td>
           <td class="p-3.5">
@@ -879,7 +1018,7 @@
               'bg-emerald-950 text-emerald-300'
             }">${u.role}</span>
           </td>
-          <td class="p-3.5 text-xs text-emerald-400">● ${u.status || 'Active'}</td>
+          <td class="p-3.5 text-xs ${statusColor}">● ${u.status || 'Active'}</td>
           <td class="p-3.5 text-right">
             <button onclick="openEditUserModal(${u.id})" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0e4d6e]/40 hover:bg-[#0e4d6e] text-[#7dd3fc] border border-[#7dd3fc]/30 text-xs font-semibold transition-all cursor-pointer">
               <span class="material-symbols-outlined text-[12px]">edit</span>
@@ -894,7 +1033,7 @@
       if (countElem) countElem.innerText = `Total: ${usersList.length} accounts`;
     }
 
-    function handleAdminAddUser(e) {
+    async function handleAdminAddUser(e) {
       e.preventDefault();
       const email = document.getElementById('txt_add_email').value.trim();
       const name = document.getElementById('txt_add_name').value.trim();
@@ -910,15 +1049,12 @@
       if (role === 'Student') {
         const studentIdInput = document.getElementById('txt_add_student_id');
         studentId = studentIdInput ? studentIdInput.value.trim() : '';
-        if (!studentId) {
-          studentId = String(24000 + Math.floor(Math.random() * 900) + 100);
-        }
         const majorInput = document.getElementById('txt_add_major');
         major = (majorInput ? majorInput.value.trim() : '') || 'B.S. Software Engineering';
         const yearSelect = document.getElementById('combo_add_year');
         year = yearSelect ? yearSelect.value : 'Year 1';
         department = `${major} (${year})`;
-        assignedCourses = ['CS-301', 'ENG-204'];
+        assignedCourses = ['CS-301', 'ENG-204', 'MATH-310'];
       } else if (role === 'Instructor') {
         const deptSelect = document.getElementById('combo_add_dept');
         department = deptSelect ? deptSelect.value : 'Faculty of Engineering';
@@ -926,64 +1062,59 @@
       } else {
         const deptSelect = document.getElementById('combo_add_dept');
         department = deptSelect ? deptSelect.value : 'Faculty of Engineering';
-        assignedCourses = ['System Master Node'];
       }
 
-      const newUser = {
-        id: 1000 + appData.users.length + 1,
-        email: email,
-        password: password,
-        name: name,
-        fullName: name,
-        role: role,
-        courses: assignedCourses,
-        studentId: studentId || undefined,
-        major: major || undefined,
-        year: year || undefined,
-        academicYear: year || undefined,
-        department: department,
-        status: 'Active'
-      };
-
-      appData.users.push(newUser);
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: (appData.currentUser && (appData.currentUser.name || appData.currentUser.fullName)) || 'Root Systems Admin',
-        action: 'Create User Account',
-        details: `${email} (${role}${studentId ? ` • ID #${studentId}` : ''}${role === 'Instructor' ? ` • Teaching: ${assignedCourses.join(', ')}` : ''}) • Password configured`
-      });
-
-      saveAppData(appData);
-      document.getElementById('txt_add_email').value = '';
-      document.getElementById('txt_add_name').value = '';
-      document.getElementById('txt_add_password').value = 'password123';
-      const studentIdInput = document.getElementById('txt_add_student_id');
-      if (studentIdInput) studentIdInput.value = '';
-      const majorField = document.getElementById('txt_add_major');
-      if (majorField) majorField.value = 'B.S. Software Engineering';
-      assignedInstructorCourses = ['CS-301', 'CS-402'];
-      renderInstructorAssignedBadges();
-      renderAdminUsers();
-      renderAuditLogs();
-      renderAdminEnrollments();
-      showToast(`User ${name} (${role}${studentId ? ` #${studentId}` : ''}) provisioned successfully.`);
+      try {
+        await apiRequest('/api/users', {
+          method: 'POST',
+          body: {
+            email,
+            name,
+            fullName: name,
+            password,
+            role,
+            studentId: studentId || null,
+            major: major || null,
+            academicYear: year || null,
+            department,
+            courses: assignedCourses,
+            actorId: appData.currentUser ? appData.currentUser.id : null
+          }
+        });
+        appData = getAppData();
+        document.getElementById('txt_add_email').value = '';
+        document.getElementById('txt_add_name').value = '';
+        document.getElementById('txt_add_password').value = 'password123';
+        const studentIdInput = document.getElementById('txt_add_student_id');
+        if (studentIdInput) studentIdInput.value = '';
+        const majorField = document.getElementById('txt_add_major');
+        if (majorField) majorField.value = 'B.S. Software Engineering';
+        assignedInstructorCourses = ['CS-301', 'CS-402'];
+        renderInstructorAssignedBadges();
+        renderAdminUsers();
+        renderAuditLogs();
+        renderAdminEnrollments();
+        showToast(`User ${name} (${role}) provisioned in SQLite.`);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
     }
 
     function openEditUserModal(userId) {
-      const user = appData.users.find(u => u.id === userId);
+      const user = (appData.users || []).find(u => u.id === userId);
       if (!user) return;
       currentEditingUserId = userId;
       document.getElementById('edit_user_id').value = user.id;
       document.getElementById('edit_user_name').value = user.name || user.fullName || '';
       document.getElementById('edit_user_email').value = user.email;
-      document.getElementById('edit_user_password').value = user.password || 'password123';
+      document.getElementById('edit_user_password').value = '';
       document.getElementById('edit_user_role').value = user.role;
-      document.getElementById('edit_user_status').value = user.status;
+      document.getElementById('edit_user_status').value = user.status || 'Active';
 
       const editStudentId = document.getElementById('edit_user_student_id');
       if (editStudentId) editStudentId.value = user.studentId || '';
       const editMajor = document.getElementById('edit_user_major');
-      if (editMajor && user.major) editMajor.value = user.major;
+      if (editMajor) editMajor.value = user.major || '';
       const editYear = document.getElementById('edit_user_year');
       if (editYear && (user.year || user.academicYear)) editYear.value = user.year || user.academicYear;
 
@@ -1001,79 +1132,73 @@
       currentEditingUserId = null;
     }
 
-    function handleSaveEditUser(e) {
+    async function handleSaveEditUser(e) {
       e.preventDefault();
       if (!currentEditingUserId) return;
-      const user = appData.users.find(u => u.id === currentEditingUserId);
-      if (user) {
-        user.name = document.getElementById('edit_user_name').value.trim();
-        user.fullName = user.name;
-        user.email = document.getElementById('edit_user_email').value.trim();
-        const updatedPw = document.getElementById('edit_user_password').value.trim();
-        if (updatedPw) {
-          user.password = updatedPw;
-        }
-        user.role = document.getElementById('edit_user_role').value;
-        user.status = document.getElementById('edit_user_status').value;
 
-        if (user.role === 'Student') {
-          const editStudentId = document.getElementById('edit_user_student_id');
-          if (editStudentId) user.studentId = editStudentId.value.trim() || user.studentId;
-          const editMajor = document.getElementById('edit_user_major');
-          if (editMajor) user.major = editMajor.value.trim() || user.major;
-          const editYear = document.getElementById('edit_user_year');
-          if (editYear) {
-            user.year = editYear.value;
-            user.academicYear = editYear.value;
-          }
-          if (user.major && user.year) {
-            user.department = `${user.major} (${user.year})`;
-          }
-        } else if (user.role === 'Instructor') {
-          const editCourses = document.getElementById('edit_user_courses');
-          if (editCourses) {
-            const raw = editCourses.value.trim();
-            user.courses = raw ? raw.split(',').map(s => s.trim().toUpperCase()).filter(Boolean) : ['CS-301'];
-          }
-        }
+      const name = document.getElementById('edit_user_name').value.trim();
+      const email = document.getElementById('edit_user_email').value.trim();
+      const updatedPw = document.getElementById('edit_user_password').value.trim();
+      const role = document.getElementById('edit_user_role').value;
+      const status = document.getElementById('edit_user_status').value;
 
-        appData.auditLogs.unshift({
-          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          user: appData.currentUser ? (appData.currentUser.name || appData.currentUser.fullName) : 'Root Systems Admin',
-          action: 'Modify User Record',
-          details: `Updated account #${user.id} (${user.name}, ${user.role})`
+      const payload = {
+        name,
+        fullName: name,
+        email,
+        role,
+        status,
+        actorId: appData.currentUser ? appData.currentUser.id : null
+      };
+      if (updatedPw) {
+        payload.password = updatedPw;
+      }
+
+      if (role === 'Student') {
+        const editStudentId = document.getElementById('edit_user_student_id');
+        const editMajor = document.getElementById('edit_user_major');
+        const editYear = document.getElementById('edit_user_year');
+        payload.studentId = editStudentId ? editStudentId.value.trim() : undefined;
+        payload.major = editMajor ? editMajor.value.trim() : undefined;
+        payload.academicYear = editYear ? editYear.value : undefined;
+      } else if (role === 'Instructor') {
+        const editCourses = document.getElementById('edit_user_courses');
+        const raw = editCourses ? editCourses.value.trim() : '';
+        payload.courses = raw ? raw.split(',').map(s => s.trim().toUpperCase()).filter(Boolean) : ['CS-301'];
+      }
+
+      try {
+        await apiRequest(`/api/users/${currentEditingUserId}`, {
+          method: 'PUT',
+          body: payload
         });
-
-        saveAppData(appData);
+        appData = getAppData();
         closeEditUserModal();
         renderAdminUsers();
         renderAuditLogs();
-        showToast(`User record for ${user.name} updated successfully.`);
+        showToast(`User record for ${name} updated in SQLite.`);
+      } catch (err) {
+        showToast(err.message, 'error');
       }
     }
 
-    function handleDeleteUserFromModal() {
+    async function handleDeleteUserFromModal() {
       if (!currentEditingUserId) return;
-      const user = appData.users.find(u => u.id === currentEditingUserId);
-      if (!user) return;
-      
       const removedId = currentEditingUserId;
-      const removedName = user.name || user.fullName;
-      appData.users = appData.users.filter(u => u.id !== removedId);
-      
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: appData.currentUser ? (appData.currentUser.name || appData.currentUser.fullName) : 'Root Systems Admin',
-        action: 'Deprovision User',
-        details: `Deleted account #${removedId} (${removedName})`
-      });
-
-      saveAppData(appData);
-      closeEditUserModal();
-      renderAdminUsers();
-      renderAuditLogs();
-      renderAdminEnrollments();
-      showToast(`Account #${removedId} removed from system.`, 'warning');
+      try {
+        await apiRequest(`/api/users/${removedId}`, {
+          method: 'DELETE',
+          body: { actorId: appData.currentUser ? appData.currentUser.id : null }
+        });
+        appData = getAppData();
+        closeEditUserModal();
+        renderAdminUsers();
+        renderAuditLogs();
+        renderAdminEnrollments();
+        showToast(`Account #${removedId} removed from SQLite.`, 'warning');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
     }
 
     function renderAdminCourses() {
@@ -1081,14 +1206,15 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      appData.courses.forEach((c, idx) => {
+      const catalog = appData.courseCatalog || [];
+      catalog.forEach((c) => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
         tr.innerHTML = `
-          <td class="p-2.5 font-mono text-[#7dd3fc]">CRS-0${idx + 1}</td>
-          <td class="p-2.5 text-white font-medium">${c}</td>
+          <td class="p-2.5 font-mono text-[#7dd3fc]">${c.code || ('CRS-0' + c.id)}</td>
+          <td class="p-2.5 text-white font-medium">${c.course_name || c.displayLabel}</td>
           <td class="p-2.5 text-right">
-            <button onclick="handleAdminDeleteCourse(${idx})" class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition-all cursor-pointer">
+            <button onclick="handleAdminDeleteCourse(${c.id}, '${(c.code || '').replace(/'/g, "\\'")}')" class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition-all cursor-pointer">
               Delete
             </button>
           </td>
@@ -1097,51 +1223,49 @@
       });
 
       const countElem = document.getElementById('admin_courses_count');
-      if (countElem) countElem.innerText = `${appData.courses.length} offerings`;
+      if (countElem) countElem.innerText = `${catalog.length} offerings`;
     }
 
-    function handleAdminAddCourse(e) {
+    async function handleAdminAddCourse(e) {
       e.preventDefault();
-      const code = document.getElementById('txt_add_course_code').value.trim();
-      const name = document.getElementById('txt_add_course_name').value.trim();
-      const fullName = `${code}: ${name}`;
+      const code = document.getElementById('txt_add_course_code').value.trim().toUpperCase();
+      const title = document.getElementById('txt_add_course_name').value.trim();
 
-      if (appData.courses.includes(fullName)) {
-        showToast('This course offering already exists in catalog.', 'warning');
-        return;
+      try {
+        await apiRequest('/api/courses', {
+          method: 'POST',
+          body: {
+            code,
+            title,
+            actorId: appData.currentUser ? appData.currentUser.id : null
+          }
+        });
+        appData = getAppData();
+        document.getElementById('txt_add_course_code').value = '';
+        document.getElementById('txt_add_course_name').value = '';
+        renderAdminCourses();
+        renderAdminEnrollments();
+        renderAuditLogs();
+        showToast(`Course offering [${code}] added to catalog.`);
+      } catch (err) {
+        showToast(err.message, 'error');
       }
-
-      appData.courses.push(fullName);
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: 'Root Systems Admin',
-        action: 'Register Course Offering',
-        details: fullName
-      });
-
-      saveAppData(appData);
-      document.getElementById('txt_add_course_code').value = '';
-      document.getElementById('txt_add_course_name').value = '';
-      renderAdminCourses();
-      renderAdminEnrollments();
-      renderAuditLogs();
-      showToast(`Course offering [${code}] added to catalog.`);
     }
 
-    function handleAdminDeleteCourse(index) {
-      const removed = appData.courses[index];
-      appData.courses.splice(index, 1);
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: 'Root Systems Admin',
-        action: 'Remove Course Offering',
-        details: removed
-      });
-      saveAppData(appData);
-      renderAdminCourses();
-      renderAdminEnrollments();
-      renderAuditLogs();
-      showToast(`Removed course: ${removed}`, 'warning');
+    async function handleAdminDeleteCourse(courseId, code) {
+      try {
+        await apiRequest(`/api/courses/${encodeURIComponent(courseId)}`, {
+          method: 'DELETE',
+          body: { actorId: appData.currentUser ? appData.currentUser.id : null }
+        });
+        appData = getAppData();
+        renderAdminCourses();
+        renderAdminEnrollments();
+        renderAuditLogs();
+        showToast(`Removed course: ${code || courseId}`, 'warning');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
     }
 
     function renderAdminEnrollments() {
@@ -1160,8 +1284,8 @@
 
       if (courseSelect) {
         courseSelect.innerHTML = '<option value="">Select Course...</option>';
-        appData.courses.forEach(c => {
-          courseSelect.innerHTML += `<option value="${c}">${c}</option>`;
+        (appData.courseCatalog || []).forEach(c => {
+          courseSelect.innerHTML += `<option value="${c.id}">${c.course_name}</option>`;
         });
       }
 
@@ -1172,10 +1296,10 @@
           tr.className = 'hover:bg-white/5 transition-colors';
           tr.innerHTML = `
             <td class="p-2.5 text-white font-medium">#${en.userId} (${en.studentName})</td>
-            <td class="p-2.5 text-[#7dd3fc] font-semibold">${en.course.split(':')[0]}</td>
-            <td class="p-2.5 text-purple-300 font-mono text-[11px]">${en.term || 'Fall 2026'}</td>
+            <td class="p-2.5 text-[#7dd3fc] font-semibold">${(en.course || en.course_name || '').split(':')[0]}</td>
+            <td class="p-2.5 text-purple-300 font-mono text-[11px]">${en.term || en.semester || 'Fall 2026'}</td>
             <td class="p-2.5 text-right">
-              <button onclick="handleAdminUnenrollStudent(${en.id})" class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition-all cursor-pointer">
+              <button onclick="handleAdminUnenrollStudent(${en.userId || en.user_id}, ${en.courseId || en.course_id}, '${(en.studentName || '').replace(/'/g, "\\'")}')" class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition-all cursor-pointer">
                 Drop
               </button>
             </td>
@@ -1189,66 +1313,51 @@
       }
     }
 
-    function handleAdminEnrollStudent(e) {
+    async function handleAdminEnrollStudent(e) {
       e.preventDefault();
       const studentId = parseInt(document.getElementById('combo_enroll_student').value);
-      const course = document.getElementById('combo_enroll_course').value;
+      const courseId = document.getElementById('combo_enroll_course').value;
 
-      if (!studentId || !course) {
+      if (!studentId || !courseId) {
         showToast('Please select both a student and a course.', 'warning');
         return;
       }
 
-      const student = (appData.users || []).find(u => u.id === studentId);
-      if (!student) return;
-
-      const exists = (appData.enrollments || []).some(en => en.userId === studentId && en.course === course);
-      if (exists) {
-        showToast(`Student #${studentId} is already enrolled in this course.`, 'warning');
-        return;
-      }
-
-      const newEnrollment = {
-        id: (appData.enrollments || []).length + 1,
-        userId: studentId,
-        studentName: student.name || student.fullName,
-        course: course,
-        term: 'Fall 2026'
-      };
-
-      if (!appData.enrollments) appData.enrollments = [];
-      appData.enrollments.push(newEnrollment);
-
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: 'Root Systems Admin',
-        action: 'Enroll Student in Course',
-        details: `Enrolled ${student.name || student.fullName} (#${studentId}) in ${course.split(':')[0]}`
-      });
-
-      saveAppData(appData);
-      renderAdminEnrollments();
-      renderAuditLogs();
-      showToast(`Enrolled ${student.name || student.fullName} in ${course.split(':')[0]}`);
-    }
-
-    function handleAdminUnenrollStudent(enrollmentId) {
-      const idx = (appData.enrollments || []).findIndex(en => en.id === enrollmentId);
-      if (idx !== -1) {
-        const removed = appData.enrollments[idx];
-        appData.enrollments.splice(idx, 1);
-
-        appData.auditLogs.unshift({
-          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          user: 'Root Systems Admin',
-          action: 'Drop Student Enrollment',
-          details: `Dropped ${removed.studentName} from ${removed.course.split(':')[0]}`
+      try {
+        await apiRequest('/api/enrollments', {
+          method: 'POST',
+          body: {
+            userId: studentId,
+            courseId,
+            term: 'Fall 2026',
+            actorId: appData.currentUser ? appData.currentUser.id : null
+          }
         });
-
-        saveAppData(appData);
+        appData = getAppData();
         renderAdminEnrollments();
         renderAuditLogs();
-        showToast(`Dropped enrollment for ${removed.studentName}.`, 'warning');
+        showToast('Student enrollment assigned in SQLite.');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function handleAdminUnenrollStudent(userId, courseId, studentName) {
+      try {
+        await apiRequest('/api/enrollments', {
+          method: 'DELETE',
+          body: {
+            userId,
+            courseId,
+            actorId: appData.currentUser ? appData.currentUser.id : null
+          }
+        });
+        appData = getAppData();
+        renderAdminEnrollments();
+        renderAuditLogs();
+        showToast(`Dropped enrollment for ${studentName}.`, 'warning');
+      } catch (err) {
+        showToast(err.message, 'error');
       }
     }
 
@@ -1257,12 +1366,12 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      appData.auditLogs.slice(0, 15).forEach(l => {
+      (appData.auditLogs || []).slice(0, 20).forEach(l => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
         tr.innerHTML = `
-          <td class="p-3 text-[#a0b4c4] whitespace-nowrap">${l.time}</td>
-          <td class="p-3 text-white font-medium whitespace-nowrap">${l.user}</td>
+          <td class="p-3 text-[#a0b4c4] whitespace-nowrap">${l.time || l.timestamp}</td>
+          <td class="p-3 text-white font-medium whitespace-nowrap">${l.user || l.full_name}</td>
           <td class="p-3 text-[#7dd3fc] whitespace-nowrap">${l.action}</td>
           <td class="p-3 text-[#e0e8f0] truncate max-w-xs">${l.details}</td>
         `;
@@ -1271,12 +1380,184 @@
     }
 
     function exportSystemReportCSV() {
+      if (isHttpMode()) {
+        window.location.href = '/api/reports/system';
+        showToast('Exporting system report CSV from SQLite...');
+        return;
+      }
       let csv = 'Timestamp,Principal,Action,Details\n';
-      appData.auditLogs.forEach(l => {
+      (appData.auditLogs || []).forEach(l => {
         csv += `"${l.time}","${l.user}","${l.action}","${l.details}"\n`;
       });
       downloadCSV(csv, 'SAS_System_Attendance_Audit_Report.csv');
       showToast('System audit report exported as CSV.');
+    }
+
+    function renderJiraBugs() {
+      const tbody = document.getElementById('admin_jira_bugs_body');
+      const badge = document.getElementById('jira_connection_badge');
+      const projKey = appData.jiraProjectKey || 'SAS';
+      if (badge) {
+        badge.innerText = appData.jiraConfigured
+          ? `Jira Cloud API v3 Active (Project: ${projKey})`
+          : `Jira Workflow Queue (Project: ${projKey})`;
+      }
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const bugs = appData.bugs || [];
+      if (bugs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-[#a0b4c4]">No Jira defects logged yet.</td></tr>';
+        return;
+      }
+
+      const priorityClass = (p) => {
+        if (p === 'Highest' || p === 'High') return 'bg-rose-950/70 text-rose-300 border-rose-500/30';
+        if (p === 'Medium') return 'bg-amber-950/70 text-amber-300 border-amber-500/30';
+        return 'bg-slate-800/70 text-slate-300 border-slate-600/30';
+      };
+
+      bugs.forEach(b => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors align-top';
+        const safeDesc = String(b.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safeSummary = String(b.summary || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        tr.innerHTML = `
+          <td class="p-3 whitespace-nowrap">
+            <div class="font-mono font-bold text-sky-300">${b.jiraRemoteKey || b.issueKey}</div>
+            <div class="text-[10px] text-[#a0b4c4] mt-0.5">${b.jiraSyncStatus || 'Local Jira Queue'}</div>
+          </td>
+          <td class="p-3 max-w-xs">
+            <div class="flex items-center gap-1.5 mb-0.5">
+              <span class="px-1.5 py-0.5 rounded bg-sky-950/80 border border-sky-500/30 text-sky-300 font-mono text-[10px]">${b.testCaseId}</span>
+              <span class="text-[10px] text-purple-300">${b.module}</span>
+            </div>
+            <div class="text-white font-semibold">${safeSummary}</div>
+            <div class="text-[11px] text-[#a0b4c4] line-clamp-2 mt-0.5">${safeDesc}</div>
+            <div class="text-[10px] text-[#a0b4c4]/80 mt-1">Assignee: ${b.assignee} • Reporter: ${b.reporterName}</div>
+          </td>
+          <td class="p-3 whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded border text-[10px] font-semibold ${priorityClass(b.priority)}">${b.priority}</span>
+            <div class="text-[10px] text-[#a0b4c4] mt-1">${b.severity}</div>
+          </td>
+          <td class="p-3 whitespace-nowrap">
+            <select onchange="handleJiraStatusTransition(${b.id}, this.value)"
+              class="h-8 px-2 rounded-lg bg-[#141c2e] border border-white/15 text-[11px] text-white focus:outline-none focus:border-sky-400 cursor-pointer">
+              ${['To Do', 'In Progress', 'In Review', 'Done'].map(st => `<option value="${st}" ${b.status === st ? 'selected' : ''}>${st}</option>`).join('')}
+            </select>
+          </td>
+          <td class="p-3 text-right whitespace-nowrap space-x-1">
+            ${!b.jiraRemoteKey ? `<button type="button" onclick="handleSyncBugToJira(${b.id}, '${b.issueKey}')"
+              class="px-2 py-1 rounded-lg bg-sky-950/60 hover:bg-sky-900/80 text-sky-300 border border-sky-500/30 text-[11px] font-semibold transition-all cursor-pointer"
+              title="Push to Atlassian Jira Cloud">
+              Sync
+            </button>` : ''}
+            <button type="button" onclick="handleDeleteJiraBug(${b.id}, '${b.issueKey}')"
+              class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/80 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition-all cursor-pointer">
+              Delete
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function handleAdminLogJiraBug(e) {
+      e.preventDefault();
+      const summary = document.getElementById('txt_bug_summary').value.trim();
+      const testCaseId = document.getElementById('txt_bug_testcase').value.trim().toUpperCase() || 'GENERAL';
+      const module = document.getElementById('combo_bug_module').value;
+      const priority = document.getElementById('combo_bug_priority').value;
+      const severity = document.getElementById('combo_bug_severity').value;
+      const assignee = document.getElementById('combo_bug_assignee').value;
+      const description = document.getElementById('txt_bug_description').value.trim();
+
+      try {
+        const res = await apiRequest('/api/bugs', {
+          method: 'POST',
+          body: {
+            summary,
+            testCaseId,
+            module,
+            priority,
+            severity,
+            assignee,
+            description,
+            reporterId: appData.currentUser ? appData.currentUser.id : 4
+          }
+        });
+        appData = getAppData();
+        document.getElementById('txt_bug_summary').value = '';
+        document.getElementById('txt_bug_description').value = '';
+        renderJiraBugs();
+        renderAuditLogs();
+        showToast(res.message || 'Jira defect logged.');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function handleJiraStatusTransition(bugId, newStatus) {
+      try {
+        const res = await apiRequest(`/api/bugs/${bugId}/status`, {
+          method: 'PUT',
+          body: {
+            status: newStatus,
+            actorId: appData.currentUser ? appData.currentUser.id : 4
+          }
+        });
+        appData = getAppData();
+        renderJiraBugs();
+        renderAuditLogs();
+        showToast(res.message || `Updated Jira status to ${newStatus}`);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function handleDeleteJiraBug(bugId, issueKey) {
+      try {
+        await apiRequest(`/api/bugs/${bugId}`, {
+          method: 'DELETE',
+          body: { actorId: appData.currentUser ? appData.currentUser.id : 4 }
+        });
+        appData = getAppData();
+        renderJiraBugs();
+        renderAuditLogs();
+        showToast(`Deleted Jira bug ${issueKey}`, 'warning');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function exportJiraCSV() {
+      if (isHttpMode()) {
+        window.location.href = '/api/bugs/export-jira-csv';
+        showToast('Exporting Jira External System CSV import...');
+        return;
+      }
+      showToast('Jira CSV export requires HTTP server mode.', 'warning');
+    }
+
+    async function handleTestJiraConnection() {
+      try {
+        const res = await apiRequest('/api/bugs/jira-test', { method: 'POST', body: {} });
+        showToast(res.message || 'Jira Cloud connection verified.');
+      } catch (err) {
+        showToast(err.message, 'warning');
+      }
+    }
+
+    async function handleSyncBugToJira(bugId, issueKey) {
+      try {
+        const res = await apiRequest(`/api/bugs/${bugId}/sync`, { method: 'POST', body: {} });
+        appData = getAppData();
+        renderJiraBugs();
+        renderAuditLogs();
+        showToast(res.message || `Synced ${issueKey} to Jira Cloud.`);
+      } catch (err) {
+        showToast(err.message, 'warning');
+      }
     }
 
     window.addEventListener('DOMContentLoaded', initAdminPage);

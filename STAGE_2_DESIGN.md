@@ -25,10 +25,10 @@ As established in Chapter 3:
 
 ## 2. Software Architecture Design
 
-### 2.1 Applied Architectural Pattern: MVC Model (Model-View-Controller)
+### 2.1 Applied Architectural Pattern (Single Pattern): MVC Model (Model–View–Controller)
 *(Reference: Chapter 3, Slides 17–19)*
 
-The primary architectural pattern applied to SAS Enterprise is the **MVC (Model-View-Controller) Model** (Slide 17):
+In strict accordance with the requirement to apply **a single architectural pattern**, SAS Enterprise exclusively implements the **MVC (Model–View–Controller) Model** (Slide 17):
 > *"Separate display and interaction of system data. The system is structured into three logical components that interact with each other."*
 
 ```
@@ -37,79 +37,64 @@ The primary architectural pattern applied to SAS Enterprise is the **MVC (Model-
                  +-----------------------------------+
                    | (1) Request       ^ (4) Response
                    v                   |
-           +---------------+   (3)    +---------------+
-           |  CONTROLLER   |--------->|     VIEW      |
-           |  (logic.py)   | Data     | (index.html)  |
-           +---------------+ Model    +---------------+
+           +--------------------+  (3)   +----------------------+
+           |     CONTROLLER     |------->|         VIEW         |
+           | (controller/*.py)  | Data   | (*.html, shared.js)  |
+           +--------------------+ Model  +----------------------+
                    |
-                   | (2) Manipulate (CRUD)
+                   | (2) Manipulate (Model API Calls)
                    v
-           +---------------+
-           |     MODEL     |
-           | (database.py) |
-           +---------------+
+           +--------------------+
+           |       MODEL        |
+           |   (model/*.py)     |
+           +--------------------+
                    |
-                   | CRUD Operations
+                   | SQLite3 CRUD Operations
                    v
-           +---------------+
-           |   DATABASE    |
-           | (attendance.db|
-           +---------------+
+           +--------------------+
+           |      DATABASE      |
+           |  (attendance.db)   |
+           +--------------------+
 ```
 
 #### Detailed Component Responsibilities (Slide 17):
-1. **Model (`database.py` & `attendance.db`):**
+1. **Model (`model/` package & `attendance.db`):**
    - *Definition (Slide 17):* "Manages system data and the operations associated with that data."
-   - *Implementation:* Encapsulates relational schema definitions, ACID transactions via `DBConnection` Context Manager, SQLite3 constraints, and data manipulation operations (Create, Read, Update, Delete).
-   - *Managed Entities:* `Users`, `Courses`, `Enrollments`, `Sessions`, `Attendance`, `Excuses`, `Counseling_Notes`, `Audit_Logs`.
-2. **View (`index.html` & UI components):**
+   - *Implementation:*
+     - `model/entities.py`: Object-Oriented domain entities (`BaseEntity`, `User`, `Student`, `Instructor`, `Advisor`, `Administrator`, `UserFactory`, `Course`, `Enrollment`, `AttendanceSession`, `AttendanceRecord`, `ExcuseRequest`, `CounselingNote`, `AuditLog`).
+     - `model/database.py`: Thread-safe `DBConnection` Context Manager (`PRAGMA foreign_keys = ON;`), schema initialization, safe legacy migration, and initial institutional seeding.
+     - `model/attendance_model.py`: `AttendanceModel` encapsulating **100% of SQLite3 CRUD operations** and relational hydration.
+   - *Managed Entities:* `Users`, `Courses`, `Instructor_Courses`, `Enrollments`, `Sessions`, `Attendance`, `Excuses`, `Counseling_Notes`, `Audit_Logs`.
+2. **View (`index.html`, `student.html`, `instructor.html`, `advisor.html`, `admin.html`, `shared.js`):**
    - *Definition (Slide 17):* "Defines and manages how data is presented (displayed) to the user."
-   - *Implementation:* Five distinct role-specific screens:
-     - Screen 0: Login & Role Authentication Gateway
-     - Screen 1: Student Portal (attendance rate, real-time code check-in, excuse submission)
-     - Screen 2: Instructor Portal (rolling session code generation, live roster, excuse review)
-     - Screen 3: Academic Advisor Portal (at-risk warning triggers, student counseling logs)
-     - Screen 4: System Administration Console (user management, course catalog, audit logs)
-     - Screen 5: Stage 2 Architecture & Database Inspector.
-3. **Controller (`logic.py` & `AttendanceLogic`):**
+   - *Implementation:* Role-specific web views that contain zero SQL or persistence logic and only render data models supplied by the Controller while dispatching user interactions back to Controller endpoints:
+     - `index.html`: Login & Role Authentication Gateway + Stage 2 Design Inspector
+     - `student.html`: Student Portal (real-time attendance rate, PIN/QR check-in, excuse submission)
+     - `instructor.html`: Instructor Portal (rolling session PIN/QR generation, live roster, manual override, excuse review)
+     - `advisor.html`: Academic Advisor Portal (Early Warning System triggers, counseling notes)
+     - `admin.html`: System Administration Console (user management, course catalog, enrollments, security audit logs).
+3. **Controller (`controller/` package):**
    - *Definition (Slide 17):* "Manages user interactions and passes these interactions to the View and Model respectively."
-   - *Implementation:* Intercepts user actions, applies domain validation (e.g., verifying 15-minute PIN validity, verifying absence thresholds, hashing credentials with salt), instructs the Model to perform CRUD operations, and prepares structured JSON response objects for the View.
+   - *Implementation:*
+     - `controller/attendance_controller.py`: `AttendanceController` coordinates authentication checks, attendance timing evaluation, CSV formatting, and Early Warning computations. Contains **zero `sqlite3` imports and zero raw SQL**—all data reads/writes go strictly through `self.model` (`AttendanceModel`).
+     - `controller/http_controller.py`: `SASHttpHandler` routes user HTTP requests `(1)`, invokes `AttendanceController` -> `AttendanceModel` `(2)`, and sends JSON data models or HTML Views back to the user `(3, 4)`.
 
 ---
 
-### 2.2 Integration with Layered Model & Client-Server Model
-*(Reference: Chapter 3, Slides 23–27)*
-
-In full alignment with **Slide 25 & 26 (Layered Model)**, the system is organized into four hierarchical layers where each layer provides dedicated services to the layer above:
-
-| Layer (Slide 25) | System Module | Functions & Services (Slide 26) |
-|---|---|---|
-| **Presentation Layer** | `index.html` (Web Browser) | Form & Menu Manager, Screen Rendering, Client Data Validation, User Event Capture |
-| **Business Layer** | `logic.py` (`AttendanceLogic`) | Role Checking, Session PIN Verification, Attendance Calculation, Risk Warning Generation |
-| **Persistence Layer** | `database.py` (DAO Methods) | Data Access Objects, Query Building, Transaction Safety, Object-Relational Translation |
-| **Database Layer** | `attendance.db` (SQLite3 Engine) | Physical Tables, Foreign Key Constraints (`PRAGMA foreign_keys = ON`), ACID Storage |
-
-Furthermore, the system follows the **Client-Server Model (Slide 23)**:
-- **Client:** Web Browser accessing services through structured HTTP/REST requests.
-- **Server:** Python `server.py` executing services and returning responses.
-
----
-
-### 2.3 Evaluation Against Course Quality Metrics
+### 2.2 Evaluation Against Course Quality Metrics
 *(Reference: Chapter 3, Slides 11–13, 19)*
 
 1. **High Cohesion (Slide 11, 13, 19):**
-   - `database.py` strictly handles persistence logic.
-   - `logic.py` strictly handles business validation and workflow coordination.
-   - `index.html` strictly handles display formatting and user interaction events.
+   - `model/` strictly manages domain state, OOP entities, schema integrity, and SQLite CRUD operations.
+   - `controller/` strictly manages user interaction routing, workflow validation, and View data assembly.
+   - `*.html` + `shared.js` strictly manage UI rendering and DOM interaction events.
 2. **Loose Coupling (Slide 11, 12, 19):**
-   - View never executes raw SQL queries.
-   - Controller communicates with Model through clean parameter contracts and receives standard dictionary rows.
-3. **Course Pros Verified (Slide 19):**
-   - *Concurrent (parallel) development:* Front-end views and back-end database schemas can be developed simultaneously.
-   - *High cohesion:* Logical grouping of related actions in Controller, CRUD in Model.
-   - *Loose coupling:* Low coupling simplifies automated testing and future extensions.
-   - *Easy to maintain:* Modifying UI layout does not alter database logic.
+   - View never communicates directly with SQLite and never imports persistence modules.
+   - Controller communicates with Model solely through typed `AttendanceModel` methods and hydrated OOP entities.
+3. **MVC Advantages Verified (Slide 19):**
+   - *Concurrent (parallel) development:* View interfaces and Model persistence can evolve independently.
+   - *High cohesion & Loose coupling:* Strictly verified by automated unit test `test_10_strict_mvc_separation`.
+   - *Easy to maintain:* Swapping UI layout or extending database tables remains isolated to its single MVC component.
 
 ---
 
@@ -226,8 +211,8 @@ The database strictly implements every relational conversion rule presented in t
 
 ## 5. Verification & Live Traceability
 
-All 8 tables, foreign key cascades, and MVC controller routines are active in:
-1. **Interactive Web App Screen 5:** Directly accessible via the top navigation bar `[5: Stage 2 Design]`.
-2. **Back-end Persistence Layer:** `database.py` with `DBConnection` SQLite3 context manager.
-3. **Controller Layer:** `logic.py` with `AttendanceLogic` decoupled business validation.
-4. **Physical Relational Store:** `attendance.db` SQLite3 file with foreign keys enforced.
+All database tables, OOP domain models, and strict MVC component boundaries are active in:
+1. **View (`index.html`, `student.html`, `instructor.html`, `advisor.html`, `admin.html`, `shared.js`):** Interactive browser views rendering data models supplied by the Controller.
+2. **Model (`model/entities.py`, `model/database.py`, `model/attendance_model.py`):** OOP domain entities, SQLite3 `DBConnection` context manager, and all CRUD queries in `AttendanceModel`.
+3. **Controller (`controller/attendance_controller.py`, `controller/http_controller.py`):** `AttendanceController` and `SASHttpHandler` (zero raw SQL / `sqlite3` imports), verified by `test_10_strict_mvc_separation`.
+4. **Physical Relational Store (`attendance.db`):** SQLite3 database with `PRAGMA foreign_keys = ON;` enforced.

@@ -92,8 +92,8 @@
       <!-- User Dossier & Sign Out -->
       <div class="flex items-center gap-3">
         <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-medium shadow-sm">
-          <span class="material-symbols-outlined text-xs">lock</span>
-          <span>HTTPS Strict</span>
+          <span class="material-symbols-outlined text-xs">schedule</span>
+          <span id="live_utc_clock">Live Sync</span>
         </div>
 
         <!-- Student Profile Pill -->
@@ -324,45 +324,84 @@
   <script>
     let appData = getAppData();
 
-    function initStudentPage() {
-      // Guard: Ensure user is Student
+    async function initStudentPage() {
       if (!enforceRoleGuard('Student', 'Student Portal')) return;
 
       const user = appData.currentUser;
-      const userName = user.name || user.fullName || 'Student';
-      const studentId = user.studentId || '24091';
-      const major = user.major || 'B.S. Software Engineering';
-      const year = user.year || user.academicYear || 'Year 3';
+      appData = await syncAppDataFromServer(user.id);
+      const syncedUser = appData.currentUser || user;
 
-      // Header info
+      const userName = syncedUser.name || syncedUser.fullName || 'Student';
+      const studentId = syncedUser.studentId || syncedUser.student_id || String(syncedUser.id || '24091');
+      const major = syncedUser.major || 'B.S. Software Engineering';
+      const year = syncedUser.year || syncedUser.academicYear || 'Year 3';
+
       document.getElementById('header_student_name').innerText = userName;
       document.getElementById('header_student_id').innerText = `#${studentId}`;
       document.getElementById('header_student_major').innerText = `• ${major} (${year})`;
       document.getElementById('header_student_avatar').innerText = userName.split(' ').map(n => n[0]).join('').slice(0, 2);
 
-      // Banner info
       document.getElementById('student_welcome_name').innerText = `Welcome back, ${userName}`;
       document.getElementById('student_welcome_subtext').innerText = `Student ID: #${studentId} • ${major} (${year})`;
 
-      // Date default
       const dateInput = document.getElementById('date_excuse');
       if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
 
+      populateCourseDropdowns();
       renderStudentStats();
       renderStudentExcuses();
       checkLiveSessionSync();
+      startRealtimeClockUpdater('live_utc_clock');
 
-      // Reactive real-time cross-tab listener & polling
       window.addEventListener('storage', () => {
         appData = getAppData();
+        populateCourseDropdowns();
         checkLiveSessionSync();
         renderStudentStats();
+        renderStudentExcuses();
       });
 
+      // 1-second smooth local countdown synced to server offset
       setInterval(() => {
-        appData = getAppData();
         checkLiveSessionSync();
       }, 1000);
+
+      // 2.5-second live polling from Python OOP backend
+      setInterval(async () => {
+        const uid = (appData.currentUser && appData.currentUser.id) || null;
+        if (!uid) return;
+        appData = await syncAppDataFromServer(uid);
+        populateCourseDropdowns();
+        checkLiveSessionSync();
+        renderStudentStats();
+        renderStudentExcuses();
+      }, 2500);
+    }
+
+    function populateCourseDropdowns() {
+      const catalog = appData.courseCatalog || [];
+      const enrolledStats = appData.stats || [];
+      const optionsSource = catalog.length > 0
+        ? catalog.map(c => ({ code: c.code, label: `${c.code}: ${c.title}` }))
+        : enrolledStats.map(s => ({ code: s.code, label: `${s.code}: ${s.name}` }));
+
+      if (optionsSource.length === 0) return;
+
+      ['combo_student_courses', 'combo_excuse_course'].forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        const prev = select.value;
+        select.innerHTML = '';
+        optionsSource.forEach(item => {
+          const opt = document.createElement('option');
+          opt.value = item.code;
+          opt.innerText = item.label;
+          select.appendChild(opt);
+        });
+        if (prev && optionsSource.some(o => o.code === prev)) {
+          select.value = prev;
+        }
+      });
     }
 
     function checkLiveSessionSync() {
@@ -370,6 +409,11 @@
       if (!banner) return;
 
       const session = appData.session;
+      const hintPin = document.getElementById('student_hint_pin');
+      if (hintPin) {
+        hintPin.innerText = (session && session.active) ? session.code : 'Session Closed';
+      }
+
       if (session && session.active) {
         banner.classList.remove('hidden');
 
@@ -382,7 +426,6 @@
         const btnText = document.getElementById('btn_quick_checkin_text');
         if (btnText) btnText.innerText = `Check In to ${courseCode}`;
 
-        // Ensure course exists in combo_student_courses, or add it dynamically if new
         const select = document.getElementById('combo_student_courses');
         if (select) {
           let hasOption = false;
@@ -400,14 +443,13 @@
           }
         }
 
-        // Calculate timer
         const timerElem = document.getElementById('live_banner_timer');
         if (timerElem) {
-          const elapsedSec = Math.floor((Date.now() - (session.startTime || Date.now())) / 1000);
-          const remaining = Math.max(0, (15 * 60) - elapsedSec);
+          const elapsedSec = Math.floor(((Date.now() + (typeof serverTimeOffsetMs === 'number' ? serverTimeOffsetMs : 0)) - (session.startTime || Date.now())) / 1000);
+          const remaining = Math.max(0, (15 * 60) - Math.max(0, elapsedSec));
           const m = Math.floor(remaining / 60);
           const s = (remaining % 60).toString().padStart(2, '0');
-          timerElem.innerText = `${m}:${s} remaining`;
+          timerElem.innerText = remaining > 0 ? `${m}:${s} remaining` : 'Late / Extended window';
         }
       } else {
         banner.classList.add('hidden');
@@ -439,12 +481,11 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      let totalPresent = 0;
-      let totalSessions = 0;
+      let sumPct = 0;
+      const statsList = appData.stats || [];
 
-      appData.stats.forEach(s => {
-        totalPresent += s.present;
-        totalSessions += s.total;
+      statsList.forEach(s => {
+        sumPct += Number(s.pct || 0);
 
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
@@ -459,19 +500,18 @@
           <td class="p-3.5 text-center font-bold text-white">${s.pct}%</td>
           <td class="p-3.5 text-right font-sans">
             <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold ${
-              s.pct >= 90 ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30' : 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
+              s.pct >= 90 ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30' :
+              s.pct >= 80 ? 'bg-amber-950/60 text-amber-300 border border-amber-500/30' :
+              'bg-rose-950/60 text-rose-300 border border-rose-500/30'
             }">${s.status}</span>
           </td>
         `;
         tbody.appendChild(tr);
       });
 
-      const overall = totalSessions > 0 ? Math.round((totalPresent / totalSessions) * 1000) / 10 : 100;
+      const overall = statsList.length > 0 ? Math.round((sumPct / statsList.length) * 10) / 10 : 100;
       const statElem = document.getElementById('overall_attendance_stat');
       if (statElem) statElem.innerText = `${overall}%`;
-
-      const hintPin = document.getElementById('student_hint_pin');
-      if (hintPin) hintPin.innerText = appData.session.active ? appData.session.code : 'Session Closed';
     }
 
     function renderStudentExcuses() {
@@ -479,12 +519,15 @@
       if (!container) return;
       container.innerHTML = '';
 
-      const user = appData.currentUser || { id: '24091', name: 'Alex Rivera' };
-      const currId = String(user.id || user.studentId || '24091');
+      const user = appData.currentUser || { id: 1, studentId: '24091', name: 'Alex Rivera' };
+      const currDbId = String(user.id || '');
+      const currStuId = String(user.studentId || user.student_id || '');
       const currName = (user.name || user.fullName || '').toLowerCase();
-      
-      const myExcuses = (appData.excuses || []).filter(e => 
-        String(e.studentId) === currId || (e.studentName && e.studentName.toLowerCase() === currName)
+
+      const myExcuses = (appData.excuses || []).filter(e =>
+        String(e.student_id || '') === currDbId ||
+        (currStuId && String(e.studentId || '') === currStuId) ||
+        (e.studentName && e.studentName.toLowerCase() === currName)
       );
 
       if (myExcuses.length === 0) {
@@ -511,105 +554,72 @@
       });
     }
 
-    function handleStudentCheckIn(e) {
+    async function handleStudentCheckIn(e) {
       e.preventDefault();
       const pin = document.getElementById('txt_qr_code').value.trim();
       const course = document.getElementById('combo_student_courses').value;
       const feedback = document.getElementById('lbl_checkin_status');
+      const user = appData.currentUser;
 
       feedback.classList.remove('hidden', 'bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500/40', 'bg-amber-950/80', 'text-amber-300', 'border-amber-500/40', 'bg-red-950/80', 'text-red-300', 'border-red-500/40', 'border');
       feedback.classList.add('border');
 
-      if (!appData.session.active) {
-        feedback.classList.add('bg-red-950/80', 'text-red-300', 'border-red-500/40');
-        feedback.innerHTML = '<span class="material-symbols-outlined text-sm">cancel</span><span>No active attendance session found. Please wait for instructor.</span>';
-        showToast('Check-in failed: Session is inactive.', 'error');
-        return;
-      }
-
-      const cleanInput = pin.replace(/[^0-9]/g, '');
-      const cleanSession = appData.session.code.replace(/[^0-9]/g, '');
-
-      if (cleanInput === cleanSession) {
-        const user = appData.currentUser;
-        const studentId = user.studentId || '24091';
-        const studentName = user.name || user.fullName || 'Alex Rivera';
-
-        const existing = appData.roster.find(r => r.id === studentId);
-        if (existing) {
-          existing.status = 'Present';
-          existing.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          existing.method = 'PIN Input';
-          existing.updatedBy = 'Self (PIN)';
-        } else {
-          appData.roster.unshift({
-            id: studentId,
-            name: studentName,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            method: 'PIN Input',
-            status: 'Present',
-            updatedBy: 'Self (PIN)'
-          });
-        }
-
-        const statCourse = appData.stats.find(s => s.code === course);
-        if (statCourse) {
-          statCourse.present += 1;
-          statCourse.pct = Math.round((statCourse.present / statCourse.total) * 1000) / 10;
-        }
-
-        appData.auditLogs.unshift({
-          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          user: studentName,
-          action: 'Direct PIN Check-in',
-          details: `Course ${course}: Status Present via verified PIN [${pin}]`
+      try {
+        const res = await apiRequest('/api/attendance/checkin', {
+          method: 'POST',
+          body: {
+            userId: user.id,
+            studentId: user.id,
+            course,
+            pin
+          }
         });
-
-        saveAppData(appData);
+        appData = getAppData();
         renderStudentStats();
 
-        feedback.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500/40');
-        feedback.innerHTML = '<span class="material-symbols-outlined text-sm">verified</span><span>Attendance verified and recorded: 🟢 Present!</span>';
-        showToast('Attendance recorded: Present for ' + course);
-      } else {
+        const isLate = res.status === 'Late';
+        const isAbs = res.status === 'Absent';
+        if (isAbs) {
+          feedback.classList.add('bg-red-950/80', 'text-red-300', 'border-red-500/40');
+        } else if (isLate) {
+          feedback.classList.add('bg-amber-950/80', 'text-amber-300', 'border-amber-500/40');
+        } else {
+          feedback.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500/40');
+        }
+        feedback.innerHTML = `<span class="material-symbols-outlined text-sm">verified</span><span>${res.message || 'Attendance recorded: ' + res.status}</span>`;
+        showToast(res.message || `Attendance recorded: ${res.status}`, isAbs ? 'error' : isLate ? 'warning' : 'success');
+      } catch (err) {
         feedback.classList.add('bg-red-950/80', 'text-red-300', 'border-red-500/40');
-        feedback.innerHTML = '<span class="material-symbols-outlined text-sm">error</span><span>Invalid PIN code. Please check projection screen.</span>';
-        showToast('Invalid PIN code.', 'error');
+        feedback.innerHTML = `<span class="material-symbols-outlined text-sm">error</span><span>${err.message}</span>`;
+        showToast(err.message, 'error');
       }
     }
 
-    function handleStudentExcuseSubmit(e) {
+    async function handleStudentExcuseSubmit(e) {
       e.preventDefault();
       const course = document.getElementById('combo_excuse_course').value;
       const date = document.getElementById('date_excuse').value;
       const reason = document.getElementById('txt_excuse_reason').value.trim();
-
       const user = appData.currentUser;
-      const studentId = user.studentId || '24091';
-      const studentName = user.name || user.fullName || 'Alex Rivera';
 
-      const newExcuse = {
-        id: appData.excuses.length + 1,
-        studentId: studentId,
-        studentName: studentName,
-        course: course,
-        date: date,
-        reason: reason,
-        status: 'Pending'
-      };
-
-      appData.excuses.unshift(newExcuse);
-      appData.auditLogs.unshift({
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        user: studentName,
-        action: 'Submit Absence Excuse',
-        details: `Course ${course} (${date}): ${reason.slice(0, 30)}...`
-      });
-
-      saveAppData(appData);
-      document.getElementById('txt_excuse_reason').value = '';
-      renderStudentExcuses();
-      showToast('Excuse request submitted for instructor review.');
+      try {
+        await apiRequest('/api/excuses', {
+          method: 'POST',
+          body: {
+            userId: user.id,
+            studentId: user.id,
+            course,
+            date,
+            reason
+          }
+        });
+        appData = getAppData();
+        document.getElementById('txt_excuse_reason').value = '';
+        renderStudentExcuses();
+        showToast('Excuse request submitted for instructor review.');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
     }
 
     window.addEventListener('DOMContentLoaded', initStudentPage);

@@ -104,7 +104,7 @@
         </div>
         <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#141c2e] border border-white/10 text-xs text-[#a0b4c4]">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>System Online</span>
+          <span id="live_utc_clock" class="font-mono text-[#7dd3fc]">System Online</span>
         </div>
       </div>
 
@@ -178,11 +178,11 @@
               <div class="text-xs font-bold text-[#7dd3fc] group-hover:underline">🎓 Student 1</div>
               <div class="text-[10px] text-[#e0e8f0] font-medium truncate">Alex Rivera</div>
             </button>
-            <button onclick="autofillAndLogin('sarah.jenkins@student.univ.edu', 'Student')" class="p-2.5 rounded-xl bg-[#141c2e] hover:bg-[#1a2438] border border-[#7dd3fc]/20 text-left transition-all hover:border-[#7dd3fc]/40 group cursor-pointer">
+            <button onclick="autofillAndLogin('s.jenkins@university.edu', 'Student')" class="p-2.5 rounded-xl bg-[#141c2e] hover:bg-[#1a2438] border border-[#7dd3fc]/20 text-left transition-all hover:border-[#7dd3fc]/40 group cursor-pointer">
               <div class="text-xs font-bold text-[#7dd3fc] group-hover:underline">🎓 Student 2</div>
               <div class="text-[10px] text-[#e0e8f0] font-medium truncate">Sarah Jenkins</div>
             </button>
-            <button onclick="autofillAndLogin('david.kim@student.univ.edu', 'Student')" class="p-2.5 rounded-xl bg-[#141c2e] hover:bg-[#1a2438] border border-[#7dd3fc]/20 text-left transition-all hover:border-[#7dd3fc]/40 group cursor-pointer">
+            <button onclick="autofillAndLogin('d.kim@university.edu', 'Student')" class="p-2.5 rounded-xl bg-[#141c2e] hover:bg-[#1a2438] border border-[#7dd3fc]/20 text-left transition-all hover:border-[#7dd3fc]/40 group cursor-pointer">
               <div class="text-xs font-bold text-[#7dd3fc] group-hover:underline">🎓 Student 3</div>
               <div class="text-[10px] text-[#e0e8f0] font-medium truncate">David Kim</div>
             </button>
@@ -263,91 +263,56 @@
       doLogin(email, roleHint);
     }
 
-    function handleLoginSubmit(e) {
+    async function handleLoginSubmit(e) {
       e.preventDefault();
       const email = document.getElementById('txt_email').value.trim();
-      doLogin(email);
+      await doLogin(email);
     }
 
-    function doLogin(email, roleHint) {
-      const appData = getAppData();
-      let user = (appData.users || []).find(u => u.email.toLowerCase() === email.toLowerCase());
+    async function doLogin(email, roleHint) {
+      const password = document.getElementById('txt_password').value;
+      const errBox = document.getElementById('lbl_login_error');
+      const errText = document.getElementById('lbl_login_error_text');
+      const btn = document.getElementById('btn_login');
 
-      // If custom email typed in
-      if (!user && email && email.includes('@')) {
-        const rawName = email.split('@')[0];
-        const cleanName = rawName
-          .replace(/[._-]+/g, ' ')
-          .split(' ')
-          .filter(Boolean)
-          .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-          .join(' ') || 'Authenticated User';
+      if (btn) btn.disabled = true;
 
-        let detectedRole = roleHint || 'Student';
-        const lower = email.toLowerCase();
-        if (lower.includes('dr.') || lower.includes('prof') || lower.includes('instructor') || lower.includes('faculty')) {
-          detectedRole = 'Instructor';
-        } else if (lower.includes('advisor') || lower.includes('counselor')) {
-          detectedRole = 'Advisor';
-        } else if (lower.includes('admin') || lower.includes('sysadmin')) {
-          detectedRole = 'Administrator';
-        }
-
-        user = {
-          id: Math.floor(1000 + Math.random() * 9000),
-          email: email,
-          password: document.getElementById('txt_password').value || 'password123',
-          name: cleanName,
-          fullName: cleanName,
-          role: detectedRole,
-          status: 'Active',
-          studentId: detectedRole === 'Student' ? String(Math.floor(24000 + Math.random() * 900)) : undefined,
-          major: detectedRole === 'Student' ? 'B.S. Software Engineering' : undefined,
-          year: detectedRole === 'Student' ? 'Year 3' : undefined,
-          academicYear: detectedRole === 'Student' ? 'Year 3' : undefined,
-          department: detectedRole === 'Student' ? 'B.S. Software Engineering (Year 3)' : 'Dept. of Computer Science'
-        };
-        appData.users.push(user);
-      }
-
-      if (user) {
-        const inputPassword = document.getElementById('txt_password').value;
-        const expectedPassword = user.password || 'password123';
-        if (inputPassword !== expectedPassword) {
-          document.getElementById('lbl_login_error').classList.remove('hidden');
-          document.getElementById('lbl_login_error_text').innerText = 'Incorrect password for this account. Please verify your credentials.';
-          showToast('Authentication failed: Invalid password.', 'error');
-          return;
-        }
-
-        document.getElementById('lbl_login_error').classList.add('hidden');
-        appData.currentUser = user;
-
-        if (!appData.auditLogs) appData.auditLogs = [];
-        appData.auditLogs.unshift({
-          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          user: user.name || user.fullName || 'User',
-          action: 'User Sign-In',
-          details: `Role: ${user.role} authenticated`
+      try {
+        const res = await apiRequest('/api/auth/login', {
+          method: 'POST',
+          body: { email, password }
         });
 
-        saveAppData(appData);
+        const user = res.user;
+        if (errBox) errBox.classList.add('hidden');
+        const stateSnapshot = res.state || getAppData();
+        stateSnapshot.currentUser = user;
+        saveAppData(stateSnapshot);
 
-        const targetPage = user.role === 'Student' ? 'student.html' :
-                           user.role === 'Instructor' ? 'instructor.html' :
-                           user.role === 'Advisor' ? 'advisor.html' :
-                           user.role === 'Administrator' ? 'admin.html' : 'student.html';
+        const targetPage = res.redirect || (
+          user.role === 'Student' ? 'student.html' :
+          user.role === 'Instructor' ? 'instructor.html' :
+          user.role === 'Advisor' ? 'advisor.html' :
+          user.role === 'Administrator' ? 'admin.html' : 'student.html'
+        );
 
-        showToast(`Signed in as ${user.name} (${user.role}). Entering ${user.role} Portal...`);
+        showToast(`Signed in as ${user.name || user.fullName} (${user.role}). Entering ${user.role} Portal...`);
         setTimeout(() => {
           window.location.href = targetPage;
-        }, 350);
-      } else {
-        document.getElementById('lbl_login_error').classList.remove('hidden');
-        document.getElementById('lbl_login_error_text').innerText = 'Invalid email or user account not found.';
-        showToast('Login failed. Please check credentials.', 'error');
+        }, 300);
+      } catch (err) {
+        if (errBox) errBox.classList.remove('hidden');
+        if (errText) errText.innerText = err.message || 'Invalid email or password. Please check credentials.';
+        showToast(err.message || 'Authentication failed.', 'error');
+      } finally {
+        if (btn) btn.disabled = false;
       }
     }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      await syncAppDataFromServer();
+      startRealtimeClockUpdater('live_utc_clock');
+    });
   </script>
 </body>
 </html>

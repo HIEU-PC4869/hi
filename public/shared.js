@@ -1,145 +1,95 @@
 /**
- * SAS Enterprise - Shared Data Model & State Controller
+ * SAS Enterprise - Shared Data Model, Python OOP REST Client & Real-Time Controller
  * Multi-Page Application (MPA) Architecture
  */
 
 const STORAGE_KEY = 'sas_enterprise_attendance_v2_en';
+let serverTimeOffsetMs = 0;
 
 const DEFAULT_DATA = {
-  currentUser: null, // Initially null when on login page
+  currentUser: null,
   courses: [
-    'CS-301: Advanced Data Structures',
-    'ENG-204: Technical Communication',
-    'MATH-310: Linear Algebra',
-    'PHY-102: Engineering Physics II'
+    'CS-301: Advanced Data Structures (Hall B-12)',
+    'ENG-204: Technical Communication (Hall A-08)',
+    'MATH-310: Linear Algebra (Hall C-14)',
+    'PHY-102: Engineering Physics II (Science Lab 102)',
+    'CS-402: Cloud Architecture & DevOps (Lab 201)'
   ],
-  stats: [
-    { code: 'CS-301', name: 'Advanced Data Structures', total: 28, present: 25, late: 2, absent: 1, excused: 0, pct: 92.8, status: 'Good Standing' },
-    { code: 'ENG-204', name: 'Technical Communication', total: 16, present: 16, late: 0, absent: 0, excused: 0, pct: 100.0, status: 'Honor Compliance' },
-    { code: 'MATH-310', name: 'Linear Algebra', total: 24, present: 20, late: 2, absent: 2, excused: 0, pct: 88.3, status: 'Good Standing' },
-    { code: 'PHY-102', name: 'Engineering Physics II', total: 20, present: 18, late: 1, absent: 1, excused: 0, pct: 93.0, status: 'Good Standing' }
+  courseCatalog: [
+    { id: 1, code: 'CS-301', title: 'Advanced Data Structures', room: 'Hall B-12', displayLabel: 'CS-301: Advanced Data Structures (Hall B-12)' },
+    { id: 2, code: 'ENG-204', title: 'Technical Communication', room: 'Hall A-08', displayLabel: 'ENG-204: Technical Communication (Hall A-08)' },
+    { id: 3, code: 'MATH-310', title: 'Linear Algebra', room: 'Hall C-14', displayLabel: 'MATH-310: Linear Algebra (Hall C-14)' },
+    { id: 4, code: 'PHY-102', title: 'Engineering Physics II', room: 'Science Lab 102', displayLabel: 'PHY-102: Engineering Physics II (Science Lab 102)' },
+    { id: 5, code: 'CS-402', title: 'Cloud Architecture & DevOps', room: 'Lab 201', displayLabel: 'CS-402: Cloud Architecture & DevOps (Lab 201)' }
   ],
+  stats: [],
   session: {
-    active: true,
-    code: '849-210',
+    active: false,
+    code: '---',
     course: 'CS-301',
-    startTime: Date.now() - (6 * 60 * 1000), // 6 minutes ago
-    remainingSeconds: 14 * 60 + 59
+    courseName: 'CS-301: Advanced Data Structures',
+    startTime: Date.now(),
+    remainingSeconds: 0
   },
-  roster: [
-    { id: '24091', name: 'Alex Rivera', time: '10:02 AM', method: 'PIN Input', status: 'Present', updatedBy: 'Self (QR)' },
-    { id: '24092', name: 'Elena Rostova', time: '10:04 AM', method: 'PIN Input', status: 'Present', updatedBy: 'Self (QR)' },
-    { id: '24093', name: 'Marcus Chen', time: '10:18 AM', method: 'PIN Input', status: 'Late', updatedBy: 'Self (QR)' },
-    { id: '24094', name: 'Sarah Jenkins', time: '--', method: 'Pending', status: 'Absent', updatedBy: 'System Auto' },
-    { id: '24108', name: 'David Kim', time: '--', method: 'Pending', status: 'Absent', updatedBy: 'System Auto' },
-    { id: '24115', name: 'Taylor Scott', time: '10:01 AM', method: 'Manual Override', status: 'Present', updatedBy: 'Dr. Vance' }
-  ],
-  excuses: [
-    { id: 1, studentId: '24094', studentName: 'Sarah Jenkins', course: 'CS-301', date: '2026-10-20', reason: 'Hospitalized for acute flu treatment', status: 'Pending' },
-    { id: 2, studentId: '24108', studentName: 'David Kim', course: 'CS-301', date: '2026-10-18', reason: 'Transit bus breakdown on route 08', status: 'Approved' },
-    { id: 3, studentId: '24091', studentName: 'Alex Rivera', course: 'MATH-310', date: '2026-10-12', reason: 'Represented university at ACM-ICPC contest', status: 'Approved' }
-  ],
-  warnings: [
-    { studentId: '24094', name: 'Sarah Jenkins', course: 'CS-301', pct: 71.4, consecutiveAbsences: 3, risk: 'Critical', notes: 'Initial warning email dispatched' },
-    { studentId: '24108', name: 'David Kim', course: 'CS-301', pct: 76.5, consecutiveAbsences: 2, risk: 'Warning', notes: 'In-person counseling scheduled' }
-  ],
-  counselingNotes: {
-    '24094': [
-      { date: '2026-10-21 14:30', advisor: 'Marcus Brody', text: 'Contacted student and guardian. Student committed to providing medical discharge paperwork and attending tutoring.' }
-    ],
-    '24108': [
-      { date: '2026-10-19 11:00', advisor: 'Marcus Brody', text: 'Discussed transit issues and offered campus shuttle schedules.' }
-    ]
-  },
-  users: [
-    { id: 1001, email: 'a.rivera@university.edu', password: 'password123', name: 'Alex Rivera', role: 'Student', studentId: '24091', major: 'B.S. Software Engineering', year: 'Year 3', academicYear: 'Year 3', department: 'B.S. Software Engineering (Year 3)', status: 'Active', courses: ['CS-301', 'ENG-204', 'MATH-310', 'PHY-102'] },
-    { id: 1002, email: 'dr.vance@university.edu', password: 'password123', name: 'Dr. Evelyn Vance', role: 'Instructor', department: 'Faculty of Engineering', status: 'Active', courses: ['CS-301', 'CS-402'] },
-    { id: 1003, email: 'm.brody@university.edu', password: 'password123', name: 'Marcus Brody', role: 'Advisor', department: 'Student Support Services', status: 'Active', courses: ['All CS Undergrads'] },
-    { id: 1004, email: 'sysadmin@university.edu', password: 'password123', name: 'Root Systems Admin', role: 'Administrator', department: 'Global Campus Administration', status: 'Active', courses: ['System Master Node'] },
-    { id: 1005, email: 'sarah.jenkins@student.univ.edu', password: 'password123', name: 'Sarah Jenkins', role: 'Student', studentId: '24094', major: 'B.S. Computer Science', year: 'Year 2', academicYear: 'Year 2', department: 'B.S. Computer Science (Year 2)', status: 'Flagged (EWS)', courses: ['CS-301', 'ENG-204'] },
-    { id: 1006, email: 'david.kim@student.univ.edu', password: 'password123', name: 'David Kim', role: 'Student', studentId: '24108', major: 'B.S. Computer Engineering', year: 'Year 2', academicYear: 'Year 2', department: 'B.Eng. Computer Engineering (Year 2)', status: 'Flagged (EWS)', courses: ['CS-301', 'MATH-310'] }
-  ],
-  enrollments: [
-    { id: 1, userId: 1001, studentName: 'Alex Rivera', course: 'CS-301: Advanced Data Structures', term: 'Fall 2026' },
-    { id: 2, userId: 1001, studentName: 'Alex Rivera', course: 'ENG-204: Technical Communication', term: 'Fall 2026' },
-    { id: 3, userId: 1001, studentName: 'Alex Rivera', course: 'MATH-310: Linear Algebra', term: 'Fall 2026' },
-    { id: 4, userId: 1001, studentName: 'Alex Rivera', course: 'PHY-102: Engineering Physics II', term: 'Fall 2026' },
-    { id: 5, userId: 1005, studentName: 'Sarah Jenkins', course: 'CS-301: Advanced Data Structures', term: 'Fall 2026' },
-    { id: 6, userId: 1006, studentName: 'David Kim', course: 'CS-301: Advanced Data Structures', term: 'Fall 2026' },
-    { id: 7, userId: 1005, studentName: 'Sarah Jenkins', course: 'MATH-310: Linear Algebra', term: 'Fall 2026' }
-  ],
-  auditLogs: [
-    { time: '2026-10-22 10:18:22', user: 'Marcus Chen', action: 'Direct PIN Check-in', details: 'Status: Late (18 mins into session)' },
-    { time: '2026-10-22 10:04:15', user: 'Elena Rostova', action: 'Direct PIN Check-in', details: 'Status: Present (4 mins into session)' },
-    { time: '2026-10-22 10:02:01', user: 'Alex Rivera', action: 'Direct PIN Check-in', details: 'Status: Present (2 mins into session)' },
-    { time: '2026-10-22 10:00:00', user: 'Dr. Evelyn Vance', action: 'Start Attendance Session', details: 'Code: 849-210, Course: CS-301' }
-  ]
+  roster: [],
+  excuses: [],
+  warnings: [],
+  counselingNotes: {},
+  users: [],
+  enrollments: [],
+  auditLogs: [],
+  bugs: []
 };
 
-// Initialize or load state
+function isHttpMode() {
+  return typeof window !== 'undefined' && (window.location.protocol === 'http:' || window.location.protocol === 'https:');
+}
+
+function getLiveUtcDate() {
+  return new Date(Date.now() + serverTimeOffsetMs);
+}
+
+function getLiveUtcTimestamp() {
+  return getLiveUtcDate().toISOString().replace('T', ' ').slice(0, 19);
+}
+
+function startRealtimeClockUpdater(elementId) {
+  const update = () => {
+    const el = document.getElementById(elementId);
+    if (el) {
+      el.innerText = `${getLiveUtcTimestamp()} UTC`;
+    }
+  };
+  update();
+  return setInterval(update, 1000);
+}
+
 function getAppData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_DATA));
-      return JSON.parse(JSON.stringify(DEFAULT_DATA));
+      const clone = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(clone));
+      return clone;
     }
     const data = JSON.parse(raw);
-    // Guarantee required fields exist
-    if (!data.users || data.users.length === 0) data.users = DEFAULT_DATA.users;
     if (!data.courses) data.courses = DEFAULT_DATA.courses;
-    if (!data.stats) data.stats = DEFAULT_DATA.stats;
+    if (!data.courseCatalog) data.courseCatalog = DEFAULT_DATA.courseCatalog;
+    if (!data.stats) data.stats = [];
     if (!data.session) data.session = DEFAULT_DATA.session;
-    if (!data.roster) data.roster = DEFAULT_DATA.roster;
-    if (!data.excuses) data.excuses = DEFAULT_DATA.excuses;
-    if (!data.warnings) data.warnings = DEFAULT_DATA.warnings;
-    if (!data.counselingNotes) data.counselingNotes = DEFAULT_DATA.counselingNotes;
-    if (!data.enrollments) data.enrollments = DEFAULT_DATA.enrollments;
-    if (!data.auditLogs) data.auditLogs = DEFAULT_DATA.auditLogs;
-    data.users.forEach(u => {
-      if (!u.password) u.password = 'password123';
-      if (!u.courses) {
-        if (u.role === 'Instructor') u.courses = ['CS-301', 'CS-402'];
-        else if (u.role === 'Student') u.courses = ['CS-301', 'ENG-204'];
-        else u.courses = ['System Node'];
-      }
-    });
+    if (!data.roster) data.roster = [];
+    if (!data.excuses) data.excuses = [];
+    if (!data.warnings) data.warnings = [];
+    if (!data.counselingNotes) data.counselingNotes = {};
+    if (!data.enrollments) data.enrollments = [];
+    if (!data.auditLogs) data.auditLogs = [];
+    if (!data.users) data.users = [];
+    if (!data.bugs) data.bugs = [];
     return data;
   } catch (err) {
     console.error('Failed to parse appData from localStorage:', err);
     return JSON.parse(JSON.stringify(DEFAULT_DATA));
   }
-}
-
-// Helper: Add Course to Catalog and assign to Instructor
-function addCourseForInstructor(instructorId, courseCode, courseTitle) {
-  const data = getAppData();
-  const cleanCode = (courseCode || '').trim().toUpperCase();
-  const cleanTitle = (courseTitle || '').trim();
-  const fullLabel = cleanTitle ? `${cleanCode}: ${cleanTitle}` : cleanCode;
-  
-  if (!data.courses) data.courses = [];
-  if (!data.courses.some(c => c.startsWith(cleanCode))) {
-    data.courses.push(fullLabel);
-  }
-
-  const inst = data.users.find(u => u.id === instructorId || String(u.id) === String(instructorId));
-  if (inst) {
-    if (!inst.courses) inst.courses = [];
-    if (!inst.courses.includes(cleanCode)) {
-      inst.courses.push(cleanCode);
-    }
-  }
-
-  if (data.currentUser && (data.currentUser.id === instructorId || String(data.currentUser.id) === String(instructorId))) {
-    if (!data.currentUser.courses) data.currentUser.courses = [];
-    if (!data.currentUser.courses.includes(cleanCode)) {
-      data.currentUser.courses.push(cleanCode);
-    }
-  }
-
-  saveAppData(data);
-  return data;
 }
 
 function saveAppData(data) {
@@ -148,6 +98,105 @@ function saveAppData(data) {
   } catch (err) {
     console.error('Failed to save appData to localStorage:', err);
   }
+}
+
+function mergeServerState(serverState, preserveUser = null) {
+  const local = getAppData();
+  const activeUser = preserveUser || local.currentUser || serverState.currentUser || null;
+  if (serverState.serverTimeMs) {
+    serverTimeOffsetMs = serverState.serverTimeMs - Date.now();
+  }
+
+  // Refresh activeUser fields from fresh SQLite users list if logged in
+  let mergedUser = activeUser;
+  if (activeUser && Array.isArray(serverState.users)) {
+    const freshMatch = serverState.users.find(
+      u => u.id === activeUser.id || (u.email && activeUser.email && u.email.toLowerCase() === activeUser.email.toLowerCase())
+    );
+    if (freshMatch) {
+      mergedUser = freshMatch;
+    }
+  }
+
+  const merged = {
+    ...local,
+    ...serverState,
+    currentUser: mergedUser
+  };
+  saveAppData(merged);
+  return merged;
+}
+
+async function apiRequest(endpoint, options = {}) {
+  if (!isHttpMode()) {
+    throw new Error('HTTP API unavailable in local file:// mode');
+  }
+  const fetchOpts = {
+    method: options.method || 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {})
+    }
+  };
+  if (options.body !== undefined) {
+    fetchOpts.body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
+  }
+
+  const res = await fetch(endpoint, fetchOpts);
+  const payload = await res.json().catch(() => ({}));
+  if (!res.ok || payload.ok === false) {
+    throw new Error(payload.error || payload.message || `API Error (${res.status})`);
+  }
+  if (payload.state) {
+    mergeServerState(payload.state);
+  }
+  return payload;
+}
+
+async function syncAppDataFromServer(optionalUserId = null) {
+  const local = getAppData();
+  const uid = optionalUserId || (local.currentUser && local.currentUser.id) || '';
+  if (!isHttpMode()) return local;
+
+  try {
+    const url = uid ? `/api/state?userId=${encodeURIComponent(uid)}` : '/api/state';
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return local;
+    const state = await res.json();
+    return mergeServerState(state);
+  } catch (err) {
+    console.warn('Server sync skipped:', err.message);
+    return local;
+  }
+}
+
+async function addCourseForInstructor(instructorId, courseCode, courseTitle, room = 'Hall B-12') {
+  const cleanCode = (courseCode || '').trim().toUpperCase();
+  let cleanTitle = (courseTitle || '').trim();
+  if (cleanTitle.includes(':')) {
+    cleanTitle = cleanTitle.split(':').slice(1).join(':').trim();
+  }
+
+  if (isHttpMode()) {
+    const resp = await apiRequest('/api/instructor/courses', {
+      method: 'POST',
+      body: { instructorId, code: cleanCode, title: cleanTitle, room }
+    });
+    return resp.state ? mergeServerState(resp.state) : getAppData();
+  }
+
+  const data = getAppData();
+  const fullLabel = `${cleanCode}: ${cleanTitle || cleanCode}`;
+  if (!data.courses.some(c => c.startsWith(cleanCode))) {
+    data.courses.push(fullLabel);
+  }
+  const inst = data.users.find(u => String(u.id) === String(instructorId));
+  if (inst) {
+    if (!inst.courses) inst.courses = [];
+    if (!inst.courses.includes(cleanCode)) inst.courses.push(cleanCode);
+  }
+  saveAppData(data);
+  return data;
 }
 
 // Global Toast Notification (English only)
@@ -183,27 +232,29 @@ function showToast(message, type = 'success') {
   }, 3500);
 }
 
-// Global Sign Out handler
-function handleLogout() {
+// Global Sign Out handler backed by Python audit trail
+async function handleLogout() {
   const data = getAppData();
-  const userName = data.currentUser ? (data.currentUser.name || data.currentUser.fullName || 'User') : 'User';
-  
-  if (data.currentUser) {
-    if (!data.auditLogs) data.auditLogs = [];
-    data.auditLogs.unshift({
-      time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-      user: userName,
-      action: 'User Sign-Out',
-      details: 'Session terminated by user action'
-    });
-    data.currentUser = null;
-    saveAppData(data);
+  const user = data.currentUser;
+  const userName = user ? (user.name || user.fullName || 'User') : 'User';
+
+  if (user && isHttpMode()) {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, userName })
+      });
+    } catch (_) {}
   }
+
+  data.currentUser = null;
+  saveAppData(data);
 
   showToast('Signed out of the system successfully.');
   setTimeout(() => {
     window.location.href = 'index.html';
-  }, 400);
+  }, 300);
 }
 
 // Role Guard for Individual HTML Pages
@@ -212,13 +263,11 @@ function enforceRoleGuard(expectedRole, pageTitle) {
   const user = data.currentUser;
 
   if (!user) {
-    // If not logged in, redirect to login page
     window.location.href = 'index.html';
     return false;
   }
 
   if (user.role !== expectedRole) {
-    // Role mismatch
     const modal = document.createElement('div');
     modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md';
     modal.innerHTML = `
